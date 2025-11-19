@@ -1,0 +1,20 @@
+<ion-input *ngIf="control" [placeholder]="placeholder" [formControl]="control" [type]="type" [pattern]="pattern"
+  [label]="label || control.label" [fill]="fill" [helperText]="helperText" [labelPlacement]="labelPlacement"
+  [minlength]="minlength" [maxlength]="maxlength" [errorText]="getErrorText()">
+  <ion-icon *ngIf="iconName" [name]="iconName" [slot]="iconSlot"></ion-icon>
+  <ion-input-password-toggle *ngIf="type === 'password'" slot="end"></ion-input-password-toggle>
+</ion-input>
+
+
+<!-- <ion-note *ngIf="control.invalid && (control.dirty || control.touched)" color="danger">
+  <ng-container *ngIf="control.errors?.['required']">{{ label }} is required.</ng-container>
+  <ng-container *ngIf="control.errors?.['minlength']">
+    {{ minlengthErrorMessage || (label + ' Minimum length is ' + control.errors?.['minlength'].requiredLength + '.') }}
+  </ng-container>
+  <ng-container *ngIf="control.errors?.['maxlength']">{{label }} Maximum length is {{
+    control.errors?.['maxlength'].requiredLength
+    }}.</ng-container>
+  <ng-container *ngIf="control.errors?.['pattern']">
+    {{ patternErrorMessage || ('Invalid ' + type + ' format.') }}
+  </ng-container>
+</ion-note> -->

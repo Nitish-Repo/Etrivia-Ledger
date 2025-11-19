@@ -1,0 +1,30 @@
+.autocomplete-container {
+    position: relative;
+}
+
+.autocomplete-list {
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 8000;
+}
+
+.autocomplete-list,
+ion-list.autocomplete-list {
+  overflow: visible !important;
+  max-height: unset !important;
+  padding: 0;
+}
+
+.virtual-scroll {
+  height: 300px !important;
+  max-height: 300px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+}
