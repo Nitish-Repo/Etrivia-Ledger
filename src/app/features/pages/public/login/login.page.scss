@@ -1,0 +1,28 @@
+// ion-content {
+//   --background: url('/assets/image/bak3.jpg') no-repeat center center/cover;
+//   --background: url('../../../../assets/image/bak3.jpg') no-repeat center center/cover;
+// }
+
+div.logo {
+  margin: 8vh 0;
+
+  ion-text {
+    font-size: 2.2rem;
+    font-weight: bold;
+  }
+}
+
+ion-card {
+  background: transparent;
+  max-width: 600px;
+  margin: 0 auto;
+
+
+  ion-input {
+    font-size: 1rem;
+
+    ion-icon {
+      font-size: 1.2rem
+    }
+  }
+}

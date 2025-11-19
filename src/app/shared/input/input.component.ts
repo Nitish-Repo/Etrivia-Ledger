@@ -8,14 +8,14 @@ import {
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { IrsControl } from '@app/shared-services';
-import { IONIC_FORMS_IMPORTS } from '@app/shared/ionic-imports';
+import { IonInput, IonIcon, IonInputPasswordToggle } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-input',
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ...IONIC_FORMS_IMPORTS]
+  imports: [CommonModule, ReactiveFormsModule, IonInput, IonIcon, IonInputPasswordToggle]
 })
 export class InputComponent implements OnInit {
   @Input() form!: AbstractControl;
