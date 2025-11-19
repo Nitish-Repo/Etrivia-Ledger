@@ -9,5 +9,6 @@ export const routes: Routes = [
       ...PUBLIC_ROUTES,
       ...PRIVATE_ROUTES
     ]
-  }
+  },
+ 
 ];

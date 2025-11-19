@@ -17,8 +17,8 @@ import {
   AlertController
 } from '@ionic/angular/standalone';
 import { FormsModule } from '@angular/forms';
-import { StorageService } from '../../services/storage.service';
-import { User } from '../../models/user';
+import { StorageService } from '../../../services/storage.service';
+import { User } from '../../../models/user';
 import { of, switchMap } from 'rxjs';
 import { addIcons } from 'ionicons';
 import { 
