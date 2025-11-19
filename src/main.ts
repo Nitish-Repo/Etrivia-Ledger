@@ -1,4 +1,4 @@
-import { APP_INITIALIZER } from '@angular/core';
+import { APP_INITIALIZER, provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
@@ -50,13 +50,21 @@ export function initializeFactory(init: InitializeAppService) {
 
 bootstrapApplication(AppComponent, {
   providers: [
+    // Modern Angular: Zoneless Change Detection (better performance)
+    provideZonelessChangeDetection(),
+    
+    // Services
     SQLiteService,
     InitializeAppService,
     StorageService,
     DbnameVersionService,
+    
+    // Routing & Ionic
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
+    
+    // App Initialization
     {
       provide: APP_INITIALIZER,
       useFactory: initializeFactory,
