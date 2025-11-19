@@ -1,0 +1,7 @@
+{
+  "name": "etrivia ledger",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
