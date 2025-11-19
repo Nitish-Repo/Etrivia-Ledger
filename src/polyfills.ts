@@ -42,13 +42,9 @@
  *
  */
 
-import './zone-flags';
-
-/***************************************************************************************************
- * Zone JS is required by default for Angular itself.
- */
-import 'zone.js';  // Included with Angular CLI.
-
+// Zone.js is NOT needed when using provideZonelessChangeDetection() in main.ts
+// import './zone-flags';
+// import 'zone.js';
 
 /***************************************************************************************************
  * APPLICATION IMPORTS

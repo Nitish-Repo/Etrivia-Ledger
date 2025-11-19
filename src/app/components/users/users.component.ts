@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { 
   IonCard, 
@@ -65,7 +65,8 @@ export class UsersComponent implements OnInit {
 
   constructor(
     private storage: StorageService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private cdr: ChangeDetectorRef
   ) {
     addIcons({ 
       addCircleOutline, 
@@ -100,11 +101,13 @@ export class UsersComponent implements OnInit {
         next: (data) => {
           this.userList = data;
           console.log(`📋 Loaded ${data.length} users`);
+          this.cdr.markForCheck();
         },
         error: (err) => {
           console.error('❌ Error loading users:', err);
           this.dbStatus = 'Error - Check Console';
           this.isDbConnected = false;
+          this.cdr.markForCheck();
         }
       });
     }, 100);
@@ -114,12 +117,14 @@ export class UsersComponent implements OnInit {
     if (this.newUserName.trim()) {
       await this.storage.addUser(this.newUserName);
       this.newUserName = '';
+      this.cdr.markForCheck();
     }
   }
 
-  toggleUserActive(user: User) {
+  async toggleUserActive(user: User) {
     const active = user.active === 0 ? 1 : 0;
-    this.storage.updateUserById(user.id.toString(), active);
+    await this.storage.updateUserById(user.id.toString(), active);
+    this.cdr.markForCheck();
   }
 
   startEdit(user: User) {
@@ -137,6 +142,7 @@ export class UsersComponent implements OnInit {
       await this.storage.updateUserName(user.id.toString(), this.editingUserName.trim());
     }
     this.cancelEdit();
+    this.cdr.markForCheck();
   }
 
   async deleteUser(user: User) {
@@ -151,8 +157,9 @@ export class UsersComponent implements OnInit {
         {
           text: 'Delete',
           role: 'destructive',
-          handler: () => {
-            this.storage.deleteUserById(user.id.toString());
+          handler: async () => {
+            await this.storage.deleteUserById(user.id.toString());
+            this.cdr.markForCheck();
           }
         }
       ]
