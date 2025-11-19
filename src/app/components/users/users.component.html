@@ -1,0 +1,67 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>SQLite Database - Users</ion-card-title>
+    <ion-card-subtitle>Status: {{ dbStatus }}</ion-card-subtitle>
+  </ion-card-header>
+  
+  <ion-card-content>
+    <!-- Add User Form -->
+    <ion-item>
+      <ion-label position="floating">User Name</ion-label>
+      <ion-input [(ngModel)]="newUserName" type="text"></ion-input>
+    </ion-item>
+    <ion-button expand="block" (click)="createUser()" [disabled]="!isDbConnected || !newUserName.trim()">
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      Add User
+    </ion-button>
+
+    <!-- User List -->
+    <ion-list *ngIf="userList.length > 0">
+      <ion-list-header>
+        <ion-label>Users ({{ userList.length }})</ion-label>
+      </ion-list-header>
+      <ion-item *ngFor="let user of userList">
+        <!-- Edit Mode -->
+        <div *ngIf="isEditing(user.id)" style="width: 100%; display: flex; align-items: center; gap: 8px;">
+          <ion-input 
+            [(ngModel)]="editingUserName" 
+            type="text" 
+            placeholder="User name"
+            style="flex: 1;">
+          </ion-input>
+          <ion-button fill="clear" color="success" (click)="saveEdit(user)">
+            <ion-icon name="checkmark-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="medium" (click)="cancelEdit()">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </div>
+        
+        <!-- View Mode -->
+        <ion-label *ngIf="!isEditing(user.id)">
+          <h2>{{ user.name }}</h2>
+          <p>ID: {{ user.id }} | Status: {{ user.active ? 'Active' : 'Inactive' }}</p>
+        </ion-label>
+        <ion-button *ngIf="!isEditing(user.id)" slot="end" fill="clear" (click)="toggleUserActive(user)">
+          <ion-icon 
+            [name]="user.active ? 'toggle' : 'toggle-outline'" 
+            [color]="user.active ? 'success' : 'medium'">
+          </ion-icon>
+        </ion-button>
+        <ion-button *ngIf="!isEditing(user.id)" slot="end" fill="clear" color="primary" (click)="startEdit(user)">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="!isEditing(user.id)" slot="end" fill="clear" color="danger" (click)="deleteUser(user)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+    
+    <ion-text *ngIf="userList.length === 0 && isDbConnected" color="medium">
+      <p style="text-align: center; padding: 20px;">
+        <ion-icon name="people-outline" style="font-size: 48px;"></ion-icon><br>
+        No users found. Add one above!
+      </p>
+    </ion-text>
+  </ion-card-content>
+</ion-card>
