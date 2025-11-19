@@ -23,7 +23,8 @@
     "useDefineForClassFields": false,
     "paths": {
       "@app/shared-services": ["src/app/shared-services/index.ts"],
-      "@app/shared-services/*": ["src/app/shared-services/*"]
+      "@app/shared-services/*": ["src/app/shared-services/*"],
+      "@app/shared/ionic-imports": ["src/app/shared/ionic-imports/index.ts"]
     }
   },
   "angularCompilerOptions": {

@@ -1,32 +1,26 @@
 <div *ngIf="form && control" class="autocomplete-container">
   <ion-input [label]="label || control.label" label-placement="floating" fill="outline" [placeholder]="label"
     [formControl]="control" (ionInput)="filterOptions($event)" (ionFocus)="openDropdown()" (ionBlur)="handleBlur()">
-    <ion-text *ngIf="showSelectedName" slot="start">
-      {{selectedItem?.portName || selectedItem?.name}}
-    </ion-text>
+    @if (showSelectedName) {
+      <ion-text slot="start">
+        {{selectedItem?.portName || selectedItem?.name}}
+      </ion-text>
+    }
   </ion-input>
 
-  <!-- <ion-list lines="none" class="autocomplete-list" *ngIf="isListVisible && (filteredOptions | async)?.length">
-    <ion-item *ngFor="let item of filteredOptions | async" (mousedown)="selectOption(item)" button>
-      <ng-container *ngIf="itemTemplate; else defaultTemplate">
-        <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-container>
-      </ng-container>
-      <ng-template #defaultTemplate>
-        {{ item[displayField] }}
-      </ng-template>
-    </ion-item>
-  </ion-list> -->
-
-  <ion-list lines="none" class="autocomplete-list" *ngIf="isListVisible && (filteredOptions | async)?.length">
-    <cdk-virtual-scroll-viewport itemSize="50" class="virtual-scroll" [style.height.px]="300">
-      <ion-item *cdkVirtualFor="let item of filteredOptions | async" (mousedown)="selectOption(item)" button>
-        <ng-container *ngIf="itemTemplate; else defaultTemplate">
-          <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-container>
-        </ng-container>
-        <ng-template #defaultTemplate>
-          {{ item[displayField] }}
-        </ng-template>
-      </ion-item>
-    </cdk-virtual-scroll-viewport>
-  </ion-list>
+  @if (isListVisible && filteredOptions().length) {
+    <ion-list lines="none" class="autocomplete-list">
+      <cdk-virtual-scroll-viewport itemSize="50" class="virtual-scroll" [style.height.px]="300">
+        @for (item of filteredOptions(); track item[valueField]) {
+          <ion-item (mousedown)="selectOption(item)" button>
+            @if (itemTemplate) {
+              <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-container>
+            } @else {
+              {{ item[displayField] }}
+            }
+          </ion-item>
+        }
+      </cdk-virtual-scroll-viewport>
+    </ion-list>
+  }
 </div>

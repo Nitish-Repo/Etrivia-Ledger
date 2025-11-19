@@ -1,9 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule, NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-svg',
   templateUrl: './svg.component.html',
   styleUrls: ['./svg.component.scss'],
+  standalone: true,
+  imports: [CommonModule, NgStyle]
 })
 
 export class SvgComponent implements OnInit {

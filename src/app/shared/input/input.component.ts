@@ -5,13 +5,17 @@ import {
   EventEmitter,
   OnInit,
 } from '@angular/core';
-import { AbstractControl, FormControl } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AbstractControl, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { IrsControl } from '@app/shared-services';
+import { IONIC_FORMS_IMPORTS } from '@app/shared/ionic-imports';
 
 @Component({
   selector: 'app-input',
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, ...IONIC_FORMS_IMPORTS]
 })
 export class InputComponent implements OnInit {
   @Input() form!: AbstractControl;

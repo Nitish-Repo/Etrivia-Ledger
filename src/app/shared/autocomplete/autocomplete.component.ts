@@ -1,12 +1,17 @@
-import { ChangeDetectorRef, Component, ContentChild, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef } from '@angular/core';
-import { AbstractControl, FormControl } from '@angular/forms';
+import { ChangeDetectorRef, Component, ContentChild, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, signal, computed } from '@angular/core';
+import { CommonModule, NgTemplateOutlet } from '@angular/common';
+import { AbstractControl, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { IrsControl } from '@app/shared-services';
-import { BehaviorSubject, debounceTime, distinctUntilChanged, map, Observable, of, startWith, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, Observable, of, startWith, tap } from 'rxjs';
+import { IONIC_COMMON_IMPORTS } from '@app/shared/ionic-imports';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-autocomplete',
   templateUrl: './autocomplete.component.html',
   styleUrls: ['./autocomplete.component.scss'],
+  standalone: true,
+  imports: [CommonModule, NgTemplateOutlet, ReactiveFormsModule, ...IONIC_COMMON_IMPORTS, ScrollingModule]
 })
 export class AutocompleteComponent implements OnInit, OnChanges {
   @Input() form!: AbstractControl;
@@ -21,11 +26,12 @@ export class AutocompleteComponent implements OnInit, OnChanges {
   @Input() showSelectedName = false;
   @Input() requireSelection = false;
 
-
   isListVisible: boolean = false;
   selectedItem: any;
   control!: IrsControl;
-  filteredOptions = new BehaviorSubject<any>([]);
+  
+  // ✅ Use signals instead of BehaviorSubject for better performance
+  filteredOptions = signal<any[]>([]);
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -46,13 +52,9 @@ export class AutocompleteComponent implements OnInit, OnChanges {
       }),
       map(value => this._filterOptions(value))
     ).subscribe(filtered => {
-      this.filteredOptions.next(filtered);
-
-      this.cdr.detectChanges(); // ✅ Ensures UI updates
+      this.filteredOptions.set(filtered); // ✅ Signal update
+      this.cdr.markForCheck(); // ✅ Zoneless change detection
     });
-
-
-    // this.filteredOptions.next(this._filterOptions(this.control.value));
   }
 
 
@@ -81,7 +83,7 @@ export class AutocompleteComponent implements OnInit, OnChanges {
   filterOptions(event: Event): void {
     const input = event.target as HTMLInputElement;
     const filterValue = input.value.toLowerCase();
-    this.filteredOptions.next(this._filterOptions(filterValue));
+    this.filteredOptions.set(this._filterOptions(filterValue)); // ✅ Signal update
   }
 
   private _filterOptions(value: string): any[] {
@@ -101,7 +103,7 @@ export class AutocompleteComponent implements OnInit, OnChanges {
 
   handleBlur() {
     this.validateSelection(); // Moved validation to a reusable method
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
     setTimeout(() => {
       this.isListVisible = false;
     }, 200);
