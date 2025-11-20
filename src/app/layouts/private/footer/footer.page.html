@@ -1,22 +1,19 @@
-<ion-tabs>
+<ion-tabs (ionTabsDidChange)="setCurrentTab($event)">
   <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="home" href="/home">
-      <ion-icon name="home-outline"></ion-icon>
+    <ion-tab-button tab="home">
+      <ion-icon [name]="selectedTab() === 'home' ? 'home' : 'home-outline'"></ion-icon>
       <ion-label>Home</ion-label>
     </ion-tab-button>
-
-    <ion-tab-button tab="dashboard" href="/dashboard">
-      <ion-icon name="grid-outline"></ion-icon>
+    <ion-tab-button tab="dashboard">
+      <ion-icon [name]="selectedTab() === 'dashboard' ? 'grid' : 'grid-outline'"></ion-icon>
       <ion-label>Dashboard</ion-label>
     </ion-tab-button>
-
-    <ion-tab-button tab="product" href="/product">
-      <ion-icon name="cube-outline"></ion-icon>
+    <ion-tab-button tab="product">
+      <ion-icon [name]="selectedTab() === 'product' ? 'cube' : 'cube-outline'"></ion-icon>
       <ion-label>Products</ion-label>
     </ion-tab-button>
-
-    <ion-tab-button tab="sell" href="/sell">
-      <ion-icon name="cart-outline"></ion-icon>
+    <ion-tab-button tab="sell">
+      <ion-icon [name]="selectedTab() === 'sell' ? 'cart' : 'cart-outline'"></ion-icon>
       <ion-label>Sell</ion-label>
     </ion-tab-button>
   </ion-tab-bar>

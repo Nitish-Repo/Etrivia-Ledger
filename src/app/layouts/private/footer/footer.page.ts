@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
 import {
   IonTabs,
   IonTabBar,
@@ -8,8 +8,8 @@ import {
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { 
-  homeOutline, gridOutline, cubeOutline, cartOutline
+import {
+  home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline,
 } from 'ionicons/icons';
 
 @Component({
@@ -28,9 +28,16 @@ import {
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class FooterPage {
+  selectedTab = signal<string>('home');
+
   constructor() {
     addIcons({
-      homeOutline, gridOutline, cubeOutline, cartOutline
+       home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline,
     });
+  }
+
+  setCurrentTab(event: any) {
+    const tabName = event.tab;
+    this.selectedTab.set(tabName);
   }
 }

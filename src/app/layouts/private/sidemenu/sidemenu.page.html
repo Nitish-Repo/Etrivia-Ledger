@@ -23,32 +23,32 @@
     <ion-content>
         <ion-menu-toggle class="menu-items">
             <ion-item [routerLink]="'/home'" [button]="true" lines="none"
-                [ngClass]="{'selected': currentRoute === '/home'}">
-                <ion-icon [name]="currentRoute === '/home' ? 'home' : 'home-outline'" slot="start"></ion-icon>
+                [ngClass]="{'selected': currentRoute() === '/home'}">
+                <ion-icon [name]="currentRoute() === '/home' ? 'home' : 'home-outline'" slot="start"></ion-icon>
                 Home
             </ion-item>
 
             <ion-item [routerLink]="'/dashboard'" [button]="true" lines="none"
-                [ngClass]="{'selected': currentRoute === '/dashboard'}">
-                <ion-icon [name]="currentRoute === '/dashboard' ? 'grid' : 'grid-outline'" slot="start"></ion-icon>
+                [ngClass]="{'selected': currentRoute() === '/dashboard'}">
+                <ion-icon [name]="currentRoute() === '/dashboard' ? 'grid' : 'grid-outline'" slot="start"></ion-icon>
                 Dashboard
             </ion-item>
 
             <ion-item [routerLink]="'/product'" [button]="true" lines="none"
-                [ngClass]="{'selected': currentRoute === '/product'}">
-                <ion-icon [name]="currentRoute === '/product' ? 'cube' : 'cube-outline'" slot="start"></ion-icon>
+                [ngClass]="{'selected': currentRoute() === '/product'}">
+                <ion-icon [name]="currentRoute() === '/product' ? 'cube' : 'cube-outline'" slot="start"></ion-icon>
                 Products
             </ion-item>
 
             <ion-item [routerLink]="'/sell'" [button]="true" lines="none"
-                [ngClass]="{'selected': currentRoute === '/sell'}">
-                <ion-icon [name]="currentRoute === '/sell' ? 'cart' : 'cart-outline'" slot="start"></ion-icon>
+                [ngClass]="{'selected': currentRoute() === '/sell'}">
+                <ion-icon [name]="currentRoute() === '/sell' ? 'cart' : 'cart-outline'" slot="start"></ion-icon>
                 Sell
             </ion-item>
 
             <ion-item [routerLink]="'/settings'" [button]="true" lines="none"
-                [ngClass]="{'selected': currentRoute === '/settings'}">
-                <ion-icon [name]="currentRoute === '/settings' ? 'settings' : 'settings-outline'"
+                [ngClass]="{'selected': currentRoute() === '/settings'}">
+                <ion-icon [name]="currentRoute() === '/settings' ? 'settings' : 'settings-outline'"
                     slot="start"></ion-icon>
                 Settings
             </ion-item>
@@ -61,8 +61,8 @@
     </ion-content>
     <ion-footer>
         <ion-item [routerLink]="'/home'" [button]="true" lines="none"
-            [ngClass]="{'selected': currentRoute === '/home'}">
-            <ion-icon [name]="currentRoute === '/home' ? 'moon' : 'moon-outline'" slot="start"></ion-icon>
+            [ngClass]="{'selected': currentRoute() === '/home'}">
+            <ion-icon [name]="currentRoute() === '/home' ? 'moon' : 'moon-outline'" slot="start"></ion-icon>
             <ion-toggle>
                 <ion-label>Night Mode</ion-label>
             </ion-toggle>

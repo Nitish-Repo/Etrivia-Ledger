@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule, RouterLinkActive } from '@angular/router';
 import {
@@ -27,7 +27,8 @@ import { IONIC_COMMON_IMPORTS } from '@app/shared/ionic-imports';
 })
 export class SidemenuPage implements OnInit {
   @Output() logoutClick = new EventEmitter<void>();
-  currentRoute: string = '';
+  
+  currentRoute = signal<string>('');
 
   constructor(private router: Router) {
     addIcons({
@@ -39,10 +40,9 @@ export class SidemenuPage implements OnInit {
   ngOnInit() {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.currentRoute = event.urlAfterRedirects;
+        this.currentRoute.set(event.urlAfterRedirects);
       }
     });
-    // Optional: track current route if needed
   }
 
   onLogout() {
