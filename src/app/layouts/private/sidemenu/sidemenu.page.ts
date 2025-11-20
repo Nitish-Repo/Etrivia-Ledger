@@ -2,15 +2,12 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule, RouterLinkActive } from '@angular/router';
 import {
-  IonMenu,
-  IonAvatar,
-  IonMenuToggle, IonFooter, IonToggle
+  IonMenu, IonAvatar, IonMenuToggle, IonFooter, IonToggle
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  homeOutline, gridOutline, cubeOutline, cartOutline, logOutOutline, settingsOutline,
-  home,
-  moonOutline
+  home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline, logOut, logOutOutline, 
+  settings, settingsOutline,moon, moonOutline
 } from 'ionicons/icons';
 import { IONIC_COMMON_IMPORTS } from '@app/shared/ionic-imports';
 
@@ -34,7 +31,8 @@ export class SidemenuPage implements OnInit {
 
   constructor(private router: Router) {
     addIcons({
-      home, homeOutline, gridOutline, cubeOutline, cartOutline, logOutOutline, settingsOutline, moonOutline
+      home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline, logOut, logOutOutline, 
+      settings, settingsOutline, moon, moonOutline
     });
   }
 

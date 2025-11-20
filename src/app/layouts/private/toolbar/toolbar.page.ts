@@ -4,7 +4,6 @@ import {
   IonButtons,
   IonButton,
   IonIcon,
-  IonTitle,
   IonMenuButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -20,7 +19,6 @@ import { notificationsOutline, statsChartOutline } from 'ionicons/icons';
     IonButtons,
     IonButton,
     IonIcon,
-    IonTitle,
     IonMenuButton
   ]
 })
