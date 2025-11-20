@@ -1,8 +1,10 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from '@app/core/auth.guard';
 
 export const PRIVATE_ROUTES: Routes = [
     {
         path: '',
+        canActivateChild: [AuthGuard],
         children: [
             //   {
             //     path: 'login',

@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { IONIC_COMMON_IMPORTS } from '@app/shared/ionic-imports';
 import { Subject } from 'rxjs';
 import { FormMeta } from '@app/shared-services/models/form-meta';
@@ -10,6 +10,7 @@ import { FormHelper } from '@app/shared-services/helpers/form.helper';
 import { getLoginMeta } from 'src/app/features/models/login.model';
 import { AppService } from '@app/services/app.service';
 import { InputComponent } from '@app/shared/input/input.component';
+import { TokenService } from '@app/core/token.service';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,10 @@ import { InputComponent } from '@app/shared/input/input.component';
   ]
 })
 export class LoginPage implements OnInit {
+  private app = inject(AppService);
+  private token = inject(TokenService);
+  private route = inject(Router);
+
   private destroy$: Subject<void> = new Subject<void>();
   form!: FormGroup;
   formMeta = new FormMeta();
@@ -33,14 +38,8 @@ export class LoginPage implements OnInit {
   roleOptions!: { value: string; label: string; }[];
   isLogin = signal<boolean>(false);
 
-  // ✅ Modern Angular 20: Use inject() instead of constructor DI
-  private app = inject(AppService);
 
   ngOnInit() {
-     console.log('[LOGIN] ngOnInit started');
-    
-    // Initialize form data immediately to prevent undefined errors
-    console.log('[LOGIN] Pre-initializing form data');
     this.modelMeta = getLoginMeta();
     this.form = this.app.meta.toFormGroup(
       { 
@@ -49,15 +48,15 @@ export class LoginPage implements OnInit {
       }, 
       this.modelMeta
     );
-    console.log('[LOGIN] Form pre-initialized');
    
   }
 
     onSubmit() {
     FormHelper.submit(this.form, this.formMeta, () => {
+      this.token.setToken("loggedIn");
+      this.route.navigate(['/home']);
       this.isLogin = signal<boolean>(true);
       console.log(this.form.value)
-  
     }), true;
   }
 
