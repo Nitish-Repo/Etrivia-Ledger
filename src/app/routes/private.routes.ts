@@ -23,6 +23,10 @@ export const PRIVATE_ROUTES: Routes = [
                 path: 'dashboard',
                 loadComponent: () => import('../features/pages/private/dashboard/dashboard.page').then(m => m.DashboardPage)
             },
+            {
+                path: 'product',
+                loadComponent: () => import('../features/pages/private/product/product.page').then(m => m.ProductPage)
+            },
             { path: '', redirectTo: 'home', pathMatch: 'full' }
         ]
     }
