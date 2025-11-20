@@ -5,19 +5,11 @@ export const PRIVATE_ROUTES: Routes = [
     {
         path: '',
         canActivateChild: [AuthGuard],
+        loadComponent: () => import('../layouts/private/private-layout.page').then((m) => m.PrivateLayoutPage),
         children: [
-            //   {
-            //     path: 'login',
-            //     loadComponent: () =>
-            //       import('./login/login.component').then(m => m.LoginComponent)
-            //   },
             {
                 path: 'home',
                 loadComponent: () => import('../home/home.page').then((m) => m.HomePage),
-            },
-            {
-                path: 'sell',
-                loadComponent: () => import('../features/pages/private/sell/sell.page').then(m => m.SellPage)
             },
             {
                 path: 'dashboard',
@@ -27,7 +19,15 @@ export const PRIVATE_ROUTES: Routes = [
                 path: 'product',
                 loadComponent: () => import('../features/pages/private/product/product.page').then(m => m.ProductPage)
             },
-            { path: '', redirectTo: 'home', pathMatch: 'full' }
+            {
+                path: 'sell',
+                loadComponent: () => import('../features/pages/private/sell/sell.page').then(m => m.SellPage)
+            },
+            { 
+                path: '', 
+                redirectTo: 'home', 
+                pathMatch: 'full' 
+            }
         ]
     }
 ];
