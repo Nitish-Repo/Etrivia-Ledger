@@ -9,7 +9,7 @@ export const PRIVATE_ROUTES: Routes = [
         children: [
             {
                 path: 'home',
-                loadComponent: () => import('../home/home.page').then((m) => m.HomePage),
+                loadComponent: () => import('../features/pages/private/home/home.page').then((m) => m.HomePage),
             },
             {
                 path: 'dashboard',
