@@ -1,30 +1,14 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, NavigationEnd, RouterModule, RouterLinkActive } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { 
-  IonTabs,
-  IonMenu,
-  IonHeader,
-  IonContent,
-  IonItem,
-  IonLabel,
-  IonAvatar,
-  IonText,
-  IonIcon,
-  IonMenuToggle,
-  IonTabBar,
-  IonTabButton,
+  IonRouterOutlet,
   GestureController
 } from '@ionic/angular/standalone';
 import { ToolbarPage } from './toolbar/toolbar.page';
+import { SidemenuPage } from './sidemenu/sidemenu.page';
+import { FooterPage } from './footer/footer.page';
 import { filter } from 'rxjs/operators';
-import { addIcons } from 'ionicons';
-import { 
-  home, homeOutline, grid, gridOutline, 
-  cube, cubeOutline, cart, cartOutline, 
-  logOutOutline, person, personOutline,
-  settings, settingsOutline
-} from 'ionicons/icons';
 
 @Component({
   selector: 'app-private-layout',
@@ -33,21 +17,10 @@ import {
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule,
-    RouterLinkActive,
-    IonMenu,
-    IonHeader,
-    IonContent,
-    IonItem,
-    IonLabel,
-    IonAvatar,
-    IonText,
-    IonIcon,
-    IonMenuToggle,
-    IonTabs,
-    IonTabBar,
-    IonTabButton,
-    ToolbarPage
+    IonRouterOutlet,
+    ToolbarPage,
+    SidemenuPage,
+    FooterPage
   ]
 })
 export class PrivateLayoutPage implements OnInit, AfterViewInit {
@@ -60,13 +33,7 @@ export class PrivateLayoutPage implements OnInit, AfterViewInit {
     private router: Router,
     private gestureCtrl: GestureController
   ) {
-    // Register icons
-    addIcons({
-      home, homeOutline, grid, gridOutline,
-      cube, cubeOutline, cart, cartOutline,
-      logOutOutline, person, personOutline,
-      settings, settingsOutline
-    });
+    // Icons are now registered in child components
   }
 
   ngOnInit() {

@@ -1,79 +1,12 @@
-<ion-menu contentId="main-content">
-  <ion-header class="ion-no-border">
-    <div class="bg"></div>
-    <ion-item lines="none">
-      <ion-avatar slot="start">
-        <img src="assets/images/nk.jpg">
-      </ion-avatar>
-      <ion-label color="light">
-        NITISH KUMAR
-        <p>
-          <ion-text color="light">
-            web.nitish.k@gmail.com
-          </ion-text>
-        </p>
-      </ion-label>
-    </ion-item>
-  </ion-header>
-  
-  <ion-content>
-    <ion-menu-toggle class="menu-items">
-      <ion-item [routerLink]="'/home'" routerLinkActive="selected" [button]="true" lines="none">
-        <ion-icon name="home-outline" slot="start"></ion-icon>
-        Home
-      </ion-item>
+<!-- Side Menu Component -->
+<app-sidemenu (logoutClick)="logout()"></app-sidemenu>
 
-      <ion-item [routerLink]="'/dashboard'" routerLinkActive="selected" [button]="true" lines="none">
-        <ion-icon name="grid-outline" slot="start"></ion-icon>
-        Dashboard
-      </ion-item>
-
-      <ion-item [routerLink]="'/product'" routerLinkActive="selected" [button]="true" lines="none">
-        <ion-icon name="cube-outline" slot="start"></ion-icon>
-        Products
-      </ion-item>
-
-      <ion-item [routerLink]="'/sell'" routerLinkActive="selected" [button]="true" lines="none">
-        <ion-icon name="cart-outline" slot="start"></ion-icon>
-        Sell
-      </ion-item>
-
-      <ion-item [button]="true" lines="none" (click)="logout()">
-        <ion-icon name="log-out-outline" slot="start"></ion-icon>
-        Log Out
-      </ion-item>
-    </ion-menu-toggle>
-  </ion-content>
-</ion-menu>
-
+<!-- Main Content Area -->
 <div id="main-content">
-  <ion-header>
-    <app-toolbar></app-toolbar>
-  </ion-header>
-
-  <ion-content [fullscreen]="true">
-    <ion-tabs>
-      <ion-tab-bar slot="bottom">
-        <ion-tab-button tab="home" href="/home">
-          <ion-icon name="home-outline"></ion-icon>
-          <ion-label>Home</ion-label>
-        </ion-tab-button>
-
-        <ion-tab-button tab="dashboard" href="/dashboard">
-          <ion-icon name="grid-outline"></ion-icon>
-          <ion-label>Dashboard</ion-label>
-        </ion-tab-button>
-
-        <ion-tab-button tab="product" href="/product">
-          <ion-icon name="cube-outline"></ion-icon>
-          <ion-label>Products</ion-label>
-        </ion-tab-button>
-
-        <ion-tab-button tab="sell" href="/sell">
-          <ion-icon name="cart-outline"></ion-icon>
-          <ion-label>Sell</ion-label>
-        </ion-tab-button>
-      </ion-tab-bar>
-    </ion-tabs>
-  </ion-content>
+  
+  
+  <ion-router-outlet></ion-router-outlet>
+  
+  <!-- Footer Tabs Component -->
+  <app-footer></app-footer>
 </div>
