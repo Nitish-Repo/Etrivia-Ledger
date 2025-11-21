@@ -1,12 +1,12 @@
 ion-tabs {
   height: 100%;
-  background: #ffffff;
+  background: var(--ion-background-color);
 }
 
 ion-tab-bar {
-  --background: #ffffff;
-  background: #ffffff !important;
-  border-top: 1px solid #d7d8da;
+  --background: var(--ion-background-color);
+  background: var(--ion-background-color) !important;
+  border-top: 1px solid var(--ion-border-color, var(--ion-color-step-150));
   padding-bottom: env(safe-area-inset-bottom);
 
   ion-tab-button {
