@@ -1,13 +1,13 @@
-import { Component, OnInit, Output, EventEmitter, signal } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule, RouterLinkActive } from '@angular/router';
 import {
-  IonMenu, IonAvatar, IonMenuToggle, IonFooter, IonToggle
+  IonMenu, IonAvatar, IonMenuToggle
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline, logOut, logOutOutline, 
-  settings, settingsOutline,moon, moonOutline
+  settings, settingsOutline
 } from 'ionicons/icons';
 import { IONIC_COMMON_IMPORTS } from '@app/shared/ionic-imports';
 
@@ -16,7 +16,7 @@ import { IONIC_COMMON_IMPORTS } from '@app/shared/ionic-imports';
   templateUrl: './sidemenu.page.html',
   styleUrls: ['./sidemenu.page.scss'],
   standalone: true,
-  imports: [IonToggle, IonFooter,
+  imports: [
     CommonModule,
     RouterModule,
     IonMenu,
@@ -28,12 +28,14 @@ import { IONIC_COMMON_IMPORTS } from '@app/shared/ionic-imports';
 export class SidemenuPage implements OnInit {
   @Output() logoutClick = new EventEmitter<void>();
   
+  private router = inject(Router);
+  
   currentRoute = signal<string>('');
 
-  constructor(private router: Router) {
+  constructor() {
     addIcons({
       home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline, logOut, logOutOutline, 
-      settings, settingsOutline, moon, moonOutline
+      settings, settingsOutline
     });
   }
 
@@ -48,5 +50,6 @@ export class SidemenuPage implements OnInit {
   onLogout() {
     this.logoutClick.emit();
   }
+
   logout() { }
 }

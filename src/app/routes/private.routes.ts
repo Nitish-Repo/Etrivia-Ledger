@@ -23,6 +23,10 @@ export const PRIVATE_ROUTES: Routes = [
                 path: 'sell',
                 loadComponent: () => import('../features/pages/private/sell/sell.page').then(m => m.SellPage)
             },
+            {
+                path: 'settings',
+                loadComponent: () => import('../features/pages/private/settings/settings.page').then(m => m.SettingsPage)
+            },
             { 
                 path: '', 
                 redirectTo: 'home', 

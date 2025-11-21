@@ -59,13 +59,4 @@
             </ion-item>
         </ion-menu-toggle>
     </ion-content>
-    <ion-footer>
-        <ion-item [routerLink]="'/home'" [button]="true" lines="none"
-            [ngClass]="{'selected': currentRoute() === '/home'}">
-            <ion-icon [name]="currentRoute() === '/home' ? 'moon' : 'moon-outline'" slot="start"></ion-icon>
-            <ion-toggle>
-                <ion-label>Night Mode</ion-label>
-            </ion-toggle>
-        </ion-item>
-    </ion-footer>
 </ion-menu>
