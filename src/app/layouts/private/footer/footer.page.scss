@@ -4,9 +4,9 @@ ion-tabs {
 }
 
 ion-tab-bar {
-  --background: var(--ion-background-color);
-  background: var(--ion-background-color) !important;
-  border-top: 1px solid var(--ion-border-color, var(--ion-color-step-150));
+  // --background: var(--ion-background-color);
+  // background: var(--ion-background-color) !important;
+  // border-top: 1px solid var(--ion-border-color, var(--ion-color-step-150));
   padding-bottom: env(safe-area-inset-bottom);
 
   ion-tab-button {
