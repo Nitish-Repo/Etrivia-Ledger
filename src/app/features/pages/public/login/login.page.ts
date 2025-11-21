@@ -54,7 +54,7 @@ export class LoginPage implements OnInit {
     onSubmit() {
     FormHelper.submit(this.form, this.formMeta, () => {
       this.token.setToken("loggedIn");
-      this.route.navigate(['/home']);
+      this.route.navigate(['/home'], { replaceUrl: true });
       this.isLogin = signal<boolean>(true);
       console.log(this.form.value)
     }), true;
