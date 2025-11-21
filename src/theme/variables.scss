@@ -1,2 +1,80 @@
-// For information on how to create your own theme, please refer to:
+// Ionic Variables and Theming
+// -----------------------------------------------------
+// For more info, please see:
 // https://ionicframework.com/docs/theming/
+
+/** 
+ * Ionic Dark Palette is imported in global.scss via:
+ * @import '@ionic/angular/css/palettes/dark.class.css';
+ * 
+ * This automatically provides ALL theme variables:
+ * - Light mode colors in :root
+ * - Dark mode colors in .ion-palette-dark
+ * - iOS-specific styles in :root.ios and .ion-palette-dark.ios  
+ * - MD-specific styles in :root.md and .ion-palette-dark.md
+ * 
+ * The imported palette handles everything automatically.
+ * Only add custom overrides below if you need to customize specific colors.
+ */
+
+// ========================================
+// LIGHT MODE - Base Colors (All Platforms)
+// ========================================
+:root {
+    //   /** Example: Override primary color for all platforms in light mode **/
+    //   --ion-color-primary: #3880ff;
+    //   --ion-color-primary-rgb: 56, 128, 255;
+    //   --ion-color-primary-contrast: #ffffff;
+    //   --ion-color-primary-contrast-rgb: 255, 255, 255;
+    //   --ion-color-primary-shade: #3171e0;
+    //   --ion-color-primary-tint: #4c8dff;
+}
+
+// ========================================
+// LIGHT MODE - iOS Specific
+// ========================================
+:root.ios {
+    //   /** Example: iOS-specific light mode overrides **/
+    //   --ion-background-color: #ffffff;
+    //   --ion-toolbar-background: #f8f8f8;
+}
+
+// ========================================
+// LIGHT MODE - Material Design Specific
+// ========================================
+:root.md {
+    //   /** Example: Material Design-specific light mode overrides **/
+    //   --ion-background-color: #fafafa;
+    //   --ion-toolbar-background: #ffffff;
+}
+
+// ========================================
+// DARK MODE - Base Colors (All Platforms)
+// ========================================
+.ion-palette-dark {
+    //   /** Example: Override primary color for all platforms in dark mode **/
+    //   --ion-color-primary: #428cff;
+    //   --ion-color-primary-rgb: 66, 140, 255;
+    //   --ion-color-primary-contrast: #ffffff;
+    //   --ion-color-primary-contrast-rgb: 255, 255, 255;
+    //   --ion-color-primary-shade: #3a7be0;
+    //   --ion-color-primary-tint: #5598ff;
+}
+
+// ========================================
+// DARK MODE - iOS Specific
+// ========================================
+.ion-palette-dark.ios {
+    //   /** Example: iOS-specific dark mode overrides **/
+    //   --ion-background-color: #000000;
+    //   --ion-toolbar-background: #0a0a0a;
+}
+
+// ========================================
+// DARK MODE - Material Design Specific
+// ========================================
+.ion-palette-dark.md {
+    //   /** Example: Material Design-specific dark mode overrides **/
+    //   --ion-background-color: #121212;
+    //   --ion-toolbar-background: #1e1e1e;
+}

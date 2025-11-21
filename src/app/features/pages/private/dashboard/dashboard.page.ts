@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonLabel, IonHeader } from '@ionic/angular/standalone';
+import { IonContent, IonHeader } from '@ionic/angular/standalone';
 import { ToolbarPage } from "@app/layouts/private/toolbar/toolbar.page";
 
 @Component({
@@ -9,7 +9,7 @@ import { ToolbarPage } from "@app/layouts/private/toolbar/toolbar.page";
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonLabel, IonContent, CommonModule, FormsModule, ToolbarPage]
+  imports: [IonHeader, IonContent, CommonModule, FormsModule, ToolbarPage]
 })
 export class DashboardPage implements OnInit {
 
