@@ -3,10 +3,10 @@ ion-menu::part(container) {
 }
 
 ion-header {
-    height: 10rem;
+    height: 13rem;
 
     div.bg {
-        height: 10rem;
+        height: 11.5rem;
         background: linear-gradient(90deg, var(--ion-color-secondary) 0%, var(--ion-color-primary) 100%);
         transform: rotate(-15deg);
         width: 130%;
@@ -19,7 +19,7 @@ ion-header {
     ion-item {
         --background: transparent;
         position: absolute;
-        top: 1rem;
+        top: 3rem;
         left: 0;
 
         ion-avatar {
