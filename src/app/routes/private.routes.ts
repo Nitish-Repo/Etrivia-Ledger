@@ -27,10 +27,8 @@ export const PRIVATE_ROUTES: Routes = [
                 path: 'settings',
                 loadComponent: () => import('../features/pages/private/settings/settings.page').then(m => m.SettingsPage)
             },
-            { 
-                path: '', 
-                redirectTo: 'home', 
-                pathMatch: 'full' 
+            {
+                path: '', redirectTo: 'home', pathMatch: 'full'
             }
         ]
     }
