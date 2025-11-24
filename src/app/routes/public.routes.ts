@@ -13,7 +13,8 @@ export const PUBLIC_ROUTES: Routes = [
             {
                 path: 'reset-password',
                 loadComponent: () => import('../features/pages/public/reset-password/reset-password.page').then(m => m.ResetPasswordPage)
-            }
+            },
+            { path: '', redirectTo: 'login', pathMatch: 'full' }
         ]
     }
 ];
