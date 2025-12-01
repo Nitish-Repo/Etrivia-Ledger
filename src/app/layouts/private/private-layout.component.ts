@@ -4,7 +4,7 @@ import { IonRouterOutlet } from '@ionic/angular/standalone';
 import { SidemenuPage } from './sidemenu/sidemenu.page';
 
 @Component({
-  selector: 'app-private-layout',
+  selector: 'app-private-layout-component',
   templateUrl: './private-layout.component.html',
   styleUrls: ['./private-layout.component.scss'],
   standalone: true,
