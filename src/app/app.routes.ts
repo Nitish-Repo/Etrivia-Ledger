@@ -1,23 +1,31 @@
 import { Routes } from '@angular/router';
-import { PUBLIC_ROUTES } from './routes/public.routes';
 import { AuthGuard } from '@app/core/auth.guard';
+import { LoginGuard } from './core/login.guard';
 
 export const routes: Routes = [
-  // Public routes (no guard)
-  {
-    path: '',
-    children: PUBLIC_ROUTES
-  },
-  // Private routes with tabs (home, dashboard, sell, settings)
-  {
-    path: '',
-    canActivateChild: [AuthGuard],
-    loadChildren: () => import('./routes/private.routes').then((m) => m.PRIVATE_ROUTES),
-  },
-  // Management routes without tabs (products, customers)
   {
     path: 'manage',
     canActivateChild: [AuthGuard],
-    loadChildren: () => import('./routes/management.routes').then((m) => m.MANAGEMENT_ROUTES),
+    loadChildren: () => import('../app/layouts/private/manage-layout/manage-layout.routes').then(m => m.menageRoutes)
+  },
+  {
+    path: '',
+    children: [
+      {
+        path: 'login',
+        canActivate: [LoginGuard],
+        loadComponent: () => import('../app/features/pages/public/login/login.page').then(m => m.LoginPage)
+      },
+      {
+        path: 'reset-password',
+        loadComponent: () => import('../app/features/pages/public/reset-password/reset-password.page').then(m => m.ResetPasswordPage)
+      },
+      { path: '', redirectTo: 'login', pathMatch: 'full' }
+    ]
+  },
+  {
+    path: '',
+    canActivateChild: [AuthGuard],
+    loadChildren: () => import('../app/layouts/private/private-layout/private-layout.routes').then((m) => m.protectedRoutes),
   },
 ];

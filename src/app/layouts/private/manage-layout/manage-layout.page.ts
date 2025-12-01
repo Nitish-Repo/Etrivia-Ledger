@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { IonRouterOutlet } from '@ionic/angular/standalone';
-import { SidemenuPage } from './sidemenu/sidemenu.page';
+import { SidemenuPage } from '../sidemenu/sidemenu.page';
 
 @Component({
-  selector: 'app-private-layout-component',
-  templateUrl: './private-layout.component.html',
-  styleUrls: ['./private-layout.component.scss'],
+  selector: 'app-manage-layout',
+  templateUrl: './manage-layout.page.html',
+  styleUrls: ['./manage-layout.page.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -14,10 +14,11 @@ import { SidemenuPage } from './sidemenu/sidemenu.page';
     SidemenuPage,
   ]
 })
-export class PrivateLayoutComponent  implements OnInit {
+export class ManageLayoutPage implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
 }

@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonRouterOutlet } from '@ionic/angular/standalone';
-import { SidemenuPage } from './sidemenu/sidemenu.page';
-import { FooterPage } from './footer/footer.page';
+import { SidemenuPage } from '../sidemenu/sidemenu.page';
+import { FooterPage } from '../footer/footer.page';
 import { AppSettingService } from '@app/core/app-setting.service';
 
 @Component({
