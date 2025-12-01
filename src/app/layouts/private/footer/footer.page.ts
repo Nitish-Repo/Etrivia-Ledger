@@ -31,7 +31,7 @@ import {
 })
 export class FooterPage implements AfterViewInit {
   selectedTab = signal<string>('home');
-  private tabs = ['home', 'dashboard', 'product', 'sell'];
+  private tabs = ['home', 'dashboard', 'sell'];
 
   constructor(private router: Router, private gestureCtrl: GestureController) {
     addIcons({ home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline });
