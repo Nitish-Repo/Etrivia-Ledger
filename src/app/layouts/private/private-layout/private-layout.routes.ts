@@ -1,12 +1,13 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from '@app/core/auth.guard';
 
-
+/**
+ * Private Layout Routes - WITH ion-tabs
+ * Main app navigation pages (home, dashboard, sell, settings)
+ */
 export const protectedRoutes: Routes = [
     {
         path: '',
-        canActivateChild: [AuthGuard],
-        loadComponent: () => import('../../private/private-layout/private-layout.page').then((m) => m.PrivateLayoutPage),
+        loadComponent: () => import('./private-layout.page').then((m) => m.PrivateLayoutPage),
         children: [
             {
                 path: 'home',

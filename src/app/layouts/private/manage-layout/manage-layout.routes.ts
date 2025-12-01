@@ -1,12 +1,13 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from '@app/core/auth.guard';
 
-
-export const menageRoutes: Routes  = [
+/**
+ * Management Layout Routes - WITH sidenav, WITHOUT ion-tabs
+ * Data management pages (products, customers, etc.)
+ */
+export const menageRoutes: Routes = [
     {
         path: '',
-        canActivateChild: [AuthGuard],
-        loadComponent: () => import('../../private/manage-layout/manage-layout.page').then((m) => m.ManageLayoutPage),
+        loadComponent: () => import('./manage-layout.page').then((m) => m.ManageLayoutPage),
         children: [
             {
                 path: 'products',
@@ -16,6 +17,9 @@ export const menageRoutes: Routes  = [
                 path: 'customers',
                 loadComponent: () => import('../../../features/components/private/customers/customers.component').then(m => m.CustomersComponent)
             },
+            {
+                path: '', redirectTo: 'products', pathMatch: 'full'
+            }
         ]
     }
 ];
