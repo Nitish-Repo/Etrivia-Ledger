@@ -7,7 +7,9 @@ import {
 import { addIcons } from 'ionicons';
 import {
   home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline, logOut, logOutOutline, 
-  settings, settingsOutline
+  settings, settingsOutline,
+  peopleOutline,
+  people
 } from 'ionicons/icons';
 import { IONIC_COMMON_IMPORTS } from '@app/shared/ionic-imports';
 
@@ -35,7 +37,7 @@ export class SidemenuPage implements OnInit {
   constructor() {
     addIcons({
       home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline, logOut, logOutOutline, 
-      settings, settingsOutline
+      settings, settingsOutline, people, peopleOutline
     });
   }
 

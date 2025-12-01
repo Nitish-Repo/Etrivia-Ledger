@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from '@app/core/auth.guard';
 
 export const PRIVATE_ROUTES: Routes = [
+    // Routes WITH ion-tabs (inside private layout)
     {
         path: '',
         canActivateChild: [AuthGuard],
@@ -16,10 +17,6 @@ export const PRIVATE_ROUTES: Routes = [
                 loadComponent: () => import('../features/pages/private/dashboard/dashboard.page').then(m => m.DashboardPage)
             },
             {
-                path: 'product',
-                loadComponent: () => import('../features/pages/private/product/product.page').then(m => m.ProductPage)
-            },
-            {
                 path: 'sell',
                 loadComponent: () => import('../features/pages/private/sell/sell.page').then(m => m.SellPage)
             },
@@ -31,5 +28,16 @@ export const PRIVATE_ROUTES: Routes = [
                 path: '', redirectTo: 'home', pathMatch: 'full'
             }
         ]
+    },
+    // Routes WITHOUT ion-tabs (standalone pages)
+    {
+        path: 'products',
+        canActivate: [AuthGuard],
+        loadComponent: () => import('../features/components/private/products/products.component').then(m => m.ProductsComponent)
+    },
+    {
+        path: 'customers',
+        canActivate: [AuthGuard],
+        loadComponent: () => import('../features/components/private/customers/customers.component').then(m => m.CustomersComponent)
     }
 ];
