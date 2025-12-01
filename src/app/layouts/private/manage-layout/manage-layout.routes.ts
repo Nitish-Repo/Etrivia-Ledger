@@ -4,7 +4,7 @@ import { AuthGuard } from '@app/core/auth.guard';
 
 export const menageRoutes: Routes  = [
     {
-        path: 'manage',
+        path: '',
         canActivateChild: [AuthGuard],
         loadComponent: () => import('../../private/manage-layout/manage-layout.page').then((m) => m.ManageLayoutPage),
         children: [
