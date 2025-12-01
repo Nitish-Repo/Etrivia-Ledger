@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonRouterOutlet } from '@ionic/angular/standalone';
 import { SidemenuPage } from './sidemenu/sidemenu.page';
 import { FooterPage } from './footer/footer.page';
+import { AppSettingService } from '@app/core/app-setting.service';
 
 @Component({
   selector: 'app-private-layout',
@@ -17,6 +18,18 @@ import { FooterPage } from './footer/footer.page';
   ]
 })
 export class PrivateLayoutPage {
+  private appSettingService = inject(AppSettingService);
+
+  isDesktop = signal<boolean>(false);
+
+  ngOnInit() {
+    const desktop =
+      this.appSettingService.getSettings().AppPlatformSetting.isDesktop;
+
+    this.isDesktop.set(desktop);
+
+  }
+
   logout() {
     console.log('Logout clicked');
     // Implement your logout logic here

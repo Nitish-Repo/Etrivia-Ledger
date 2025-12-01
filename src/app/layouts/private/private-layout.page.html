@@ -8,5 +8,7 @@
   <ion-router-outlet></ion-router-outlet>
   
   <!-- Footer Tabs Component -->
-  <app-footer></app-footer>
+   @if(!isDesktop()){
+     <app-footer></app-footer>
+   }
 </div>
