@@ -29,15 +29,23 @@ export const PRIVATE_ROUTES: Routes = [
             }
         ]
     },
-    // Routes WITHOUT ion-tabs (standalone pages)
+    // Routes WITHOUT ion-tabs (standalone component)
     {
-        path: 'products',
-        canActivate: [AuthGuard],
-        loadComponent: () => import('../features/components/private/products/products.component').then(m => m.ProductsComponent)
+        path: '',
+        canActivateChild: [AuthGuard],
+        loadComponent: () => import('../layouts/private/private-layout.component').then((m) => m.PrivateLayoutComponent),
+        children: [
+            {
+                path: 'products',
+                loadComponent: () => import('../features/components/private/products/products.component').then(m => m.ProductsComponent)
+            },
+            {
+                path: 'customers',
+                canActivate: [AuthGuard],
+                loadComponent: () => import('../features/components/private/customers/customers.component').then(m => m.CustomersComponent)
+            },
+        ]
     },
-    {
-        path: 'customers',
-        canActivate: [AuthGuard],
-        loadComponent: () => import('../features/components/private/customers/customers.component').then(m => m.CustomersComponent)
-    }
+
+
 ];
