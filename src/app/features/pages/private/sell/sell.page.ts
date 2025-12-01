@@ -6,7 +6,7 @@ import { ToolbarPage } from "@app/layouts/private/toolbar/toolbar.page";
 import { Subject } from 'rxjs';
 import { FormMeta } from '@app/shared-services/models/form-meta';
 import { ModelMeta } from '@app/shared-services';
-import { AppService } from '@app/services/app.service';
+import { AppService } from '@app/core/app.service';
 import { getSellModelMeta } from '@app/features/models/sell.model';
 import { FormHelper } from '@app/shared-services/helpers/form.helper';
 

@@ -8,7 +8,7 @@ import { FormMeta } from '@app/shared-services/models/form-meta';
 import { ModelMeta } from '@app/shared-services';
 import { FormHelper } from '@app/shared-services/helpers/form.helper';
 import { getLoginMeta } from 'src/app/features/models/login.model';
-import { AppService } from '@app/services/app.service';
+import { AppService } from '@app/core/app.service';
 import { InputComponent } from '@app/shared/input/input.component';
 import { TokenService } from '@app/core/token.service';
 

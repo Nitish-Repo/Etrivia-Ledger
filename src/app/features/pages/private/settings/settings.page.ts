@@ -4,7 +4,7 @@ import {
   IonContent, IonHeader, IonList, IonListHeader, IonItem, IonLabel, IonRadioGroup, IonRadio
 } from '@ionic/angular/standalone';
 import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
-import { ThemeService, ThemeMode } from '@app/services/theme.service';
+import { ThemeService, ThemeMode } from '@app/core/theme.service';
 
 @Component({
   selector: 'app-settings',

@@ -1,116 +1,68 @@
-import { Injectable, signal, effect, computed } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-import { inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
-/**
- * Theme modes supported by the application
- */
-export type ThemeMode = 'light' | 'dark' | 'auto';
+export type ThemeMode = 'auto' | 'light' | 'dark';
 
-/**
- * Service to manage application theme (light/dark mode)
- * Integrates with Angular Material 3 theming system
- * Supports:
- * - Auto detection from system preference
- * - Manual light/dark toggle
- * - Persists user preference to localStorage
- */
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class ThemeService {
-  private document = inject(DOCUMENT);
-  private readonly STORAGE_KEY = 'app-theme-mode';
-
-  // Current theme mode selected by user
-  private themeModeSignal = signal<ThemeMode>(this.getInitialTheme());
-
-  // Actual theme applied (resolves 'auto' to light/dark)
-  actualTheme = computed(() => {
-    const mode = this.themeModeSignal();
-    if (mode === 'auto') {
-      return this.getSystemTheme();
-    }
-    return mode;
-  });
-
-  // Public read-only signal for current theme mode
-  themeMode = this.themeModeSignal.asReadonly();
-
-  // Check if dark mode is active
-  isDarkMode = computed(() => this.actualTheme() === 'dark');
+  private readonly THEME_KEY = 'app-theme-mode';
+  private prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
   constructor() {
-    // Apply theme whenever it changes
-    effect(() => {
-      const theme = this.actualTheme();
-      this.applyTheme(theme);
-    });
+    this.initializeTheme();
+    this.listenToSystemChanges();
+  }
 
-    // Listen to system theme changes when in auto mode
-    if (typeof window !== 'undefined') {
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-        if (this.themeModeSignal() === 'auto') {
-          // Trigger re-computation by updating signal
-          this.themeModeSignal.set('auto');
-        }
-      });
+  private initializeTheme(): void {
+    const savedMode = this.getThemeMode();
+    this.applyTheme(savedMode);
+  }
+
+  private listenToSystemChanges(): void {
+    this.prefersDark.addEventListener('change', (mediaQuery) => {
+      const currentMode = this.getThemeMode();
+      // Only auto-update if mode is 'auto'
+      if (currentMode === 'auto') {
+        this.applyDarkMode(mediaQuery.matches);
+      }
+    });
+  }
+
+  private applyTheme(mode: ThemeMode): void {
+    if (mode === 'auto') {
+      this.applyDarkMode(this.prefersDark.matches);
+    } else if (mode === 'dark') {
+      this.applyDarkMode(true);
+    } else {
+      this.applyDarkMode(false);
     }
   }
 
+  private applyDarkMode(isDark: boolean): void {
+    document.documentElement.classList.toggle('ion-palette-dark', isDark);
+  }
+
   /**
-   * Set theme mode (light, dark, or auto)
+   * Set theme mode: 'auto' (system), 'light', or 'dark'
    */
   setThemeMode(mode: ThemeMode): void {
-    this.themeModeSignal.set(mode);
-    this.saveThemePreference(mode);
+    localStorage.setItem(this.THEME_KEY, mode);
+    this.applyTheme(mode);
   }
 
   /**
-   * Toggle between light and dark mode
-   * If currently in auto mode, switch to explicit light/dark based on current system preference
+   * Get current theme mode
    */
-  toggleTheme(): void {
-    const current = this.actualTheme();
-    const next: ThemeMode = current === 'dark' ? 'light' : 'dark';
-    this.setThemeMode(next);
+  getThemeMode(): ThemeMode {
+    const saved = localStorage.getItem(this.THEME_KEY) as ThemeMode;
+    return saved || 'auto';
   }
 
   /**
-   * Get initial theme from localStorage or default to auto
+   * Check if dark mode is currently active
    */
-  private getInitialTheme(): ThemeMode {
-    if (typeof localStorage === 'undefined') {
-      return 'auto';
-    }
-    const stored = localStorage.getItem(this.STORAGE_KEY);
-    return (stored as ThemeMode) || 'auto';
-  }
-
-  /**
-   * Get system theme preference
-   */
-  private getSystemTheme(): 'light' | 'dark' {
-    if (typeof window === 'undefined') {
-      return 'light';
-    }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-
-  /**
-   * Apply theme by adding/removing CSS classes on html element
-   * Material 3 themes are applied via these classes in styles.scss
-   */
-  private applyTheme(theme: 'light' | 'dark'): void {
-    const html = this.document.documentElement;
-    html.classList.remove('light-theme', 'dark-theme');
-    html.classList.add(`${theme}-theme`);
-  }
-
-  /**
-   * Save theme preference to localStorage
-   */
-  private saveThemePreference(mode: ThemeMode): void {
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem(this.STORAGE_KEY, mode);
-    }
+  isDarkModeActive(): boolean {
+    return document.documentElement.classList.contains('ion-palette-dark');
   }
 }
