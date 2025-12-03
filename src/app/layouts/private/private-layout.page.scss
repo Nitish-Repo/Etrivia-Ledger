@@ -2,18 +2,18 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  
-  app-toolbar {
-    flex-shrink: 0;
-  }
-  
+
   ion-router-outlet {
     flex: 1;
-    overflow: hidden;
+    overflow-y: auto;    /* FIXED: allow scrolling & proper render */
     contain: layout style;
   }
-  
+
   app-footer {
     flex-shrink: 0;
+  }
+
+  .debugging {
+    color: red;
   }
 }
