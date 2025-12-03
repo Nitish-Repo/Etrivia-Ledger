@@ -7,6 +7,7 @@ import { IonHeader, IonContent } from "@ionic/angular/standalone";
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
+  standalone: true,
   imports: [IonContent, IonHeader, CommonModule, ToolbarPage]
 })
 export class ProductsComponent  implements OnInit {

@@ -7,6 +7,7 @@ import { IonHeader, IonContent } from "@ionic/angular/standalone";
   selector: 'app-customers',
   templateUrl: './customers.component.html',
   styleUrls: ['./customers.component.scss'],
+  standalone: true,
   imports: [IonContent, IonHeader, CommonModule, ToolbarPage]
 })
 export class CustomersComponent implements OnInit {
