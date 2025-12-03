@@ -4,6 +4,8 @@ import { IonRouterOutlet } from '@ionic/angular/standalone';
 import { SidemenuPage } from './sidemenu/sidemenu.page';
 import { FooterPage } from './footer/footer.page';
 import { AppSettingService } from '@app/core/app-setting.service';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-private-layout',
@@ -19,8 +21,12 @@ import { AppSettingService } from '@app/core/app-setting.service';
 })
 export class PrivateLayoutPage {
   private appSettingService = inject(AppSettingService);
+  private router = inject(Router)
 
   isDesktop = signal<boolean>(false);
+  hideFooter = signal<boolean>(false);
+
+  hideFooterUrls: string[] = ['/products', '/customers'];
 
   ngOnInit() {
     const desktop =
@@ -28,6 +34,19 @@ export class PrivateLayoutPage {
 
     this.isDesktop.set(desktop);
 
+     this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.updateFooterVisibility(event.urlAfterRedirects);
+      });
+
+  }
+
+   private updateFooterVisibility(url: string) {
+    const shouldHide = this.hideFooterUrls.some(path =>
+      url.startsWith(path)
+    );
+    this.hideFooter.set(shouldHide);
   }
 
   logout() {
