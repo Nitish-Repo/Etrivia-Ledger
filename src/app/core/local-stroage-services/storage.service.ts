@@ -3,8 +3,8 @@ import { SQLiteDBConnection } from '@capacitor-community/sqlite';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SQLiteService } from './sqlite.service';
 import { DbnameVersionService } from './dbname-version.service';
-import { UserUpgradeStatements } from '../upgrades/user.upgrade.statements';
-import { User } from '../models/user';
+import { User } from '@app/models/user';
+import { UserUpgradeStatements } from '@app/upgrades/user.upgrade.statements';
 
 @Injectable()
 export class StorageService {

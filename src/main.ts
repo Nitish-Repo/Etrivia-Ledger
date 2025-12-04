@@ -8,10 +8,11 @@ import { defineCustomElements as jeepSqlite } from 'jeep-sqlite/loader';
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
-import { InitializeAppService } from './app/services/initialize.app.service';
-import { SQLiteService } from './app/services/sqlite.service';
-import { StorageService } from './app/services/storage.service';
-import { DbnameVersionService } from './app/services/dbname-version.service';
+import { InitializeAppService } from '@app/core/local-stroage-services/initialize.app.service';
+import { SQLiteService } from '@app/core/local-stroage-services/sqlite.service';
+import { StorageService } from '@app/core/local-stroage-services/storage.service';
+import { DbnameVersionService } from '@app/core/local-stroage-services/dbname-version.service';
+
 
 // Web platform setup for SQLite
 const platform = Capacitor.getPlatform();

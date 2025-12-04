@@ -17,7 +17,6 @@ import {
   AlertController
 } from '@ionic/angular/standalone';
 import { FormsModule } from '@angular/forms';
-import { StorageService } from '../../../services/storage.service';
 import { User } from '../../../models/user';
 import { of, switchMap } from 'rxjs';
 import { addIcons } from 'ionicons';
@@ -31,6 +30,7 @@ import {
   checkmarkOutline,
   closeOutline
 } from 'ionicons/icons';
+import { StorageService } from '@app/core/local-stroage-services/storage.service';
 
 @Component({
   selector: 'app-users',
