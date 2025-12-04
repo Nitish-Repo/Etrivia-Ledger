@@ -1,15 +1,10 @@
 <app-sidemenu (logoutClick)="logout()"></app-sidemenu>
 
 <div id="main-content">
-  <div class="debugging">
-    Footer: {{ showFooter() | json }} <br>
-    isDesktop: {{ isDesktop() | json }} <br>
-    hideFooter: {{ hideFooter() | json }}
-  </div>
 
-  <ion-router-outlet id="main-router-outlet"></ion-router-outlet>
+  <ion-router-outlet></ion-router-outlet>
 
-  @if (showFooter()) {
+  @if (!isDesktop()) {
     <app-footer></app-footer>
   }
 </div>
