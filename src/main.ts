@@ -61,7 +61,10 @@ bootstrapApplication(AppComponent, {
     
     // Routing & Ionic
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
+    provideIonicAngular({
+      mode: 'md',
+      innerHTMLTemplatesEnabled: true,
+    }),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     
     // App Initialization

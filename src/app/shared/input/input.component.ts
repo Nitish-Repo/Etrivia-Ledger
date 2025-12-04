@@ -36,6 +36,7 @@ export class InputComponent implements OnInit {
 
   @Input() maxlength!: number;
   @Input() minlength!: number;
+  @Input() counter!: boolean;
   @Input() minlengthErrorMessage?: string;
   @Input() pattern!: string;
   @Input() patternErrorMessage?: string;

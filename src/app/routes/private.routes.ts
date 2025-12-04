@@ -28,6 +28,10 @@ export const PRIVATE_ROUTES: Routes = [
                 loadComponent: () => import('../features/components/private/products/products.component').then(m => m.ProductsComponent)
             },
             {
+                path: 'product',
+                loadComponent: () => import('../features/components/private/products/product/product.component').then(m => m.ProductComponent)
+            },
+            {
                 path: 'customers',
                 loadComponent: () => import('../features/components/private/customers/customers.component').then(m => m.CustomersComponent)
             },

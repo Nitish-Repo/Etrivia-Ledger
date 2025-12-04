@@ -1,0 +1,50 @@
+<ion-header [translucent]="true">
+  <app-toolbar title="Product"></app-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <div class="ion-padding">
+    <h1>Product</h1>
+  </div>
+  <div class="ion-margin">
+    @if(form){
+    <div>
+      <form id="productForm" [formGroup]="form" (submit)="onSubmit()">
+
+        <div class="ion-margin-bottom">
+          <app-input [form]="form" name="productName" placeholder="Enter name" labelPlacement="floating"
+            errorText="Please enter product name" fill="outline" [maxlength]="50" [counter]="true"></app-input>
+        </div>
+
+        <div class="ion-margin-bottom">
+          <ion-textarea formControlName="description" label="Product Description" labelPlacement="floating" fill="outline"
+            placeholder="Enter description" autoGrow="true" [counter]="true" maxlength="200"></ion-textarea>
+        </div>
+
+        <div class="ion-margin-bottom">
+          <app-input [form]="form" name="price" placeholder="Enter Price" labelPlacement="floating" type="number"
+            errorText="Please enter Price" fill="outline"></app-input>
+        </div>
+
+        <div class="ion-margin-bottom">
+          <app-input [form]="form" name="purchaseCost" placeholder="Enter Price" labelPlacement="floating" type="number"
+            errorText="Please enter Price" fill="outline"></app-input>
+        </div>
+
+        <div>
+          @if(!isProductSave()){
+          <ion-button size="large" expand="block" type="submit" [disabled]="formMeta.submitProcessing"
+            class="ion-margin-top ion-padding-top" [strong]="true">
+            <ion-text> SAVE</ion-text>
+          </ion-button>
+          } @else {
+          <ion-button size="large" expand="block" [disabled]="formMeta.submitProcessing"
+            class="ion-margin-top ion-padding-top" [strong]="true">
+            <ion-spinner name="crescent"></ion-spinner>
+          </ion-button>
+          }
+        </div>
+      </form>
+    </div>
+    }
+  </div>
+</ion-content>
