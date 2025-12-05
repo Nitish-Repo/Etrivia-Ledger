@@ -5,7 +5,6 @@ import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalo
 import { Capacitor } from '@capacitor/core';
 import { defineCustomElements as pwaElements } from '@ionic/pwa-elements/loader';
 import { defineCustomElements as jeepSqlite } from 'jeep-sqlite/loader';
-import { provideHttpClient } from '@angular/common/http';
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
@@ -60,9 +59,6 @@ bootstrapApplication(AppComponent, {
   providers: [
     // Modern Angular: Zoneless Change Detection (better performance)
     provideZonelessChangeDetection(),
-    
-    // HTTP Client for loading schema.sql
-    provideHttpClient(),
     
     // Database Service
     DatabaseService,

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Capacitor } from '@capacitor/core';
 import { 
   CapacitorSQLite, 
@@ -7,7 +6,7 @@ import {
   SQLiteDBConnection, 
   CapacitorSQLitePlugin
 } from '@capacitor-community/sqlite';
-import { firstValueFrom } from 'rxjs';
+import { SCHEMA_VERSIONS, getLatestVersion } from './schema';
 
 /**
  * SQLite Connection Service
@@ -25,9 +24,8 @@ export class SqliteConnectionService {
   private webStoreInitialized: boolean = false;
   private db!: SQLiteDBConnection;
   private dbName: string = 'etrivia_ledger_db';
-  private dbVersion: number = 1;
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
   /**
    * Initialize the SQLite plugin and detect platform
@@ -120,7 +118,7 @@ export class SqliteConnectionService {
   }
 
   /**
-   * Open or create database connection
+   * Open or create database connection and run migrations
    */
   async openDatabase(): Promise<void> {
     if (!this.isInitialized) {
@@ -143,7 +141,7 @@ export class SqliteConnectionService {
           this.dbName,
           false, // encrypted
           'no-encryption', // mode
-          this.dbVersion,
+          getLatestVersion(),
           false // readonly
         );
       }
@@ -151,8 +149,8 @@ export class SqliteConnectionService {
       await this.db.open();
       console.log('✅ Database opened successfully');
       
-      // Load and execute schema from SQL file
-      await this.loadAndExecuteSchema();
+      // Run migrations to bring database up to date
+      await this.runMigrations();
       
       // Save to store for web
       if (this.platform === 'web') {
@@ -166,61 +164,54 @@ export class SqliteConnectionService {
   }
 
   /**
-   * Load SQL schema from file and execute it
+   * Run database migrations - applies schema versions in order
    */
-  private async loadAndExecuteSchema(): Promise<void> {
+  private async runMigrations(): Promise<void> {
     try {
-      console.log('📋 Loading schema from assets/schema.sql...');
+      // Get current database version
+      let currentVersion = 0;
       
-      // Load SQL file from assets
-      const schema = await firstValueFrom(
-        this.http.get('assets/schema.sql', { responseType: 'text' })
-      );
+      try {
+        const result = await this.db.query('PRAGMA user_version');
+        currentVersion = result.values?.[0]?.user_version || 0;
+      } catch (error) {
+        console.log('📋 New database, starting from version 0');
+      }
       
-      console.log('✅ Schema file loaded');
-      await this.executeSchema(schema);
-    } catch (error) {
-      console.error('❌ Error loading schema file:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Execute schema SQL statements
-   */
-  private async executeSchema(schema: string): Promise<void> {
-    try {
-      console.log('📋 Executing database schema...');
+      console.log(`📊 Current database version: ${currentVersion}`);
+      console.log(`🎯 Target version: ${getLatestVersion()}`);
       
-      // Clean up the schema - remove comments and empty lines
-      const cleanedSchema = schema
-        .split('\n')
-        .filter(line => {
-          const trimmed = line.trim();
-          return trimmed && !trimmed.startsWith('--');
-        })
-        .join('\n');
+      // Get versions that need to be applied
+      const pendingVersions = SCHEMA_VERSIONS.filter(v => v.version > currentVersion);
       
-      // For native platforms, execute as a single batch
-      if (this.isNative) {
-        await this.db.execute(cleanedSchema);
-      } else {
-        // For web, split and execute individually
-        const statements = cleanedSchema
-          .split(';')
-          .map(s => s.trim())
-          .filter(s => s.length > 0);
+      if (pendingVersions.length === 0) {
+        console.log('✅ Database is up to date');
+        return;
+      }
+      
+      console.log(`🔄 Applying ${pendingVersions.length} version(s)...`);
+      
+      // Apply each version in order
+      for (const schemaVersion of pendingVersions) {
+        console.log(`  ⏳ Version ${schemaVersion.version}: ${schemaVersion.name}`);
         
-        for (const statement of statements) {
-          if (statement) {
-            await this.db.execute(statement + ';');
-          }
+        try {
+          // Execute the schema/migration SQL
+          await this.db.execute(schemaVersion.up);
+          
+          // Update the database version
+          await this.db.execute(`PRAGMA user_version = ${schemaVersion.version}`);
+          
+          console.log(`  ✅ Version ${schemaVersion.version} applied successfully`);
+        } catch (error) {
+          console.error(`  ❌ Version ${schemaVersion.version} failed:`, error);
+          throw error;
         }
       }
       
-      console.log('✅ Schema executed successfully');
+      console.log('✅ All migrations completed successfully');
     } catch (error) {
-      console.error('❌ Error executing schema:', error);
+      console.error('❌ Migration error:', error);
       throw error;
     }
   }
