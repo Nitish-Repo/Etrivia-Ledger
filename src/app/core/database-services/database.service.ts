@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SqliteConnectionService } from './sqlite-connection.service';
-import { QueryResult } from '../models';
 
 /**
  * Generic Database Service
@@ -70,9 +69,9 @@ export class DatabaseService {
    * Execute a non-query SQL statement (INSERT, UPDATE, DELETE)
    * @param sql SQL statement
    * @param params Optional parameters
-   * @returns Number of affected rows and last inserted ID
+   * @returns Object with changes count and last inserted ID
    */
-  async executeNonQuery(sql: string, params: any[] = []): Promise<QueryResult> {
+  private async executeNonQuery(sql: string, params: any[] = []): Promise<{ changes: number; lastId: number }> {
     try {
       const db = this.connectionService.getConnection();
       const result = await db.run(sql, params);

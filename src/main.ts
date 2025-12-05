@@ -9,7 +9,7 @@ import { provideHttpClient } from '@angular/common/http';
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
-import { DatabaseService } from '@app/core/database/services/database.service';
+import { DatabaseService } from '@app/core/database-services/database.service';
 
 
 // Web platform setup for SQLite

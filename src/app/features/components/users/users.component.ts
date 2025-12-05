@@ -29,7 +29,7 @@ import {
   checkmarkOutline,
   closeOutline
 } from 'ionicons/icons';
-import { DatabaseService } from '@app/core/database/services/database.service';
+import { DatabaseService } from '@app/core/database-services/database.service';
 
 @Component({
   selector: 'app-users',
