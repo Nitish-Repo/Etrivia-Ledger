@@ -1,0 +1,310 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { SqliteConnectionService } from './sqlite-connection.service';
+import { QueryResult } from '../models';
+
+/**
+ * Generic Database Service
+ * Provides CRUD operations for all tables
+ */
+@Injectable({
+  providedIn: 'root'
+})
+export class DatabaseService {
+  private isReady$ = new BehaviorSubject<boolean>(false);
+
+  constructor(private connectionService: SqliteConnectionService) {}
+
+  /**
+   * Initialize database with schema
+   */
+  async initializeDatabase(): Promise<void> {
+    try {
+      await this.connectionService.initialize();
+      await this.connectionService.openDatabase();
+      this.isReady$.next(true);
+      console.log('✅ Database service ready');
+    } catch (error) {
+      console.error('❌ Database initialization failed:', error);
+      this.isReady$.next(false);
+      throw error;
+    }
+  }
+
+  /**
+   * Observable to check if database is ready
+   */
+  getDatabaseState(): Observable<boolean> {
+    return this.isReady$.asObservable();
+  }
+
+  /**
+   * Check if database is ready
+   */
+  isReady(): boolean {
+    return this.isReady$.value;
+  }
+
+  // =============================================
+  // GENERIC CRUD OPERATIONS
+  // =============================================
+
+  /**
+   * Execute a custom SQL query
+   * @param sql SQL query string
+   * @param params Optional query parameters
+   * @returns Array of results
+   */
+  async query<T>(sql: string, params: any[] = []): Promise<T[]> {
+    try {
+      const db = this.connectionService.getConnection();
+      const result = await db.query(sql, params);
+      return (result.values as T[]) || [];
+    } catch (error) {
+      console.error('❌ Query error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Execute a non-query SQL statement (INSERT, UPDATE, DELETE)
+   * @param sql SQL statement
+   * @param params Optional parameters
+   * @returns Number of affected rows and last inserted ID
+   */
+  async executeNonQuery(sql: string, params: any[] = []): Promise<QueryResult> {
+    try {
+      const db = this.connectionService.getConnection();
+      const result = await db.run(sql, params);
+      return {
+        changes: result.changes?.changes || 0,
+        lastId: result.changes?.lastId || 0
+      };
+    } catch (error) {
+      console.error('❌ Execute error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get all records from a table
+   * @param table Table name
+   * @returns Array of all records
+   */
+  async getAll<T>(table: string): Promise<T[]> {
+    const sql = `SELECT * FROM ${table}`;
+    return this.query<T>(sql);
+  }
+
+  /**
+   * Get a single record by ID
+   * @param table Table name
+   * @param id Record ID
+   * @returns Single record or null
+   */
+  async getById<T>(table: string, id: number): Promise<T | null> {
+    const sql = `SELECT * FROM ${table} WHERE id = ?`;
+    const results = await this.query<T>(sql, [id]);
+    return results.length > 0 ? results[0] : null;
+  }
+
+  /**
+   * Get records by a specific condition
+   * @param table Table name
+   * @param where WHERE clause (e.g., "active = ? AND name LIKE ?")
+   * @param params Parameters for the WHERE clause
+   * @returns Array of matching records
+   */
+  async getByCondition<T>(table: string, where: string, params: any[] = []): Promise<T[]> {
+    const sql = `SELECT * FROM ${table} WHERE ${where}`;
+    return this.query<T>(sql, params);
+  }
+
+  /**
+   * Insert a new record
+   * @param table Table name
+   * @param data Object with column names as keys
+   * @returns ID of inserted record
+   */
+  async insert(table: string, data: any): Promise<number> {
+    try {
+      const keys = Object.keys(data).filter(key => data[key] !== undefined);
+      const values = keys.map(key => data[key]);
+      const placeholders = keys.map(() => '?').join(', ');
+      
+      const sql = `INSERT INTO ${table} (${keys.join(', ')}) VALUES (${placeholders})`;
+      const result = await this.executeNonQuery(sql, values);
+      
+      console.log(`✅ Inserted into ${table}, ID: ${result.lastId}`);
+      return result.lastId;
+    } catch (error) {
+      console.error(`❌ Insert error in ${table}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a record by ID
+   * @param table Table name
+   * @param id Record ID
+   * @param data Object with column names as keys
+   * @returns Number of affected rows
+   */
+  async update(table: string, id: number, data: any): Promise<number> {
+    try {
+      const keys = Object.keys(data).filter(key => data[key] !== undefined);
+      const values = keys.map(key => data[key]);
+      const setClause = keys.map(key => `${key} = ?`).join(', ');
+      
+      const sql = `UPDATE ${table} SET ${setClause} WHERE id = ?`;
+      values.push(id);
+      
+      const result = await this.executeNonQuery(sql, values);
+      console.log(`✅ Updated ${table}, rows affected: ${result.changes}`);
+      return result.changes;
+    } catch (error) {
+      console.error(`❌ Update error in ${table}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update records by condition
+   * @param table Table name
+   * @param data Object with column names as keys
+   * @param where WHERE clause
+   * @param params Parameters for the WHERE clause
+   * @returns Number of affected rows
+   */
+  async updateByCondition(
+    table: string, 
+    data: any, 
+    where: string, 
+    params: any[] = []
+  ): Promise<number> {
+    try {
+      const keys = Object.keys(data).filter(key => data[key] !== undefined);
+      const values = keys.map(key => data[key]);
+      const setClause = keys.map(key => `${key} = ?`).join(', ');
+      
+      const sql = `UPDATE ${table} SET ${setClause} WHERE ${where}`;
+      const allParams = [...values, ...params];
+      
+      const result = await this.executeNonQuery(sql, allParams);
+      console.log(`✅ Updated ${table}, rows affected: ${result.changes}`);
+      return result.changes;
+    } catch (error) {
+      console.error(`❌ Update error in ${table}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a record by ID
+   * @param table Table name
+   * @param id Record ID
+   * @returns Number of affected rows
+   */
+  async delete(table: string, id: number): Promise<number> {
+    try {
+      const sql = `DELETE FROM ${table} WHERE id = ?`;
+      const result = await this.executeNonQuery(sql, [id]);
+      console.log(`✅ Deleted from ${table}, rows affected: ${result.changes}`);
+      return result.changes;
+    } catch (error) {
+      console.error(`❌ Delete error in ${table}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete records by condition
+   * @param table Table name
+   * @param where WHERE clause
+   * @param params Parameters for the WHERE clause
+   * @returns Number of affected rows
+   */
+  async deleteByCondition(table: string, where: string, params: any[] = []): Promise<number> {
+    try {
+      const sql = `DELETE FROM ${table} WHERE ${where}`;
+      const result = await this.executeNonQuery(sql, params);
+      console.log(`✅ Deleted from ${table}, rows affected: ${result.changes}`);
+      return result.changes;
+    } catch (error) {
+      console.error(`❌ Delete error in ${table}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Count records in a table
+   * @param table Table name
+   * @param where Optional WHERE clause
+   * @param params Optional parameters for WHERE clause
+   * @returns Number of records
+   */
+  async count(table: string, where?: string, params: any[] = []): Promise<number> {
+    try {
+      const sql = where 
+        ? `SELECT COUNT(*) as count FROM ${table} WHERE ${where}`
+        : `SELECT COUNT(*) as count FROM ${table}`;
+      
+      const result = await this.query<{ count: number }>(sql, params);
+      return result[0]?.count || 0;
+    } catch (error) {
+      console.error(`❌ Count error in ${table}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Check if a record exists
+   * @param table Table name
+   * @param where WHERE clause
+   * @param params Parameters for WHERE clause
+   * @returns True if exists, false otherwise
+   */
+  async exists(table: string, where: string, params: any[] = []): Promise<boolean> {
+    const count = await this.count(table, where, params);
+    return count > 0;
+  }
+
+  /**
+   * Execute a batch of SQL statements (transaction)
+   * @param statements Array of SQL statements
+   * @returns True if successful
+   */
+  async executeBatch(statements: string[]): Promise<boolean> {
+    try {
+      const db = this.connectionService.getConnection();
+      await db.execute('BEGIN TRANSACTION;');
+      
+      for (const statement of statements) {
+        await db.execute(statement);
+      }
+      
+      await db.execute('COMMIT;');
+      console.log('✅ Batch execution successful');
+      return true;
+    } catch (error) {
+      console.error('❌ Batch execution error:', error);
+      const db = this.connectionService.getConnection();
+      await db.execute('ROLLBACK;');
+      throw error;
+    }
+  }
+
+  /**
+   * Truncate a table (delete all records)
+   * @param table Table name
+   */
+  async truncate(table: string): Promise<void> {
+    try {
+      await this.executeNonQuery(`DELETE FROM ${table}`);
+      console.log(`✅ Truncated table ${table}`);
+    } catch (error) {
+      console.error(`❌ Truncate error in ${table}:`, error);
+      throw error;
+    }
+  }
+}

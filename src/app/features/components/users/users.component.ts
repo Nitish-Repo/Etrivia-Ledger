@@ -18,7 +18,6 @@ import {
 } from '@ionic/angular/standalone';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../../models/user';
-import { of, switchMap } from 'rxjs';
 import { addIcons } from 'ionicons';
 import { 
   addCircleOutline, 
@@ -30,7 +29,7 @@ import {
   checkmarkOutline,
   closeOutline
 } from 'ionicons/icons';
-import { StorageService } from '@app/core/local-stroage-services/storage.service';
+import { DatabaseService } from '@app/core/database/services/database.service';
 
 @Component({
   selector: 'app-users',
@@ -64,7 +63,7 @@ export class UsersComponent implements OnInit {
   editingUserName = '';
 
   constructor(
-    private storage: StorageService,
+    private db: DatabaseService,
     private alertController: AlertController,
     private cdr: ChangeDetectorRef
   ) {
@@ -78,52 +77,53 @@ export class UsersComponent implements OnInit {
       checkmarkOutline,
       closeOutline
     });
-  }  ngOnInit() {
+  }
+
+  async ngOnInit() {
     console.log('👤 UsersComponent initialized');
     
-    // Add a small delay to ensure services are ready
-    setTimeout(() => {
-      this.storage.userState().pipe(
-        switchMap(res => {
-          if (res) {
-            this.dbStatus = 'Connected ✓';
-            this.isDbConnected = true;
-            console.log('✅ Database connected');
-            return this.storage.fetchUsers();
-          } else {
-            this.dbStatus = 'Connecting...';
-            this.isDbConnected = false;
-            console.log('⏳ Database not ready yet');
-            return of([]);
-          }
-        })
-      ).subscribe({
-        next: (data) => {
-          this.userList = data;
-          console.log(`📋 Loaded ${data.length} users`);
-          this.cdr.markForCheck();
-        },
-        error: (err) => {
-          console.error('❌ Error loading users:', err);
-          this.dbStatus = 'Error - Check Console';
-          this.isDbConnected = false;
-          this.cdr.markForCheck();
-        }
-      });
-    }, 100);
+    // Subscribe to database ready state
+    this.db.getDatabaseState().subscribe(async (isReady) => {
+      if (isReady) {
+        this.dbStatus = 'Connected ✓';
+        this.isDbConnected = true;
+        console.log('✅ Database connected');
+        await this.loadUsers();
+      } else {
+        this.dbStatus = 'Connecting...';
+        this.isDbConnected = false;
+        console.log('⏳ Database not ready yet');
+      }
+      this.cdr.markForCheck();
+    });
+  }
+
+  async loadUsers() {
+    try {
+      this.userList = await this.db.getAll<User>('users');
+      console.log(`📋 Loaded ${this.userList.length} users`);
+      this.cdr.markForCheck();
+    } catch (err) {
+      console.error('❌ Error loading users:', err);
+      this.dbStatus = 'Error - Check Console';
+      this.isDbConnected = false;
+      this.cdr.markForCheck();
+    }
   }
 
   async createUser() {
     if (this.newUserName.trim()) {
-      await this.storage.addUser(this.newUserName);
+      await this.db.insert('users', { name: this.newUserName.trim() });
       this.newUserName = '';
+      await this.loadUsers();
       this.cdr.markForCheck();
     }
   }
 
   async toggleUserActive(user: User) {
     const active = user.active === 0 ? 1 : 0;
-    await this.storage.updateUserById(user.id.toString(), active);
+    await this.db.update('users', user.id, { active });
+    await this.loadUsers();
     this.cdr.markForCheck();
   }
 
@@ -139,7 +139,8 @@ export class UsersComponent implements OnInit {
 
   async saveEdit(user: User) {
     if (this.editingUserName.trim() && this.editingUserName !== user.name) {
-      await this.storage.updateUserName(user.id.toString(), this.editingUserName.trim());
+      await this.db.update('users', user.id, { name: this.editingUserName.trim() });
+      await this.loadUsers();
     }
     this.cancelEdit();
     this.cdr.markForCheck();
@@ -158,7 +159,8 @@ export class UsersComponent implements OnInit {
           text: 'Delete',
           role: 'destructive',
           handler: async () => {
-            await this.storage.deleteUserById(user.id.toString());
+            await this.db.delete('users', user.id);
+            await this.loadUsers();
             this.cdr.markForCheck();
           }
         }

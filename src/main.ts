@@ -5,13 +5,11 @@ import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalo
 import { Capacitor } from '@capacitor/core';
 import { defineCustomElements as pwaElements } from '@ionic/pwa-elements/loader';
 import { defineCustomElements as jeepSqlite } from 'jeep-sqlite/loader';
+import { provideHttpClient } from '@angular/common/http';
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
-import { InitializeAppService } from '@app/core/local-stroage-services/initialize.app.service';
-import { SQLiteService } from '@app/core/local-stroage-services/sqlite.service';
-import { StorageService } from '@app/core/local-stroage-services/storage.service';
-import { DbnameVersionService } from '@app/core/local-stroage-services/dbname-version.service';
+import { DatabaseService } from '@app/core/database/services/database.service';
 
 
 // Web platform setup for SQLite
@@ -45,8 +43,17 @@ if (platform === "web") {
 export { jeepSqliteReady };
 
 // APP_INITIALIZER factory
-export function initializeFactory(init: InitializeAppService) {
-  return () => init.initializeApp();
+export function initializeFactory(dbService: DatabaseService) {
+  return async () => {
+    try {
+      console.log('🚀 Initializing database...');
+      await dbService.initializeDatabase();
+      console.log('✅ Database initialization complete');
+    } catch (error) {
+      console.error('❌ Database initialization failed:', error);
+      throw error;
+    }
+  };
 }
 
 bootstrapApplication(AppComponent, {
@@ -54,11 +61,11 @@ bootstrapApplication(AppComponent, {
     // Modern Angular: Zoneless Change Detection (better performance)
     provideZonelessChangeDetection(),
     
-    // Services
-    SQLiteService,
-    InitializeAppService,
-    StorageService,
-    DbnameVersionService,
+    // HTTP Client for loading schema.sql
+    provideHttpClient(),
+    
+    // Database Service
+    DatabaseService,
     
     // Routing & Ionic
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
@@ -72,7 +79,7 @@ bootstrapApplication(AppComponent, {
     {
       provide: APP_INITIALIZER,
       useFactory: initializeFactory,
-      deps: [InitializeAppService],
+      deps: [DatabaseService],
       multi: true
     }
   ],
