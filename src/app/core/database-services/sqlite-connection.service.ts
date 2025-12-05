@@ -192,15 +192,29 @@ export class SqliteConnectionService {
     try {
       console.log('📋 Executing database schema...');
       
-      // Split schema into individual statements
-      const statements = schema
-        .split(';')
-        .map(s => s.trim())
-        .filter(s => s.length > 0 && !s.startsWith('--'));
+      // Clean up the schema - remove comments and empty lines
+      const cleanedSchema = schema
+        .split('\n')
+        .filter(line => {
+          const trimmed = line.trim();
+          return trimmed && !trimmed.startsWith('--');
+        })
+        .join('\n');
       
-      for (const statement of statements) {
-        if (statement) {
-          await this.db.execute(statement + ';');
+      // For native platforms, execute as a single batch
+      if (this.isNative) {
+        await this.db.execute(cleanedSchema);
+      } else {
+        // For web, split and execute individually
+        const statements = cleanedSchema
+          .split(';')
+          .map(s => s.trim())
+          .filter(s => s.length > 0);
+        
+        for (const statement of statements) {
+          if (statement) {
+            await this.db.execute(statement + ';');
+          }
         }
       }
       
