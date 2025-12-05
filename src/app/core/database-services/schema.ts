@@ -29,14 +29,26 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
       );
 
       CREATE TABLE IF NOT EXISTS products (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
+        productId TEXT PRIMARY KEY,
+        productName TEXT NOT NULL,
         description TEXT,
-        price REAL NOT NULL,
-        quantity INTEGER DEFAULT 0,
-        active INTEGER DEFAULT 1,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+        price REAL,
+        purchaseCost REAL,
+        imageUrl TEXT,
+        category TEXT,
+        warnThresholdNumber INTEGER,
+        infoThresholdNumber INTEGER,
+        isActive INTEGER,
+        isThreshold INTEGER,
+        isInventory INTEGER,
+        createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
+      );
+
+      CREATE TABLE IF NOT EXISTS inventory (
+        productId INTEGER PRIMARY KEY,
+        count INTEGER DEFAULT 0,
+        updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
       );
 
       CREATE INDEX IF NOT EXISTS idx_users_name ON users(name);
@@ -46,7 +58,7 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
       CREATE INDEX IF NOT EXISTS idx_products_active ON products(active);
     `
   },
-  
+
   // Add future versions here:
   // {
   //   version: 3,

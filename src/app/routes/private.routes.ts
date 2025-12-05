@@ -24,11 +24,15 @@ export const PRIVATE_ROUTES: Routes = [
                 loadComponent: () => import('../features/pages/private/settings/settings.page').then(m => m.SettingsPage)
             },
             {
-                path: 'products',
+                path: 'product',
                 loadComponent: () => import('../features/components/private/products/products.component').then(m => m.ProductsComponent)
             },
             {
-                path: 'product',
+                path: 'product/new',
+                loadComponent: () => import('../features/components/private/products/product/product.component').then(m => m.ProductComponent)
+            },
+            {
+                path: 'product/:id',
                 loadComponent: () => import('../features/components/private/products/product/product.component').then(m => m.ProductComponent)
             },
             {
