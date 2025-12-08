@@ -66,11 +66,11 @@ export class ProductComponent implements OnInit {
 
   private buildProductForm(productId: string) {
     this.isEdit.set(true);
-    this.service.get(productId).subscribe((y) => {
+    this.service.getProductById(productId).subscribe((y) => {
       this.form = this.app.meta.toFormGroup(y, this.modelMeta);
     });
 
-    this.service.getProductInventory(productId).subscribe((y) => {
+    this.service.getProductInventoryByProductId(productId).subscribe((y) => {
       this.inventoryForm = this.app.meta.toFormGroup(y, this.inventoryMeta);
     });
   }
@@ -97,9 +97,9 @@ export class ProductComponent implements OnInit {
           if (this.form.value.isInventory === true) {
             let productInventory = this.inventoryForm.value;
             productInventory.productId = productId;
-            this.service.saveInventory(productInventory).subscribe();
+            this.service.updateProductInventory(productInventory).subscribe();
           }
-          this.service.update(this.form.value).subscribe((x) => {
+          this.service.updateProduct(this.form.value).subscribe((x) => {
             // this.app.noty.notifyUpdated('Product has been');
 
             // Check if the component was opened within a dialog, and close it
@@ -112,14 +112,14 @@ export class ProductComponent implements OnInit {
         } else {
           // add
           this.service
-            .add(this.form.value)
+            .addProduct(this.form.value)
             .pipe(
               switchMap((x: Product | any) => {
                 let productInventory = this.inventoryForm.value;
                 productInventory.productId = x.productId;
                 // save inventory if managing inventory for this product
                 if (x.isInventory === true) {
-                  return this.service.saveInventory(productInventory);
+                  return this.service.addProductInventory(productInventory);
                 } else {
                   return of(x);
                 }

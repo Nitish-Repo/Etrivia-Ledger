@@ -1,7 +1,7 @@
 import { ModelMeta } from '@app/shared-services';
 
 export interface Product {
-  productId?: string | number;
+  productId?: string;
   productName: string;
   description?: string;
   price?: number;

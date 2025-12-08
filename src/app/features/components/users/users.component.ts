@@ -59,7 +59,7 @@ export class UsersComponent implements OnInit {
   userList: User[] = [];
   dbStatus = 'Initializing...';
   isDbConnected = false;
-  editingUserId: number | null = null;
+  editingUserId: string | null = null;
   editingUserName = '';
 
   constructor(
@@ -170,7 +170,7 @@ export class UsersComponent implements OnInit {
     await alert.present();
   }
 
-  isEditing(userId: number): boolean {
+  isEditing(userId: string): boolean {
     return this.editingUserId === userId;
   }
 }

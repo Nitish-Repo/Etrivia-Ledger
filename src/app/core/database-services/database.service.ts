@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import { SqliteConnectionService } from './sqlite-connection.service';
 
 /**
@@ -12,7 +12,7 @@ import { SqliteConnectionService } from './sqlite-connection.service';
 export class DatabaseService {
   private isReady$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private connectionService: SqliteConnectionService) {}
+  constructor(private connectionService: SqliteConnectionService) { }
 
   /**
    * Initialize database with schema
@@ -95,17 +95,26 @@ export class DatabaseService {
     return this.query<T>(sql);
   }
 
+  getAll$<T>(table: string): Observable<T[]> {
+    return from(this.getAll<T>(table));
+  }
+
   /**
    * Get a single record by ID
    * @param table Table name
    * @param id Record ID
    * @returns Single record or null
    */
-  async getById<T>(table: string, id: number): Promise<T | null> {
+  async getById<T>(table: string, id: number | string): Promise<T | null> {
     const sql = `SELECT * FROM ${table} WHERE id = ?`;
     const results = await this.query<T>(sql, [id]);
     return results.length > 0 ? results[0] : null;
   }
+
+  getById$<T>(table: string, id: string | number): Observable<T | null> {
+    return from(this.getById<T>(table, id));
+  }
+
 
   /**
    * Get records by a specific condition
@@ -130,16 +139,20 @@ export class DatabaseService {
       const keys = Object.keys(data).filter(key => data[key] !== undefined);
       const values = keys.map(key => data[key]);
       const placeholders = keys.map(() => '?').join(', ');
-      
+
       const sql = `INSERT INTO ${table} (${keys.join(', ')}) VALUES (${placeholders})`;
       const result = await this.executeNonQuery(sql, values);
-      
+
       console.log(`✅ Inserted into ${table}, ID: ${result.lastId}`);
       return result.lastId;
     } catch (error) {
       console.error(`❌ Insert error in ${table}:`, error);
       throw error;
     }
+  }
+
+  insert$(table: string, data: any): Observable<number> {
+    return from(this.insert(table, data));   // Convert Promise → Observable
   }
 
   /**
@@ -149,23 +162,30 @@ export class DatabaseService {
    * @param data Object with column names as keys
    * @returns Number of affected rows
    */
-  async update(table: string, id: number, data: any): Promise<number> {
+  async update(table: string, id: string, data: any): Promise<number> {
     try {
       const keys = Object.keys(data).filter(key => data[key] !== undefined);
       const values = keys.map(key => data[key]);
       const setClause = keys.map(key => `${key} = ?`).join(', ');
-      
+
       const sql = `UPDATE ${table} SET ${setClause} WHERE id = ?`;
       values.push(id);
-      
+
       const result = await this.executeNonQuery(sql, values);
       console.log(`✅ Updated ${table}, rows affected: ${result.changes}`);
+
       return result.changes;
     } catch (error) {
       console.error(`❌ Update error in ${table}:`, error);
       throw error;
     }
   }
+
+  update$(table: string, id: string, data: any): Observable<number> {
+    return from(this.update(table, id, data)); // <-- this is correct
+  }
+
+
 
   /**
    * Update records by condition
@@ -176,19 +196,19 @@ export class DatabaseService {
    * @returns Number of affected rows
    */
   async updateByCondition(
-    table: string, 
-    data: any, 
-    where: string, 
+    table: string,
+    data: any,
+    where: string,
     params: any[] = []
   ): Promise<number> {
     try {
       const keys = Object.keys(data).filter(key => data[key] !== undefined);
       const values = keys.map(key => data[key]);
       const setClause = keys.map(key => `${key} = ?`).join(', ');
-      
+
       const sql = `UPDATE ${table} SET ${setClause} WHERE ${where}`;
       const allParams = [...values, ...params];
-      
+
       const result = await this.executeNonQuery(sql, allParams);
       console.log(`✅ Updated ${table}, rows affected: ${result.changes}`);
       return result.changes;
@@ -204,7 +224,7 @@ export class DatabaseService {
    * @param id Record ID
    * @returns Number of affected rows
    */
-  async delete(table: string, id: number): Promise<number> {
+  async delete(table: string, id: string): Promise<number> {
     try {
       const sql = `DELETE FROM ${table} WHERE id = ?`;
       const result = await this.executeNonQuery(sql, [id]);
@@ -244,10 +264,10 @@ export class DatabaseService {
    */
   async count(table: string, where?: string, params: any[] = []): Promise<number> {
     try {
-      const sql = where 
+      const sql = where
         ? `SELECT COUNT(*) as count FROM ${table} WHERE ${where}`
         : `SELECT COUNT(*) as count FROM ${table}`;
-      
+
       const result = await this.query<{ count: number }>(sql, params);
       return result[0]?.count || 0;
     } catch (error) {
@@ -277,11 +297,11 @@ export class DatabaseService {
     try {
       const db = this.connectionService.getConnection();
       await db.execute('BEGIN TRANSACTION;');
-      
+
       for (const statement of statements) {
         await db.execute(statement);
       }
-      
+
       await db.execute('COMMIT;');
       console.log('✅ Batch execution successful');
       return true;
