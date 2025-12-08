@@ -75,7 +75,8 @@ export class ProductComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  onSubmit1() {
+    console.log(this.form.value);
     FormHelper.submit(this.form, this.formMeta, () => {
       this.isProductSave.set(true);
       // this.token.setToken("loggedIn");
@@ -86,7 +87,7 @@ export class ProductComponent implements OnInit {
     }, true);
   }
 
-  saveProduct(addMore?: boolean) {
+  onSubmit(addMore?: boolean) {
     FormHelper.submit(
       this.form,
       this.formMeta,

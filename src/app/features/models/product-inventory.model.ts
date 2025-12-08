@@ -3,7 +3,7 @@ import { ModelMeta } from '@app/shared-services';
 export interface ProductInventory {
   productId: string;
   count: number;
-  updatedAt?: Date;
+  updatedAt?: string | Date;
 }
 
 export function getProductInventoryMeta() {

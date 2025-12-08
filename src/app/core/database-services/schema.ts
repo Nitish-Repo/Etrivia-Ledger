@@ -19,10 +19,15 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
     version: 1,
     name: 'Initial schema',
     up: `
-      CREATE TABLE IF NOT EXISTS users (
+      CREATE TABLE IF NOT EXISTS customers (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         email TEXT,
+        phone TEXT,
+        address TEXT,
+        city TEXT,
+        state TEXT,
+        zip_code TEXT,
         active INTEGER DEFAULT 1,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         updated_at TEXT DEFAULT CURRENT_TIMESTAMP
@@ -51,11 +56,10 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
         updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
       );
 
-      CREATE INDEX IF NOT EXISTS idx_users_name ON users(name);
-      CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
-      CREATE INDEX IF NOT EXISTS idx_users_active ON users(active);
-      CREATE INDEX IF NOT EXISTS idx_products_title ON products(title);
-      CREATE INDEX IF NOT EXISTS idx_products_active ON products(active);
+      CREATE INDEX IF NOT EXISTS idx_customers_name ON customers(name);
+      CREATE INDEX IF NOT EXISTS idx_products_name ON products(productName);
+      CREATE INDEX IF NOT EXISTS idx_products_active ON products(isActive);
+
     `
   },
 

@@ -102,17 +102,18 @@ export class DatabaseService {
   /**
    * Get a single record by ID
    * @param table Table name
-   * @param id Record ID
+   * @param id Record ID (value to match)
+   * @param idColumn Column name to match (default: 'id')
    * @returns Single record or null
    */
-  async getById<T>(table: string, id: number | string): Promise<T | null> {
-    const sql = `SELECT * FROM ${table} WHERE id = ?`;
+  async getById<T>(table: string, id: number | string, idColumn: string = 'id'): Promise<T | null> {
+    const sql = `SELECT * FROM ${table} WHERE ${idColumn} = ?`;
     const results = await this.query<T>(sql, [id]);
     return results.length > 0 ? results[0] : null;
   }
 
-  getById$<T>(table: string, id: string | number): Observable<T | null> {
-    return from(this.getById<T>(table, id));
+  getById$<T>(table: string, id: string | number, idColumn: string = 'id'): Observable<T | null> {
+    return from(this.getById<T>(table, id, idColumn));
   }
 
 
@@ -158,17 +159,18 @@ export class DatabaseService {
   /**
    * Update a record by ID
    * @param table Table name
-   * @param id Record ID
+   * @param id Record ID (value to match)
    * @param data Object with column names as keys
+   * @param idColumn Column name to match (default: 'id')
    * @returns Number of affected rows
    */
-  async update(table: string, id: string, data: any): Promise<number> {
+  async update(table: string, id: string | number, data: any, idColumn: string = 'id'): Promise<number> {
     try {
-      const keys = Object.keys(data).filter(key => data[key] !== undefined);
+      const keys = Object.keys(data).filter(key => data[key] !== undefined && key !== idColumn);
       const values = keys.map(key => data[key]);
       const setClause = keys.map(key => `${key} = ?`).join(', ');
 
-      const sql = `UPDATE ${table} SET ${setClause} WHERE id = ?`;
+      const sql = `UPDATE ${table} SET ${setClause} WHERE ${idColumn} = ?`;
       values.push(id);
 
       const result = await this.executeNonQuery(sql, values);
@@ -181,8 +183,8 @@ export class DatabaseService {
     }
   }
 
-  update$(table: string, id: string, data: any): Observable<number> {
-    return from(this.update(table, id, data)); // <-- this is correct
+  update$(table: string, id: string | number, data: any, idColumn: string = 'id'): Observable<number> {
+    return from(this.update(table, id, data, idColumn));
   }
 
 
@@ -221,12 +223,13 @@ export class DatabaseService {
   /**
    * Delete a record by ID
    * @param table Table name
-   * @param id Record ID
+   * @param id Record ID (value to match)
+   * @param idColumn Column name to match (default: 'id')
    * @returns Number of affected rows
    */
-  async delete(table: string, id: string): Promise<number> {
+  async delete(table: string, id: string | number, idColumn: string = 'id'): Promise<number> {
     try {
-      const sql = `DELETE FROM ${table} WHERE id = ?`;
+      const sql = `DELETE FROM ${table} WHERE ${idColumn} = ?`;
       const result = await this.executeNonQuery(sql, [id]);
       console.log(`✅ Deleted from ${table}, rows affected: ${result.changes}`);
       return result.changes;

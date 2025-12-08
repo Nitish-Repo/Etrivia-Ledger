@@ -13,8 +13,8 @@ export interface Product {
   warnThresholdNumber: number;
   infoThresholdNumber: number;
   isInventory: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
 }
 
 export interface ProductWithInventory extends Product {
