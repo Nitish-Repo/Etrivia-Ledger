@@ -7,11 +7,11 @@ import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
 import { ModelMeta } from '@app/shared-services';
 import { FormHelper } from '@app/shared-services/helpers/form.helper';
 import { FormMeta } from '@app/shared-services/models/form-meta';
-import { IonHeader, IonContent, IonText, IonButton, IonSpinner, IonTextarea } from "@ionic/angular/standalone";
+import { IonHeader, IonContent, IonButton, IonSpinner, IonTextarea, IonIcon, IonToggle, IonItem, IonList } from "@ionic/angular/standalone";
 import { of, Subject, switchMap } from 'rxjs';
 import { InputComponent } from "@app/shared/input/input.component";
 import { addIcons } from 'ionicons';
-import { pricetagOutline } from 'ionicons/icons';
+import { addCircleOutline, pricetagOutline, saveOutline } from 'ionicons/icons';
 import { ActivatedRoute, Router } from '@angular/router';
 import { getProductInventoryMeta, ProductInventory } from '@app/features/models/product-inventory.model';
 import { ProductService } from '@app/features/services/product.service';
@@ -20,7 +20,7 @@ import { ProductService } from '@app/features/services/product.service';
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss'],
   standalone: true,
-  imports: [IonTextarea, IonSpinner, IonButton, IonText, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent]
+  imports: [IonList, IonItem, IonToggle, IonIcon, IonTextarea, IonSpinner, IonButton, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent]
 })
 export class ProductComponent implements OnInit {
   private app = inject(AppService);
@@ -42,7 +42,7 @@ export class ProductComponent implements OnInit {
 
   constructor() {
     addIcons({
-      pricetagOutline
+      pricetagOutline, addCircleOutline, saveOutline
     });
   }
 
@@ -75,19 +75,8 @@ export class ProductComponent implements OnInit {
     });
   }
 
-  onSubmit1() {
-    console.log(this.form.value);
-    FormHelper.submit(this.form, this.formMeta, () => {
-      this.isProductSave.set(true);
-      // this.token.setToken("loggedIn");
-      // this.route.navigate(['/home'], { replaceUrl: true });
-      console.log(this.form.value);
-      this.isProductSave.set(false);
-      this.formMeta.submitProcessing = false;
-    }, true);
-  }
-
   onSubmit(addMore?: boolean) {
+    console.log(this.form.value);
     FormHelper.submit(
       this.form,
       this.formMeta,
@@ -107,7 +96,7 @@ export class ProductComponent implements OnInit {
             // if (this.data && this.data.isDialog) {
             //   this.dialog.closeAll();
             // } else {
-              this.router.navigate(['../'], { relativeTo: this.route });
+            this.router.navigate(['../'], { relativeTo: this.route });
             // }
           });
         } else {
@@ -146,9 +135,9 @@ export class ProductComponent implements OnInit {
                 // if (this.data && this.data.isDialog) {
                 //   this.dialog.closeAll();
                 // } else {
-                  this.router.navigate(['../', x.productId], {
-                    relativeTo: this.route,
-                  });
+                this.router.navigate(['../', x.productId], {
+                  relativeTo: this.route,
+                });
                 // }
               }
             });

@@ -16,8 +16,9 @@
         </div>
 
         <div class="ion-margin-bottom">
-          <ion-textarea formControlName="description" label="Product Description" labelPlacement="floating" fill="outline"
-            placeholder="Enter description" autoGrow="true" [counter]="true" maxlength="200"></ion-textarea>
+          <ion-textarea formControlName="description" label="Product Description" labelPlacement="floating"
+            fill="outline" placeholder="Enter description" autoGrow="true" [counter]="true"
+            maxlength="200"></ion-textarea>
         </div>
 
         <div class="ion-margin-bottom">
@@ -25,17 +26,47 @@
             errorText="Please enter Price" fill="outline"></app-input>
         </div>
 
-        <div class="ion-margin-bottom">
+        <div>
           <app-input [form]="form" name="purchaseCost" placeholder="Enter Price" labelPlacement="floating" type="number"
             errorText="Please enter Price" fill="outline"></app-input>
         </div>
 
+
+        <ion-list>
+          <ion-item class="ion-no-padding" lines="none">
+            <ion-toggle formControlName="isInventory">Manage Stock/Inventory</ion-toggle>
+          </ion-item>
+          @if(form.value.isInventory){
+          <div>
+            <app-input [form]="inventoryForm" name="count" placeholder="Enter Count" labelPlacement="floating"
+              type="number" errorText="Please enter Count" fill="outline"></app-input>
+          </div>
+          }
+          <ion-item class="ion-no-padding" lines="none">
+            <ion-toggle formControlName="isThreshold">Manage Threshold Alerts</ion-toggle>
+          </ion-item>
+          @if(form.value.isThreshold){
+          <div>
+            <div class="ion-margin-bottom">
+              <app-input [form]="form" name="warnThresholdNumber" placeholder="Enter Price" labelPlacement="floating"
+                type="number" errorText="Please enter Price" fill="outline"></app-input>
+            </div>
+            <div>
+              <app-input [form]="form" name="infoThresholdNumber" placeholder="Enter Price" labelPlacement="floating"
+                type="number" errorText="Please enter Price" fill="outline"></app-input>
+            </div>
+          </div>
+          }
+        </ion-list>
+
         <div>
           @if(!isProductSave()){
-          <ion-button size="large" expand="block" type="submit" [disabled]="formMeta.submitProcessing"
-            class="ion-margin-top ion-padding-top" [strong]="true">
-            <ion-text> SAVE</ion-text>
-          </ion-button>
+          <ion-button shape="round" (click)="onSubmit(true)" [disabled]="formMeta.submitProcessing">
+            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+            Add more</ion-button>
+          <ion-button shape="round" type="submit" [disabled]="formMeta.submitProcessing">
+            <ion-icon name="save-outline" slot="start"></ion-icon>
+            Save</ion-button>
           } @else {
           <ion-button size="large" expand="block" [disabled]="formMeta.submitProcessing"
             class="ion-margin-top ion-padding-top" [strong]="true">
