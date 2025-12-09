@@ -4,6 +4,9 @@ export interface Product {
   productId?: string;
   productName: string;
   description?: string;
+  hsnCode?: string;
+  sacCode?: string;
+  unitMeasure?:string;
   price?: number;
   purchaseCost?: number;
   imageUrl?: string;

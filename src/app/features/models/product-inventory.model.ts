@@ -14,3 +14,11 @@ export function getProductInventoryMeta() {
     { key: 'updatedAt', label: 'Updated at', required: false },
   ] as Array<ModelMeta>;
 }
+
+export interface ProductPriceModel {
+  productPriceId: string;
+  productId: string;
+  sellPrice: number;
+  costPrice: number;
+  createdAt: string | Date;
+}

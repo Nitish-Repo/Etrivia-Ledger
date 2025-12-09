@@ -62,38 +62,393 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
 
     `
   },
+  {
+    version: 2,
+    name: 'Complete GST Billing System Schema',
+    up: `
+      -- Drop old tables
+      DROP TABLE IF EXISTS products;
+      DROP TABLE IF EXISTS inventory;
+      DROP TABLE IF EXISTS customers;
+      
+      -- ============================================
+      -- PRODUCTS TABLE (Enhanced with GST support)
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS products (
+        productId TEXT PRIMARY KEY,
+        productName TEXT NOT NULL,
+        hsnCode TEXT,
+        barcode TEXT UNIQUE,
+        sku TEXT UNIQUE,
+        description TEXT,
+        category TEXT,
+        unit TEXT DEFAULT 'PCS',
+        
+        -- Purchase Pricing
+        purchasePrice REAL NOT NULL DEFAULT 0,
+        purchaseTaxType TEXT DEFAULT 'INCLUSIVE',
+        purchaseGstRate REAL DEFAULT 0,
+        purchaseCessRate REAL DEFAULT 0,
+        
+        -- Sale Pricing
+        wholesalePrice REAL,
+        retailPrice REAL NOT NULL DEFAULT 0,
+        mrp REAL,
+        saleTaxType TEXT DEFAULT 'INCLUSIVE',
+        saleGstRate REAL DEFAULT 0,
+        saleCessRate REAL DEFAULT 0,
+        
+        -- Discount
+        discountType TEXT DEFAULT 'NONE',
+        discountValue REAL DEFAULT 0,
+        
+        -- Inventory
+        currentStock REAL DEFAULT 0,
+        minStockLevel REAL DEFAULT 0,
+        maxStockLevel REAL,
+        
+        imageUrl TEXT,
+        isActive INTEGER DEFAULT 1,
+        createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
+      );
 
-  // Add future versions here:
-  // {
-  //   version: 3,
-  //   name: 'Add orders table',
-  //   up: `
-  //     CREATE TABLE IF NOT EXISTS orders (
-  //       id INTEGER PRIMARY KEY AUTOINCREMENT,
-  //       user_id INTEGER NOT NULL,
-  //       product_id INTEGER NOT NULL,
-  //       quantity INTEGER DEFAULT 1,
-  //       total_price REAL NOT NULL,
-  //       created_at TEXT DEFAULT CURRENT_TIMESTAMP
-  //     );
-  //     CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
-  //   `
-  // },
-  // {
-  //   version: 3,
-  //   name: 'Add orders table',
-  //   up: `
-  //     CREATE TABLE IF NOT EXISTS orders (
-  //       id INTEGER PRIMARY KEY AUTOINCREMENT,
-  //       user_id INTEGER NOT NULL,
-  //       product_id INTEGER NOT NULL,
-  //       quantity INTEGER DEFAULT 1,
-  //       total_price REAL NOT NULL,
-  //       created_at TEXT DEFAULT CURRENT_TIMESTAMP
-  //     );
-  //     CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
-  //   `
-  // }
+      CREATE INDEX IF NOT EXISTS idx_products_name ON products(productName);
+      CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
+      CREATE INDEX IF NOT EXISTS idx_products_hsn ON products(hsnCode);
+      CREATE INDEX IF NOT EXISTS idx_products_barcode ON products(barcode);
+      CREATE INDEX IF NOT EXISTS idx_products_active ON products(isActive);
+
+      -- ============================================
+      -- CUSTOMERS TABLE (Enhanced)
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS customers (
+        customerId TEXT PRIMARY KEY,
+        customerName TEXT NOT NULL,
+        phone TEXT,
+        email TEXT,
+        gstin TEXT,
+        pan TEXT,
+        
+        billingAddress TEXT,
+        shippingAddress TEXT,
+        city TEXT,
+        state TEXT,
+        pincode TEXT,
+        country TEXT DEFAULT 'India',
+        
+        creditLimit REAL DEFAULT 0,
+        openingBalance REAL DEFAULT 0,
+        currentBalance REAL DEFAULT 0,
+        
+        customerType TEXT DEFAULT 'RETAIL',
+        priceList TEXT DEFAULT 'RETAIL',
+        
+        isActive INTEGER DEFAULT 1,
+        createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_customers_name ON customers(customerName);
+      CREATE INDEX IF NOT EXISTS idx_customers_phone ON customers(phone);
+      CREATE INDEX IF NOT EXISTS idx_customers_gstin ON customers(gstin);
+      CREATE INDEX IF NOT EXISTS idx_customers_active ON customers(isActive);
+
+      -- ============================================
+      -- SUPPLIERS TABLE
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS suppliers (
+        supplierId TEXT PRIMARY KEY,
+        supplierName TEXT NOT NULL,
+        phone TEXT,
+        email TEXT,
+        gstin TEXT,
+        pan TEXT,
+        
+        address TEXT,
+        city TEXT,
+        state TEXT,
+        pincode TEXT,
+        
+        openingBalance REAL DEFAULT 0,
+        currentBalance REAL DEFAULT 0,
+        
+        isActive INTEGER DEFAULT 1,
+        createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_suppliers_name ON suppliers(supplierName);
+      CREATE INDEX IF NOT EXISTS idx_suppliers_active ON suppliers(isActive);
+
+      -- ============================================
+      -- SALES TABLE
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS sales (
+        saleId TEXT PRIMARY KEY,
+        invoiceNumber TEXT UNIQUE NOT NULL,
+        invoiceDate TEXT NOT NULL,
+        
+        customerId TEXT NOT NULL,
+        customerName TEXT NOT NULL,
+        customerGstin TEXT,
+        
+        subtotal REAL NOT NULL DEFAULT 0,
+        
+        discountType TEXT DEFAULT 'NONE',
+        discountValue REAL DEFAULT 0,
+        discountAmount REAL DEFAULT 0,
+        
+        taxableAmount REAL NOT NULL DEFAULT 0,
+        cgst REAL DEFAULT 0,
+        sgst REAL DEFAULT 0,
+        igst REAL DEFAULT 0,
+        cess REAL DEFAULT 0,
+        
+        totalAmount REAL NOT NULL DEFAULT 0,
+        roundOff REAL DEFAULT 0,
+        grandTotal REAL NOT NULL DEFAULT 0,
+        
+        paidAmount REAL DEFAULT 0,
+        dueAmount REAL DEFAULT 0,
+        paymentStatus TEXT DEFAULT 'UNPAID',
+        
+        notes TEXT,
+        saleType TEXT DEFAULT 'CASH',
+        status TEXT DEFAULT 'COMPLETED',
+        
+        createdBy TEXT,
+        createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TEXT DEFAULT CURRENT_TIMESTAMP,
+        
+        FOREIGN KEY (customerId) REFERENCES customers(customerId)
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_sales_customer ON sales(customerId);
+      CREATE INDEX IF NOT EXISTS idx_sales_date ON sales(invoiceDate);
+      CREATE INDEX IF NOT EXISTS idx_sales_invoice ON sales(invoiceNumber);
+      CREATE INDEX IF NOT EXISTS idx_sales_status ON sales(paymentStatus);
+
+      -- ============================================
+      -- SALE ITEMS TABLE
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS sale_items (
+        saleItemId TEXT PRIMARY KEY,
+        saleId TEXT NOT NULL,
+        
+        productId TEXT NOT NULL,
+        productName TEXT NOT NULL,
+        hsnCode TEXT,
+        
+        quantity REAL NOT NULL,
+        unit TEXT DEFAULT 'PCS',
+        
+        pricePerUnit REAL NOT NULL,
+        taxType TEXT DEFAULT 'INCLUSIVE',
+        
+        discountType TEXT DEFAULT 'NONE',
+        discountValue REAL DEFAULT 0,
+        discountAmount REAL DEFAULT 0,
+        
+        taxableAmount REAL NOT NULL,
+        gstRate REAL DEFAULT 0,
+        cessRate REAL DEFAULT 0,
+        cgst REAL DEFAULT 0,
+        sgst REAL DEFAULT 0,
+        igst REAL DEFAULT 0,
+        cess REAL DEFAULT 0,
+        
+        totalAmount REAL NOT NULL,
+        
+        createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
+        
+        FOREIGN KEY (saleId) REFERENCES sales(saleId) ON DELETE CASCADE,
+        FOREIGN KEY (productId) REFERENCES products(productId)
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_sale_items_sale ON sale_items(saleId);
+      CREATE INDEX IF NOT EXISTS idx_sale_items_product ON sale_items(productId);
+
+      -- ============================================
+      -- PURCHASES TABLE
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS purchases (
+        purchaseId TEXT PRIMARY KEY,
+        billNumber TEXT NOT NULL,
+        billDate TEXT NOT NULL,
+        
+        supplierId TEXT NOT NULL,
+        supplierName TEXT NOT NULL,
+        supplierGstin TEXT,
+        
+        subtotal REAL NOT NULL DEFAULT 0,
+        
+        discountType TEXT DEFAULT 'NONE',
+        discountValue REAL DEFAULT 0,
+        discountAmount REAL DEFAULT 0,
+        
+        taxableAmount REAL NOT NULL DEFAULT 0,
+        cgst REAL DEFAULT 0,
+        sgst REAL DEFAULT 0,
+        igst REAL DEFAULT 0,
+        cess REAL DEFAULT 0,
+        
+        totalAmount REAL NOT NULL DEFAULT 0,
+        roundOff REAL DEFAULT 0,
+        grandTotal REAL NOT NULL DEFAULT 0,
+        
+        paidAmount REAL DEFAULT 0,
+        dueAmount REAL DEFAULT 0,
+        paymentStatus TEXT DEFAULT 'UNPAID',
+        
+        notes TEXT,
+        status TEXT DEFAULT 'COMPLETED',
+        
+        createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TEXT DEFAULT CURRENT_TIMESTAMP,
+        
+        FOREIGN KEY (supplierId) REFERENCES suppliers(supplierId)
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_purchases_supplier ON purchases(supplierId);
+      CREATE INDEX IF NOT EXISTS idx_purchases_date ON purchases(billDate);
+      CREATE INDEX IF NOT EXISTS idx_purchases_status ON purchases(paymentStatus);
+
+      -- ============================================
+      -- PURCHASE ITEMS TABLE
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS purchase_items (
+        purchaseItemId TEXT PRIMARY KEY,
+        purchaseId TEXT NOT NULL,
+        
+        productId TEXT NOT NULL,
+        productName TEXT NOT NULL,
+        hsnCode TEXT,
+        
+        quantity REAL NOT NULL,
+        unit TEXT DEFAULT 'PCS',
+        
+        pricePerUnit REAL NOT NULL,
+        taxType TEXT DEFAULT 'INCLUSIVE',
+        
+        taxableAmount REAL NOT NULL,
+        gstRate REAL DEFAULT 0,
+        cessRate REAL DEFAULT 0,
+        cgst REAL DEFAULT 0,
+        sgst REAL DEFAULT 0,
+        igst REAL DEFAULT 0,
+        cess REAL DEFAULT 0,
+        
+        totalAmount REAL NOT NULL,
+        
+        createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
+        
+        FOREIGN KEY (purchaseId) REFERENCES purchases(purchaseId) ON DELETE CASCADE,
+        FOREIGN KEY (productId) REFERENCES products(productId)
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_purchase_items_purchase ON purchase_items(purchaseId);
+      CREATE INDEX IF NOT EXISTS idx_purchase_items_product ON purchase_items(productId);
+
+      -- ============================================
+      -- PAYMENTS TABLE
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS payments (
+        paymentId TEXT PRIMARY KEY,
+        paymentDate TEXT NOT NULL,
+        
+        partyType TEXT NOT NULL,
+        partyId TEXT NOT NULL,
+        partyName TEXT NOT NULL,
+        
+        referenceType TEXT,
+        referenceId TEXT,
+        
+        amount REAL NOT NULL,
+        paymentMethod TEXT DEFAULT 'CASH',
+        
+        transactionId TEXT,
+        notes TEXT,
+        
+        createdAt TEXT DEFAULT CURRENT_TIMESTAMP
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_payments_party ON payments(partyId);
+      CREATE INDEX IF NOT EXISTS idx_payments_date ON payments(paymentDate);
+      CREATE INDEX IF NOT EXISTS idx_payments_reference ON payments(referenceId);
+
+      -- ============================================
+      -- EXPENSES TABLE
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS expenses (
+        expenseId TEXT PRIMARY KEY,
+        expenseDate TEXT NOT NULL,
+        
+        category TEXT NOT NULL,
+        description TEXT,
+        amount REAL NOT NULL,
+        
+        paymentMethod TEXT DEFAULT 'CASH',
+        
+        gstApplicable INTEGER DEFAULT 0,
+        gstAmount REAL DEFAULT 0,
+        
+        notes TEXT,
+        createdAt TEXT DEFAULT CURRENT_TIMESTAMP
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_expenses_date ON expenses(expenseDate);
+      CREATE INDEX IF NOT EXISTS idx_expenses_category ON expenses(category);
+
+      -- ============================================
+      -- STOCK ADJUSTMENTS TABLE
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS stock_adjustments (
+        adjustmentId TEXT PRIMARY KEY,
+        adjustmentDate TEXT NOT NULL,
+        
+        productId TEXT NOT NULL,
+        productName TEXT NOT NULL,
+        
+        adjustmentType TEXT NOT NULL,
+        quantity REAL NOT NULL,
+        
+        reason TEXT,
+        notes TEXT,
+        
+        createdBy TEXT,
+        createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
+        
+        FOREIGN KEY (productId) REFERENCES products(productId)
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_stock_adj_product ON stock_adjustments(productId);
+      CREATE INDEX IF NOT EXISTS idx_stock_adj_date ON stock_adjustments(adjustmentDate);
+
+      -- ============================================
+      -- BUSINESS SETTINGS TABLE
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS business_settings (
+        settingKey TEXT PRIMARY KEY,
+        settingValue TEXT
+      );
+
+      INSERT OR IGNORE INTO business_settings (settingKey, settingValue) VALUES
+        ('businessName', 'Your Business Name'),
+        ('gstin', ''),
+        ('pan', ''),
+        ('address', ''),
+        ('city', ''),
+        ('state', ''),
+        ('pincode', ''),
+        ('phone', ''),
+        ('email', ''),
+        ('invoicePrefix', 'INV'),
+        ('financialYearStart', '04-01'),
+        ('defaultGstRate', '18'),
+        ('enableCess', '0');
+    `
+  }
 ];
 
 /**
