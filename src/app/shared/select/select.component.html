@@ -1,17 +1,10 @@
-@if(control){
-<ion-select [label]="label || control.label" [labelPlacement]="labelPlacement" [fill]="fill()" [formControl]="control"
-  [interface]="interface">
-  <ion-select-option value="apple">Apple</ion-select-option>
-  <ion-select-option value="banana">Banana</ion-select-option>
-  <ion-select-option value="orange">Orange</ion-select-option>
-  <ion-select-option value="apple">Apple</ion-select-option>
-  <ion-select-option value="banana">Banana</ion-select-option>
-  <ion-select-option value="orange">Orange</ion-select-option>
-  <ion-select-option value="apple">Apple</ion-select-option>
-  <ion-select-option value="banana">Banana</ion-select-option>
-  <ion-select-option value="orange">Orange</ion-select-option>
-  <ion-select-option value="apple">Apple</ion-select-option>
-  <ion-select-option value="banana">Banana</ion-select-option>
-  <ion-select-option value="orange">Orange</ion-select-option>
+@if (meta(); as m) {
+@if (control(); as ctrl) {
+<ion-select [label]="m.label || 'Select'" [labelPlacement]="labelPlacement()" [fill]="fill()" [formControl]="ctrl"
+  [interface]="interface()" (ionChange)="selectionChange($event)">
+  @for (item of m.options || []; track item.key) {
+  <ion-select-option [value]="item.key">{{ item.value }}</ion-select-option>
+  }
 </ion-select>
+}
 }

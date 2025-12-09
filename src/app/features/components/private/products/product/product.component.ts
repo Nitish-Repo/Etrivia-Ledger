@@ -15,12 +15,14 @@ import { addCircleOutline, pricetagOutline, saveOutline } from 'ionicons/icons';
 import { ActivatedRoute, Router } from '@angular/router';
 import { getProductInventoryMeta, ProductInventory } from '@app/features/models/product-inventory.model';
 import { ProductService } from '@app/features/services/product.service';
+import { SelectComponent } from "@app/shared/select/select.component";
+
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss'],
   standalone: true,
-  imports: [IonList, IonItem, IonToggle, IonIcon, IonTextarea, IonSpinner, IonButton, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, IonSelect, IonSelectOption]
+  imports: [IonList, IonItem, IonToggle, IonIcon, IonTextarea, IonSpinner, IonButton, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent]
 })
 export class ProductComponent implements OnInit {
   private app = inject(AppService);
@@ -38,6 +40,7 @@ export class ProductComponent implements OnInit {
   formMeta = new FormMeta();
   modelMeta!: ModelMeta[];
   inventoryMeta!: ModelMeta[];
+  unitMeasureMeta!: ModelMeta;
 
 
   constructor() {
@@ -49,6 +52,10 @@ export class ProductComponent implements OnInit {
   ngOnInit() {
     this.modelMeta = getProductMeta();
     this.inventoryMeta = getProductInventoryMeta();
+    
+    // Find unitMeasure metadata for the select component
+    this.unitMeasureMeta = this.modelMeta.find(m => m.key === 'unitMeasure')!;
+    
     this.route.params.subscribe((x) => {
       if (x['id']) {
         let productId = x['id'];
@@ -145,6 +152,10 @@ export class ProductComponent implements OnInit {
       },
       true
     );
+  }
+
+  handleChange(event: any) {
+    console.log('Unit of Measure changed:', event);
   }
 
 }

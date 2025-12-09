@@ -36,12 +36,14 @@
             errorText="Please enter HSN" fill="outline"></app-input>
         </div>
 
-        <div>
+        <div class="ion-margin-bottom">
           <app-input [form]="form" name="purchaseCost" placeholder="Enter Price" labelPlacement="floating" type="number"
             errorText="Please enter Price" fill="outline"></app-input>
         </div>
 
-       
+        <div class="ion-margin-bottom">
+          <app-select [meta]="unitMeasureMeta" (onSelectionChange)="handleChange($event)" />
+        </div>
 
         <ion-list>
           <ion-item class="ion-no-padding" lines="none">
