@@ -2,7 +2,7 @@
  * GST Calculation Utilities
  */
 
-export type TaxType = 'INCLUSIVE' | 'EXCLUSIVE';
+import { TaxType } from '../models/product.model';
 
 export interface GstCalculationResult {
   baseAmount: number;

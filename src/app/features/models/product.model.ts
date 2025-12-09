@@ -1,4 +1,5 @@
 import { ModelMeta } from '@app/shared-services';
+import { UnitOfMeasure, UOM_LABELS } from './unit-of-measure.model';
 
 /**
  * Tax Types
@@ -36,7 +37,7 @@ export interface Product {
   discountValue?: number;
   
   // Inventory
-  unitMeasure?: string;                // KG, PCS, LTR, etc.
+  unitMeasure?: UnitOfMeasure;         // Standard UOM from GST list
   isInventory?: boolean;
   isThreshold?: boolean;
   warnThresholdNumber?: number;
@@ -106,7 +107,13 @@ export function getProductMeta() {
     { key: 'discountValue', label: 'Discount Value', required: false, controlType: 'number' },
     
     // Inventory
-    { key: 'unitMeasure', label: 'Unit of Measure', required: false },
+    {
+      key: 'unitMeasure',
+      label: 'Unit of Measure',
+      required: false,
+      controlType: 'select',
+      options: Object.entries(UOM_LABELS).map(([key, value]) => ({ key, value }))
+    },
     { key: 'currentStock', label: 'Current Stock', required: false, controlType: 'number' },
     { key: 'warnThresholdNumber', label: 'Warn Threshold', required: false, controlType: 'number' },
     { key: 'infoThresholdNumber', label: 'Info Threshold', required: false, controlType: 'number' },
