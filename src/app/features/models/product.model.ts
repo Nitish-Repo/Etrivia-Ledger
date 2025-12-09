@@ -52,6 +52,103 @@ export interface Product {
 }
 
 /**
+ * Form Metadata for Product
+ */
+export function getProductMeta() {
+  return [
+    { key: 'productId', label: 'ProductId', hide: true },
+    { key: 'productName', label: 'Product Name', required: true },
+    { key: 'description', label: 'Description', required: false },
+    
+    // Tax Classification
+    { key: 'hsnCode', label: 'HSN Code', required: false },
+    { key: 'sacCode', label: 'SAC Code', required: false },
+    
+    // Purchase Details
+    { key: 'purchaseCost', label: 'Purchase Cost', required: false, controlType: 'number' },
+    {
+      key: 'purchaseTaxType',
+      label: 'Purchase Tax Type',
+      controlType: 'select',
+      options: [
+        { key: 'INCLUSIVE', value: 'Tax Inclusive' },
+        { key: 'EXCLUSIVE', value: 'Tax Exclusive' },
+      ],
+    },
+    { key: 'purchaseGstRate', label: 'Purchase GST %', required: false, controlType: 'number' },
+    { key: 'purchaseCessRate', label: 'Purchase CESS %', required: false, controlType: 'number' },
+    
+    // Sale Details
+    { key: 'retailPrice', label: 'Retail Price', required: false, controlType: 'number' },
+    { key: 'wholesalePrice', label: 'Wholesale Price', required: false, controlType: 'number' },
+    {
+      key: 'saleTaxType',
+      label: 'Sale Tax Type',
+      controlType: 'select',
+      options: [
+        { key: 'INCLUSIVE', value: 'Tax Inclusive' },
+        { key: 'EXCLUSIVE', value: 'Tax Exclusive' },
+      ],
+    },
+    { key: 'saleGstRate', label: 'Sale GST %', required: false, controlType: 'number' },
+    { key: 'saleCessRate', label: 'Sale CESS %', required: false, controlType: 'number' },
+    
+    // Discount
+    {
+      key: 'discountType',
+      label: 'Discount Type',
+      controlType: 'select',
+      options: [
+        { key: 'PERCENTAGE', value: 'Percentage' },
+        { key: 'AMOUNT', value: 'Amount' },
+      ],
+    },
+    { key: 'discountValue', label: 'Discount Value', required: false, controlType: 'number' },
+    
+    // Inventory
+    { key: 'unitMeasure', label: 'Unit of Measure', required: false },
+    { key: 'currentStock', label: 'Current Stock', required: false, controlType: 'number' },
+    { key: 'warnThresholdNumber', label: 'Warn Threshold', required: false, controlType: 'number' },
+    { key: 'infoThresholdNumber', label: 'Info Threshold', required: false, controlType: 'number' },
+    
+    // General
+    { key: 'imageUrl', label: 'Image URL', required: false },
+    { key: 'category', label: 'Category', required: false },
+    
+    {
+      key: 'isActive',
+      label: 'Is Active',
+      controlType: 'radio',
+      options: [
+        { key: true, value: 'Yes' },
+        { key: false, value: 'No' },
+      ],
+    },
+    {
+      key: 'isThreshold',
+      label: 'Enable Threshold',
+      controlType: 'radio',
+      options: [
+        { key: true, value: 'Yes' },
+        { key: false, value: 'No' },
+      ],
+    },
+    {
+      key: 'isInventory',
+      label: 'Track Inventory',
+      controlType: 'radio',
+      options: [
+        { key: true, value: 'Yes' },
+        { key: false, value: 'No' },
+      ],
+    },
+    { key: 'createdAt', label: 'Created at', required: false, hide: true },
+    { key: 'updatedAt', label: 'Updated at', required: false, hide: true },
+  ] as Array<ModelMeta>;
+}
+
+
+/**
  * Legacy Product Interface (for backward compatibility)
  */
 export interface ProductLegacy {
@@ -150,98 +247,3 @@ export function isLowStock(product: Product): boolean {
   return currentStock <= warnThreshold;
 }
 
-/**
- * Form Metadata for Product
- */
-export function getProductMeta() {
-  return [
-    { key: 'productId', label: 'ProductId', hide: true },
-    { key: 'productName', label: 'Product Name', required: true },
-    { key: 'description', label: 'Description', required: false },
-    
-    // Tax Classification
-    { key: 'hsnCode', label: 'HSN Code', required: false },
-    { key: 'sacCode', label: 'SAC Code', required: false },
-    
-    // Purchase Details
-    { key: 'purchaseCost', label: 'Purchase Cost', required: false, controlType: 'number' },
-    {
-      key: 'purchaseTaxType',
-      label: 'Purchase Tax Type',
-      controlType: 'select',
-      options: [
-        { key: 'INCLUSIVE', value: 'Tax Inclusive' },
-        { key: 'EXCLUSIVE', value: 'Tax Exclusive' },
-      ],
-    },
-    { key: 'purchaseGstRate', label: 'Purchase GST %', required: false, controlType: 'number' },
-    { key: 'purchaseCessRate', label: 'Purchase CESS %', required: false, controlType: 'number' },
-    
-    // Sale Details
-    { key: 'retailPrice', label: 'Retail Price', required: false, controlType: 'number' },
-    { key: 'wholesalePrice', label: 'Wholesale Price', required: false, controlType: 'number' },
-    {
-      key: 'saleTaxType',
-      label: 'Sale Tax Type',
-      controlType: 'select',
-      options: [
-        { key: 'INCLUSIVE', value: 'Tax Inclusive' },
-        { key: 'EXCLUSIVE', value: 'Tax Exclusive' },
-      ],
-    },
-    { key: 'saleGstRate', label: 'Sale GST %', required: false, controlType: 'number' },
-    { key: 'saleCessRate', label: 'Sale CESS %', required: false, controlType: 'number' },
-    
-    // Discount
-    {
-      key: 'discountType',
-      label: 'Discount Type',
-      controlType: 'select',
-      options: [
-        { key: 'PERCENTAGE', value: 'Percentage' },
-        { key: 'AMOUNT', value: 'Amount' },
-      ],
-    },
-    { key: 'discountValue', label: 'Discount Value', required: false, controlType: 'number' },
-    
-    // Inventory
-    { key: 'unitMeasure', label: 'Unit of Measure', required: false },
-    { key: 'currentStock', label: 'Current Stock', required: false, controlType: 'number' },
-    { key: 'warnThresholdNumber', label: 'Warn Threshold', required: false, controlType: 'number' },
-    { key: 'infoThresholdNumber', label: 'Info Threshold', required: false, controlType: 'number' },
-    
-    // General
-    { key: 'imageUrl', label: 'Image URL', required: false },
-    { key: 'category', label: 'Category', required: false },
-    
-    {
-      key: 'isActive',
-      label: 'Is Active',
-      controlType: 'radio',
-      options: [
-        { key: true, value: 'Yes' },
-        { key: false, value: 'No' },
-      ],
-    },
-    {
-      key: 'isThreshold',
-      label: 'Enable Threshold',
-      controlType: 'radio',
-      options: [
-        { key: true, value: 'Yes' },
-        { key: false, value: 'No' },
-      ],
-    },
-    {
-      key: 'isInventory',
-      label: 'Track Inventory',
-      controlType: 'radio',
-      options: [
-        { key: true, value: 'Yes' },
-        { key: false, value: 'No' },
-      ],
-    },
-    { key: 'createdAt', label: 'Created at', required: false, hide: true },
-    { key: 'updatedAt', label: 'Updated at', required: false, hide: true },
-  ] as Array<ModelMeta>;
-}

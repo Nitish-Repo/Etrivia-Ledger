@@ -38,7 +38,7 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
         unit TEXT DEFAULT 'PCS',
         
         -- Purchase Pricing
-        purchasePrice REAL NOT NULL DEFAULT 0,
+        purchaseCost REAL NOT NULL DEFAULT 0,
         purchaseTaxType TEXT DEFAULT 'INCLUSIVE',
         purchaseGstRate REAL DEFAULT 0,
         purchaseCessRate REAL DEFAULT 0,
