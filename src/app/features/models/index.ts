@@ -2,7 +2,7 @@
  * Export all enhanced models
  */
 
-export * from './product-enhanced.model';
+export * from './product.model';
 export * from './customer.model';
 export * from './supplier.model';
 export * from './sale.model';

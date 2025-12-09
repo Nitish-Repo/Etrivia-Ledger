@@ -1,6 +1,48 @@
 import { ModelMeta } from '@app/shared-services';
 
+/**
+ * Customer Types
+ */
+export type CustomerType = 'RETAIL' | 'WHOLESALE' | 'B2B';
+export type PriceListType = 'RETAIL' | 'WHOLESALE';
+
+/**
+ * Enhanced Customer Model with GST Support
+ */
 export interface Customer {
+  customerId?: string;
+  customerName: string;
+  phone?: string;
+  email?: string;
+  gstin?: string;              // GST Number (for B2B)
+  pan?: string;
+  
+  // Address
+  billingAddress?: string;
+  shippingAddress?: string;
+  city?: string;
+  state?: string;
+  pincode?: string;
+  country?: string;
+  
+  // Credit Management
+  creditLimit?: number;
+  openingBalance?: number;      // Starting due amount
+  currentBalance?: number;      // Current due (auto-calculated)
+  
+  // Classification
+  customerType?: CustomerType;
+  priceList?: PriceListType;    // Which price to use
+  
+  isActive?: boolean;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+}
+
+/**
+ * Legacy Customer Interface (for backward compatibility)
+ */
+export interface CustomerLegacy {
   customerId?: string | number;
   customerName: string;
   phoneNumber?: string;
@@ -14,17 +56,73 @@ export interface Customer {
   updatedAt: Date;
 }
 
+/**
+ * Helper Functions
+ */
+
+/**
+ * Check if customer has credit available
+ */
+export function hasCreditAvailable(customer: Customer): boolean {
+  if (!customer.creditLimit || !customer.currentBalance) return true;
+  return customer.currentBalance < customer.creditLimit;
+}
+
+/**
+ * Get available credit
+ */
+export function getAvailableCredit(customer: Customer): number {
+  const limit = customer.creditLimit || 0;
+  const balance = customer.currentBalance || 0;
+  return Math.max(0, limit - balance);
+}
+
+/**
+ * Check if customer is over credit limit
+ */
+export function isOverCreditLimit(customer: Customer): boolean {
+  if (!customer.creditLimit) return false;
+  return (customer.currentBalance || 0) > customer.creditLimit;
+}
+
+/**
+ * Form Metadata for Customer
+ */
 export function getCustomerMeta() {
   return [
     { key: 'customerId', label: 'CustomerId', hide: true },
     { key: 'customerName', label: 'Customer Name', required: true },
-    { key: 'phoneNumber', label: 'Phone Number', required: false },
+    { key: 'phone', label: 'Phone Number', required: false },
     { key: 'email', label: 'Email', required: false },
-    { key: 'addressLine1', label: 'Address Line1', required: false },
-    { key: 'addressLine2', label: 'Address Line2', required: false },
-    { key: 'pinCode', label: 'Pincode ', required: false },
+    { key: 'gstin', label: 'GSTIN', required: false },
+    { key: 'pan', label: 'PAN', required: false },
+    { key: 'billingAddress', label: 'Billing Address', required: false },
+    { key: 'shippingAddress', label: 'Shipping Address', required: false },
+    { key: 'city', label: 'City', required: false },
     { key: 'state', label: 'State', required: false },
+    { key: 'pincode', label: 'Pincode', required: false },
     { key: 'country', label: 'Country', required: false },
+    { key: 'creditLimit', label: 'Credit Limit', required: false, controlType: 'number' },
+    { key: 'openingBalance', label: 'Opening Balance', required: false, controlType: 'number' },
+    {
+      key: 'customerType',
+      label: 'Customer Type',
+      controlType: 'select',
+      options: [
+        { key: 'RETAIL', value: 'Retail' },
+        { key: 'WHOLESALE', value: 'Wholesale' },
+        { key: 'B2B', value: 'B2B' },
+      ],
+    },
+    {
+      key: 'priceList',
+      label: 'Price List',
+      controlType: 'select',
+      options: [
+        { key: 'RETAIL', value: 'Retail Price' },
+        { key: 'WHOLESALE', value: 'Wholesale Price' },
+      ],
+    },
     {
       key: 'isActive',
       label: 'Is Active',
@@ -34,7 +132,7 @@ export function getCustomerMeta() {
         { key: false, value: 'No' },
       ],
     },
-    { key: 'createdAt', label: 'Created at', required: false },
-    { key: 'updatedAt', label: 'Updated at', required: false },
+    { key: 'createdAt', label: 'Created at', required: false, hide: true },
+    { key: 'updatedAt', label: 'Updated at', required: false, hide: true },
   ] as Array<ModelMeta>;
 }
