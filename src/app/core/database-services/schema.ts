@@ -17,53 +17,6 @@ export interface SchemaVersion {
 export const SCHEMA_VERSIONS: SchemaVersion[] = [
   {
     version: 1,
-    name: 'Initial schema',
-    up: `
-      CREATE TABLE IF NOT EXISTS customers (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT,
-        phone TEXT,
-        address TEXT,
-        city TEXT,
-        state TEXT,
-        zip_code TEXT,
-        active INTEGER DEFAULT 1,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-      );
-
-      CREATE TABLE IF NOT EXISTS products (
-        productId TEXT PRIMARY KEY,
-        productName TEXT NOT NULL,
-        description TEXT,
-        price REAL,
-        purchaseCost REAL,
-        imageUrl TEXT,
-        category TEXT,
-        warnThresholdNumber INTEGER,
-        infoThresholdNumber INTEGER,
-        isActive INTEGER,
-        isThreshold INTEGER,
-        isInventory INTEGER,
-        createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
-        updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
-      );
-
-      CREATE TABLE IF NOT EXISTS inventory (
-        productId INTEGER PRIMARY KEY,
-        count INTEGER DEFAULT 0,
-        updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
-      );
-
-      CREATE INDEX IF NOT EXISTS idx_customers_name ON customers(name);
-      CREATE INDEX IF NOT EXISTS idx_products_name ON products(productName);
-      CREATE INDEX IF NOT EXISTS idx_products_active ON products(isActive);
-
-    `
-  },
-  {
-    version: 2,
     name: 'Complete GST Billing System Schema',
     up: `
       -- Drop old tables
