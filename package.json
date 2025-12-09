@@ -41,6 +41,7 @@
     "@capacitor/toast": "^7.0.2",
     "@ionic/angular": "^8.0.0",
     "@ionic/pwa-elements": "^3.3.0",
+    "animate.css": "^4.1.1",
     "ionicons": "^7.0.0",
     "jeep-sqlite": "^2.6.4",
     "rxjs": "~7.8.0",

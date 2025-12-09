@@ -37,7 +37,7 @@
             <ion-toggle formControlName="isInventory">Manage Stock/Inventory</ion-toggle>
           </ion-item>
           @if(form.value.isInventory){
-          <div>
+          <div class="animate__animated animate__slideInUp animate__faster">
             <app-input [form]="inventoryForm" name="count" placeholder="Enter Count" labelPlacement="floating"
               type="number" errorText="Please enter Count" fill="outline"></app-input>
           </div>
@@ -46,7 +46,7 @@
             <ion-toggle formControlName="isThreshold">Manage Threshold Alerts</ion-toggle>
           </ion-item>
           @if(form.value.isThreshold){
-          <div>
+          <div class="animate__animated animate__slideInUp animate__faster">
             <div class="ion-margin-bottom">
               <app-input [form]="form" name="warnThresholdNumber" placeholder="Enter Price" labelPlacement="floating"
                 type="number" errorText="Please enter Price" fill="outline"></app-input>
