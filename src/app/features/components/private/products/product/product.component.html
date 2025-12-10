@@ -103,7 +103,7 @@
   </div>
 </ion-content>
 
-<ion-footer class="ion-no-border">
+<ion-footer class="ion-no-border" [translucent]="true" mode="ios">
   @if(!isProductSave()){
   <ion-tab-bar>
     <ion-tab-button (click)="onSubmit(true)" [disabled]="formMeta.submitProcessing">
