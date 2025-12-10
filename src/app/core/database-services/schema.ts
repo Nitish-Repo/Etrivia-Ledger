@@ -19,11 +19,6 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
     version: 1,
     name: 'Complete GST Billing System Schema',
     up: `
-      -- Drop old tables
-      DROP TABLE IF EXISTS products;
-      DROP TABLE IF EXISTS inventory;
-      DROP TABLE IF EXISTS customers;
-      
       -- ============================================
       -- PRODUCTS TABLE (Enhanced with GST support)
       -- ============================================
@@ -35,7 +30,8 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
         sku TEXT UNIQUE,
         description TEXT,
         category TEXT,
-        unit TEXT DEFAULT 'PCS',
+        unit TEXT,
+        isfavourite INTEGER,
         
         -- Purchase Pricing
         purchaseCost REAL NOT NULL DEFAULT 0,
@@ -56,6 +52,7 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
         discountValue REAL DEFAULT 0,
         
         -- Inventory
+        isInventory INTEGER,
         currentStock REAL DEFAULT 0,
         minStockLevel REAL DEFAULT 0,
         maxStockLevel REAL,

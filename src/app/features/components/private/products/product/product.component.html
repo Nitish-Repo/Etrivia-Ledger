@@ -28,8 +28,8 @@
             </div>
 
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="retailPrice" placeholder="Enter Retail Price" labelPlacement="floating"
-                type="number" errorText="Please enter Retail Price" fill="outline"></app-input>
+              <app-input [form]="form" name="mrp" placeholder="Enter MRP" labelPlacement="floating" type="number"
+                errorText="Please enter MRP" fill="outline"></app-input>
             </div>
 
             <div class="ion-margin-bottom">
@@ -68,28 +68,69 @@
 
           </ion-segment-content>
           <ion-segment-content id="second">
+            <ion-item-divider>
+              <ion-label>Sale Pricing </ion-label>
+            </ion-item-divider>
+            <div class="ion-margin-bottom ion-margin-top">
+              <app-input [form]="form" name="saleCessRate" placeholder="Enter CESS" labelPlacement="floating"
+                type="number" errorText="Please enter CESS" fill="outline"></app-input>
+            </div>
+
+            <div class="ion-display-flex ion-margin-bottom">
+              <app-input class="ion-flex-1" [form]="form" name="retailPrice" placeholder="Enter Retail Price"
+                labelPlacement="floating" type="number" errorText="Please enter Retail Price"
+                fill="outline"></app-input>
+              <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="wholesalePrice"
+                placeholder="Enter Wholesale Price" labelPlacement="floating" type="number"
+                errorText="Please enter Wholesale Price" fill="outline"></app-input>
+            </div>
+
+            <ion-item-divider>
+              <ion-label>Purchase Pricing</ion-label>
+            </ion-item-divider>
+
+            <div class="ion-display-flex ion-margin-bottom ion-margin-top">
+              <app-input class="ion-flex-1" [form]="form" name="purchaseCost" placeholder="Enter Purchase Cost"
+                labelPlacement="floating" type="number" errorText="Please enter Purchase Cost"
+                fill="outline"></app-input>
+              <app-select class="ion-flex-1 ion-margin-start" [meta]="purchaseTaxTypeMeta"
+                (onSelectionChange)="handleDiscountTypeChange($event)" />
+            </div>
+
+            <div class="ion-display-flex ion-margin-bottom">
+              <app-input class="ion-flex-1" [form]="form" name="purchaseCessRate" placeholder="Enter Purchase Cess Rate"
+                labelPlacement="floating" type="number" errorText="Please enter Purchase Cess Rate"
+                fill="outline"></app-input>
+              <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="purchaseCessRate"
+                placeholder="Enter Purchase Cess Rate" labelPlacement="floating" type="number"
+                errorText="Please enter Purchase Cess Rate" fill="outline"></app-input>
+            </div>
+
             <ion-list>
               <ion-item class="ion-no-padding" lines="none">
                 <ion-toggle formControlName="isInventory">Manage Stock/Inventory</ion-toggle>
               </ion-item>
               @if(form.value.isInventory){
               <div class="animate__animated animate__slideInUp animate__faster">
-                <app-input [form]="inventoryForm" name="count" placeholder="Enter Count" labelPlacement="floating"
-                  type="number" errorText="Please enter Count" fill="outline"></app-input>
-              </div>
-              }
-              <ion-item class="ion-no-padding" lines="none">
-                <ion-toggle formControlName="isThreshold">Manage Threshold Alerts</ion-toggle>
-              </ion-item>
-              @if(form.value.isThreshold){
-              <div class="animate__animated animate__slideInUp animate__faster">
                 <div class="ion-margin-bottom">
-                  <app-input [form]="form" name="warnThresholdNumber" placeholder="Enter Price"
-                    labelPlacement="floating" type="number" errorText="Please enter Price" fill="outline"></app-input>
+                  <app-input [form]="form" name="currentStock" placeholder="Current Stock" labelPlacement="floating"
+                    type="number" errorText="Please enter Current Stock" fill="outline"></app-input>
                 </div>
-                <div>
-                  <app-input [form]="form" name="infoThresholdNumber" placeholder="Enter Price"
-                    labelPlacement="floating" type="number" errorText="Please enter Price" fill="outline"></app-input>
+                <div class="ion-display-flex ion-margin-bottom">
+                  <app-input class="ion-flex-1" [form]="form" name="minStockLevel"
+                    placeholder="Enter Min Stock" labelPlacement="floating" type="number"
+                    errorText="Please enter Min Stock" fill="outline"></app-input>
+                  <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="maxStockLevel"
+                    placeholder="Enter Max Stock" labelPlacement="floating" type="number"
+                    errorText="Please enter Max Stock" fill="outline"></app-input>
+                </div>
+                <div class="ion-display-flex ion-margin-bottom">
+                  <app-input class="ion-flex-1" [form]="form" name="barcode" placeholder="Enter Barcode"
+                    labelPlacement="floating" type="number" errorText="Please enter Barcode"
+                    fill="outline"></app-input>
+                  <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="sku"
+                    placeholder="Enter SKU" labelPlacement="floating" type="number"
+                    errorText="Please enter SKU" fill="outline"></app-input>
                 </div>
               </div>
               }
@@ -116,10 +157,16 @@
     </ion-tab-button>
   </ion-tab-bar>
   } @else {
-  <ion-toolbar>
+  <!-- <ion-toolbar>
     <ion-button size="large" expand="block" [disabled]="formMeta.submitProcessing" [strong]="true">
       <ion-spinner name="crescent"></ion-spinner>
     </ion-button>
-  </ion-toolbar>
+  </ion-toolbar> -->
+  <ion-tab-bar>
+    <ion-tab-button [disabled]="formMeta.submitProcessing">
+      <ion-spinner name="crescent"></ion-spinner>
+      <ion-label>Saving..</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
   }
 </ion-footer>

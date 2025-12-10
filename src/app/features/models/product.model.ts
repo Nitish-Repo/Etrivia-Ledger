@@ -24,10 +24,12 @@ export interface Product {
   productId?: string;
   productName: string;
   description?: string;
+  isfavourite?:boolean;
   
   // Tax Classification
   hsnCode?: string;
-  sacCode?: string;
+  barcode?: string;
+  sku?: string;
   
   // Purchase Pricing
   purchaseCost?: number;
@@ -36,8 +38,9 @@ export interface Product {
   purchaseCessRate?: number;           // CESS % on purchase
   
   // Sale Pricing
-  retailPrice?: number;                // MRP / Retail selling price
+  retailPrice?: number;                // Retail selling price
   wholesalePrice?: number;             // Wholesale selling price
+  mrp?: number;                        // Maximum Retail Price
   saleTaxType?: TaxType;               // Tax inclusive or exclusive for sale
   saleGstRate?: number;                // GST % on sale
   saleCessRate?: number;               // CESS % on sale
@@ -47,12 +50,11 @@ export interface Product {
   discountValue?: number;
   
   // Inventory
-  unitMeasure?: UnitOfMeasure;         // Standard UOM from GST list
-  isInventory?: boolean;
-  isThreshold?: boolean;
-  warnThresholdNumber?: number;
-  infoThresholdNumber?: number;
-  currentStock?: number;
+  unit?: string;                       // Unit of measure (PCS, KG, etc.)
+  isInventory?: boolean;               // Enable inventory management
+  currentStock?: number;  
+  minStockLevel?: number;              // Minimum stock alert level
+  maxStockLevel?: number;              // Maximum stock level
   
   // General
   imageUrl?: string;
@@ -73,7 +75,8 @@ export function getProductMeta() {
     
     // Tax Classification
     { key: 'hsnCode', label: 'HSN Code', required: false },
-    { key: 'sacCode', label: 'SAC Code', required: false },
+    { key: 'barcode', label: 'Barcode', required: false },
+    { key: 'sku', label: 'SKU', required: false },
     
     // Purchase Details
     { key: 'purchaseCost', label: 'Purchase Cost', required: false, controlType: 'number' },
@@ -92,6 +95,7 @@ export function getProductMeta() {
     // Sale Details
     { key: 'retailPrice', label: 'Retail Price', required: false, controlType: 'number' },
     { key: 'wholesalePrice', label: 'Wholesale Price', required: false, controlType: 'number' },
+    { key: 'mrp', label: 'MRP', required: false, controlType: 'number' },
     {
       key: 'saleTaxType',
       label: 'Sale Tax Type',
@@ -117,16 +121,10 @@ export function getProductMeta() {
     { key: 'discountValue', label: 'Discount Value', required: false, controlType: 'number' },
     
     // Inventory
-    {
-      key: 'unitMeasure',
-      label: 'Unit of Measure',
-      required: false,
-      controlType: 'select',
-      options: Object.entries(UOM_LABELS).map(([key, value]) => ({ key, value }))
-    },
+    { key: 'unit', label: 'Unit', required: false },
     { key: 'currentStock', label: 'Current Stock', required: false, controlType: 'number' },
-    { key: 'warnThresholdNumber', label: 'Warn Threshold', required: false, controlType: 'number' },
-    { key: 'infoThresholdNumber', label: 'Info Threshold', required: false, controlType: 'number' },
+    { key: 'minStockLevel', label: 'Min Stock Level', required: false, controlType: 'number' },
+    { key: 'maxStockLevel', label: 'Max Stock Level', required: false, controlType: 'number' },
     
     // General
     { key: 'imageUrl', label: 'Image URL', required: false },
@@ -142,8 +140,8 @@ export function getProductMeta() {
       ],
     },
     {
-      key: 'isThreshold',
-      label: 'Enable Threshold',
+      key: 'isInventory',
+      label: 'Manage Inventory',
       controlType: 'radio',
       options: [
         { key: true, value: 'Yes' },
@@ -258,9 +256,9 @@ export function calculateProfitMargin(product: Product, useWholesale: boolean = 
  * Check if product is low stock
  */
 export function isLowStock(product: Product): boolean {
-  if (!product.isInventory || !product.isThreshold) return false;
+  if (!product.isInventory) return false;
   const currentStock = product.currentStock || 0;
-  const warnThreshold = product.warnThresholdNumber || 0;
-  return currentStock <= warnThreshold;
+  const minStock = product.minStockLevel || 0;
+  return currentStock <= minStock;
 }
 
