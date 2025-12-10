@@ -61,7 +61,6 @@ export class ProductComponent implements OnInit {
 
   ngOnInit() {
     this.modelMeta = getProductMeta();
-    this.inventoryMeta = getProductInventoryMeta();
 
     // Find metadata for select components
     this.unitMeasureMeta = this.modelMeta.find(m => m.key === 'unitMeasure')!;
@@ -88,9 +87,7 @@ export class ProductComponent implements OnInit {
     this.service.getProductById(productId).subscribe((y) => {
       this.form = this.app.meta.toFormGroup(y, this.modelMeta);
     });
-
-    this.service.getProductInventoryByProductId(productId).subscribe((y) => {
-    });
+ 
   }
 
   onSubmit(addMore?: boolean) {

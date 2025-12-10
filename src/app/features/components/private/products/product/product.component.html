@@ -38,7 +38,7 @@
             </div>
 
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="hsnCode" placeholder="HSN" labelPlacement="floating" type="number"
+              <app-input [form]="form" name="hsnCode" placeholder="HSN" labelPlacement="floating"
                 errorText="Please enter HSN" fill="outline"></app-input>
             </div>
 
@@ -112,7 +112,7 @@
               </ion-item>
               @if(form.value.isInventory){
               <div class="animate__animated animate__slideInUp animate__faster">
-                <div class="ion-margin-bottom">
+                <div class="ion-margin-bottom ion-margin-top">
                   <app-input [form]="form" name="currentStock" placeholder="Current Stock" labelPlacement="floating"
                     type="number" errorText="Please enter Current Stock" fill="outline"></app-input>
                 </div>
@@ -126,10 +126,10 @@
                 </div>
                 <div class="ion-display-flex ion-margin-bottom">
                   <app-input class="ion-flex-1" [form]="form" name="barcode" placeholder="Enter Barcode"
-                    labelPlacement="floating" type="number" errorText="Please enter Barcode"
+                    labelPlacement="floating" errorText="Please enter Barcode"
                     fill="outline"></app-input>
                   <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="sku"
-                    placeholder="Enter SKU" labelPlacement="floating" type="number"
+                    placeholder="Enter SKU" labelPlacement="floating"
                     errorText="Please enter SKU" fill="outline"></app-input>
                 </div>
               </div>
