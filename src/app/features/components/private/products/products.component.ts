@@ -39,7 +39,7 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
   }
 
   ngOnInit() {
-    this.loadProducts();
+    // Data loading handled by ionViewWillEnter
   }
 
   ionViewWillEnter() {
