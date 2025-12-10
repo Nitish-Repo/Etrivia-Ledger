@@ -2,9 +2,6 @@
   <app-toolbar title="Product"></app-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-  <div class="ion-padding">
-    <h1>Product</h1>
-  </div>
   <div class="ion-margin">
     @if(form){
     <div>
@@ -106,7 +103,7 @@
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <ion-toolbar>
+  <ion-toolbar class="ion-text-center">
     @if(!isProductSave()){
     <ion-button shape="round" (click)="onSubmit(true)" [disabled]="formMeta.submitProcessing">
       <ion-icon name="add-circle-outline" slot="start"></ion-icon>
