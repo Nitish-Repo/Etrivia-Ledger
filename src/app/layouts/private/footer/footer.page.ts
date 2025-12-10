@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, signal, AfterViewInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, signal, AfterViewInit, OnInit } from '@angular/core';
 import {
   IonTabs,
   IonTabBar,
@@ -8,7 +8,8 @@ import {
   GestureController
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { addIcons } from 'ionicons';
 import {
   home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline,
@@ -29,12 +30,33 @@ import {
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class FooterPage {
+export class FooterPage implements OnInit {
   selectedTab = signal<string>('home');
+  hideTabBar = signal<boolean>(false);
   private tabs = ['home', 'dashboard', 'sell'];
+  
+  // Add URLs here where you want to hide the tab bar
+  private hideTabBarRoutes: string[] = [
+    '/product/',
+    '/product-add',
+    '/customer/',
+    '/customer-add',
+    // Add more routes as needed
+  ];
 
   constructor(private router: Router, private gestureCtrl: GestureController) {
     addIcons({ home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline });
+  }
+
+  ngOnInit() {
+    // Hide tab bar on specified routes
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      const url = event.url;
+      const shouldHide = this.hideTabBarRoutes.some(route => url.includes(route));
+      this.hideTabBar.set(shouldHide);
+    });
   }
 
   // ngAfterViewInit() {

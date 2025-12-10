@@ -99,24 +99,27 @@
             </ion-list>
           </ion-segment-content>
         </ion-segment-view>
-
-        <div>
-          @if(!isProductSave()){
-          <ion-button shape="round" (click)="onSubmit(true)" [disabled]="formMeta.submitProcessing">
-            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-            Add more</ion-button>
-          <ion-button shape="round" type="submit" [disabled]="formMeta.submitProcessing">
-            <ion-icon name="save-outline" slot="start"></ion-icon>
-            Save</ion-button>
-          } @else {
-          <ion-button size="large" expand="block" [disabled]="formMeta.submitProcessing"
-            class="ion-margin-top ion-padding-top" [strong]="true">
-            <ion-spinner name="crescent"></ion-spinner>
-          </ion-button>
-          }
-        </div>
       </form>
     </div>
     }
   </div>
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    @if(!isProductSave()){
+    <ion-button shape="round" (click)="onSubmit(true)" [disabled]="formMeta.submitProcessing">
+      <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+      Add more
+    </ion-button>
+    <ion-button shape="round" type="submit" form="productForm" [disabled]="formMeta.submitProcessing">
+      <ion-icon name="save-outline" slot="start"></ion-icon>
+      Save
+    </ion-button>
+    } @else {
+    <ion-button size="large" expand="block" [disabled]="formMeta.submitProcessing" [strong]="true">
+      <ion-spinner name="crescent"></ion-spinner>
+    </ion-button>
+    }
+  </ion-toolbar>
+</ion-footer>

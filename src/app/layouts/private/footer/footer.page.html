@@ -1,4 +1,5 @@
 <ion-tabs (ionTabsDidChange)="setCurrentTab($event)">
+  @if (!hideTabBar()) {
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="home">
       <ion-icon [name]="selectedTab() === 'home' ? 'home' : 'home-outline'"></ion-icon>
@@ -17,4 +18,5 @@
       <ion-label>Sell</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
+  }
 </ion-tabs>
