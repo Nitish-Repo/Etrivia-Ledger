@@ -7,7 +7,7 @@
 <ion-content [fullscreen]="true">
 
   <ion-list>
-    @for (result of results; track result) {
+    @for (result of results(); track result) {
     <ion-item [button]="true" detail="false" lines="full" [routerLink]="`./${result.productId}`">
       <ion-icon slot="start" name="cube-outline" class="ion-margin-end"></ion-icon>
       <ion-label>
