@@ -34,31 +34,31 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
         isfavourite INTEGER,
         
         -- Purchase Pricing
-        purchaseCost REAL NOT NULL DEFAULT 0,
-        purchaseTaxType TEXT DEFAULT 'INCLUSIVE',
-        purchaseGstRate REAL DEFAULT 0,
-        purchaseCessRate REAL DEFAULT 0,
+        purchaseCost REAL,
+        purchaseTaxType TEXT,
+        purchaseGstRate REAL,
+        purchaseCessRate REAL,
         
         -- Sale Pricing
         wholesalePrice REAL,
-        retailPrice REAL NOT NULL DEFAULT 0,
+        retailPrice REAL,
         mrp REAL,
-        saleTaxType TEXT DEFAULT 'INCLUSIVE',
-        saleGstRate REAL DEFAULT 0,
-        saleCessRate REAL DEFAULT 0,
+        saleTaxType TEXT,
+        saleGstRate REAL,
+        saleCessRate REAL,
         
         -- Discount
-        discountType TEXT DEFAULT 'NONE',
-        discountValue REAL DEFAULT 0,
+        discountType TEXT,
+        discountValue REAL,
         
         -- Inventory
         isInventory INTEGER,
-        currentStock REAL DEFAULT 0,
-        minStockLevel REAL DEFAULT 0,
+        currentStock REAL,
+        minStockLevel REAL,
         maxStockLevel REAL,
         
         imageUrl TEXT,
-        isActive INTEGER DEFAULT 1,
+        isActive INTEGER NOT NULL,
         createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
         updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
       );

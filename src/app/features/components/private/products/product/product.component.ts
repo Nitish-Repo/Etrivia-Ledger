@@ -116,16 +116,16 @@ export class ProductComponent implements OnInit {
             if (addMore) {
               this.isProductSave.set(false);
               this.formMeta.submitProcessing = false;
-              this.form = this.app.meta.toFormGroup(this.defaultProduct, this.modelMeta);
+              // Reset form with default values
+              this.form.reset(this.defaultProduct);
               this.form.markAsPristine();
               this.form.markAsUntouched();
               this.form.updateValueAndValidity();
-              this.cdr.markForCheck();
             } else {
               this.form.reset();
               this.isProductSave.set(false);
               this.formMeta.submitProcessing = false;
-              this.router.navigate(['../', x.productId], {
+              this.router.navigate(['../'], {
                 relativeTo: this.route,
               });
             }
