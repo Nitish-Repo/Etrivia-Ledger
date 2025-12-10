@@ -6,7 +6,7 @@
     @if(form){
     <div>
       <form id="productForm" [formGroup]="form" (submit)="onSubmit()">
-        <ion-segment mode="ios" >
+        <ion-segment mode="ios">
           <ion-segment-button value="first" content-id="first">
             <ion-label>Basic Detail</ion-label>
           </ion-segment-button>
@@ -96,6 +96,7 @@
             </ion-list>
           </ion-segment-content>
         </ion-segment-view>
+        <button type="submit" style="display: none;" [disabled]="formMeta.submitProcessing"></button>
       </form>
     </div>
     }
@@ -104,16 +105,16 @@
 
 <ion-footer class="ion-no-border">
   @if(!isProductSave()){
-  <div style="display: flex; width: 100%;">
-    <ion-item button (click)="onSubmit(true)" [disabled]="formMeta.submitProcessing" lines="none" style="--background: var(--ion-color-primary); --color: white; flex: 1; margin: 0;">
-      <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+  <ion-tab-bar>
+    <ion-tab-button (click)="onSubmit(true)" [disabled]="formMeta.submitProcessing">
+      <ion-icon name="add-circle-outline"></ion-icon>
       <ion-label>Add more</ion-label>
-    </ion-item>
-    <ion-item button type="submit" (click)="onSubmit(false)"  form="productForm" [disabled]="formMeta.submitProcessing" lines="none" style="--background: var(--ion-color-primary); --color: white; flex: 1; margin: 0;">
-      <ion-icon name="save-outline" slot="start"></ion-icon>
+    </ion-tab-button>
+    <ion-tab-button (click)="onSubmit(false)" [disabled]="formMeta.submitProcessing">
+      <ion-icon name="save-outline"></ion-icon>
       <ion-label>Save</ion-label>
-    </ion-item>
-  </div>
+    </ion-tab-button>
+  </ion-tab-bar>
   } @else {
   <ion-toolbar>
     <ion-button size="large" expand="block" [disabled]="formMeta.submitProcessing" [strong]="true">
