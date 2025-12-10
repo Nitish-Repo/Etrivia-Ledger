@@ -6,7 +6,7 @@ import { getProductMeta, Product, DiscountType } from '@app/features/models/prod
 import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
 import { ModelMeta } from '@app/shared-services';
 import { FormMeta } from '@app/shared-services/models/form-meta';
-import { IonHeader, IonContent, IonButton, IonSpinner, IonTextarea, IonIcon, IonToggle, IonItem, IonList, IonSegment, IonSegmentButton, IonLabel, IonSegmentView, IonSegmentContent, IonFooter, IonTitle, IonToolbar } from "@ionic/angular/standalone";
+import { IonHeader, IonContent, IonButton, IonSpinner, IonTextarea, IonIcon, IonToggle, IonItem, IonList, IonSegment, IonSegmentButton, IonLabel, IonSegmentView, IonSegmentContent, IonFooter, IonTitle, IonToolbar, IonGrid, IonRow, IonCol } from "@ionic/angular/standalone";
 import { of, Subject, switchMap } from 'rxjs';
 import { InputComponent } from "@app/shared/input/input.component";
 import { addIcons } from 'ionicons';
@@ -21,7 +21,7 @@ import { SelectComponent } from "@app/shared/select/select.component";
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss'],
   standalone: true,
-  imports: [IonToolbar, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonList, IonItem, IonToggle, IonIcon, IonTextarea, IonSpinner, IonButton, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonSegmentView, IonSegmentContent]
+  imports: [IonToolbar, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonList, IonItem, IonToggle, IonIcon, IonTextarea, IonSpinner, IonButton, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonSegmentView, IonSegmentContent, IonGrid, IonRow, IonCol]
 })
 export class ProductComponent implements OnInit {
   private app = inject(AppService);
