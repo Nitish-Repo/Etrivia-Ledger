@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AppService } from '@app/core/app.service';
-import { getProductMeta, Product } from '@app/features/models/product.model';
+import { getProductMeta, Product, DiscountType } from '@app/features/models/product.model';
 import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
 import { ModelMeta } from '@app/shared-services';
 import { FormHelper } from '@app/shared-services/helpers/form.helper';
 import { FormMeta } from '@app/shared-services/models/form-meta';
-import { IonHeader, IonContent, IonButton, IonSpinner, IonTextarea, IonIcon, IonToggle, IonItem, IonList, IonSelect, IonSelectOption } from "@ionic/angular/standalone";
+import { IonHeader, IonContent, IonButton, IonSpinner, IonTextarea, IonIcon, IonToggle, IonItem, IonList, IonSelect, IonSelectOption, IonGrid, IonRow, IonCol } from "@ionic/angular/standalone";
 import { of, Subject, switchMap } from 'rxjs';
 import { InputComponent } from "@app/shared/input/input.component";
 import { addIcons } from 'ionicons';
@@ -22,7 +22,7 @@ import { SelectComponent } from "@app/shared/select/select.component";
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss'],
   standalone: true,
-  imports: [IonList, IonItem, IonToggle, IonIcon, IonTextarea, IonSpinner, IonButton, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent]
+  imports: [IonCol, IonRow, IonGrid, IonList, IonItem, IonToggle, IonIcon, IonTextarea, IonSpinner, IonButton, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent]
 })
 export class ProductComponent implements OnInit {
   private app = inject(AppService);
@@ -41,6 +41,15 @@ export class ProductComponent implements OnInit {
   modelMeta!: ModelMeta[];
   inventoryMeta!: ModelMeta[];
   unitMeasureMeta!: ModelMeta;
+  discountTypeMeta!: ModelMeta;
+
+  // Default values for new product
+  private readonly defaultProduct: Partial<Product> = {
+    isActive: true,
+    discountType: DiscountType.PERCENTAGE,
+    isInventory: false,
+    isThreshold: false
+  };
 
 
   constructor() {
@@ -53,8 +62,9 @@ export class ProductComponent implements OnInit {
     this.modelMeta = getProductMeta();
     this.inventoryMeta = getProductInventoryMeta();
     
-    // Find unitMeasure metadata for the select component
+    // Find metadata for select components
     this.unitMeasureMeta = this.modelMeta.find(m => m.key === 'unitMeasure')!;
+    this.discountTypeMeta = this.modelMeta.find(m => m.key === 'discountType')!;
     
     this.route.params.subscribe((x) => {
       if (x['id']) {
@@ -67,7 +77,7 @@ export class ProductComponent implements OnInit {
   }
 
   private buildNewProductForm() {
-    this.form = this.app.meta.toFormGroup({ isActive: true }, this.modelMeta);
+    this.form = this.app.meta.toFormGroup(this.defaultProduct, this.modelMeta);
     this.inventoryForm = this.app.meta.toFormGroup({}, this.inventoryMeta);
   }
 
@@ -84,78 +94,79 @@ export class ProductComponent implements OnInit {
 
   onSubmit(addMore?: boolean) {
     console.log(this.form.value);
-    FormHelper.submit(
-      this.form,
-      this.formMeta,
-      () => {
-        let productId = this.form.value['productId'];
-        if (productId) {
-          // edit
-          if (this.form.value.isInventory === true) {
-            let productInventory = this.inventoryForm.value;
-            productInventory.productId = productId;
-            this.service.updateProductInventory(productInventory).subscribe();
-          }
-          this.service.updateProduct(this.form.value).subscribe((x) => {
-            // this.app.noty.notifyUpdated('Product has been');
+    // FormHelper.submit(
+    //   this.form,
+    //   this.formMeta,
+    //   () => {
+    //     let productId = this.form.value['productId'];
+    //     if (productId) {
+    //       // edit
+    //       if (this.form.value.isInventory === true) {
+    //         let productInventory = this.inventoryForm.value;
+    //         productInventory.productId = productId;
+    //         this.service.updateProductInventory(productInventory).subscribe();
+    //       }
+    //       this.service.updateProduct(this.form.value).subscribe((x) => {
+    //         // this.app.noty.notifyUpdated('Product has been');
 
-            // Check if the component was opened within a dialog, and close it
-            // if (this.data && this.data.isDialog) {
-            //   this.dialog.closeAll();
-            // } else {
-            this.router.navigate(['../'], { relativeTo: this.route });
-            // }
-          });
-        } else {
-          // add
-          this.service
-            .addProduct(this.form.value)
-            .pipe(
-              switchMap((x: Product | any) => {
-                let productInventory = this.inventoryForm.value;
-                productInventory.productId = x.productId;
-                // save inventory if managing inventory for this product
-                if (x.isInventory === true) {
-                  return this.service.addProductInventory(productInventory);
-                } else {
-                  return of(x);
-                }
-              })
-            )
-            .subscribe((x: Product | ProductInventory | any) => {
-              // this.app.noty.notifyClose('Product has been added');
-              if (addMore) {
-                this.form = this.app.meta.toFormGroup(
-                  { isActive: true },
-                  this.modelMeta
-                );
-                this.inventoryForm.reset();
-                this.form.markAsPristine();
-                this.form.markAsUntouched();
-                this.form.updateValueAndValidity();
-                // this.cdr.markForCheck();
-              } else {
-                this.form.reset();
-                this.inventoryForm.reset();
+    //         // Check if the component was opened within a dialog, and close it
+    //         // if (this.data && this.data.isDialog) {
+    //         //   this.dialog.closeAll();
+    //         // } else {
+    //         this.router.navigate(['../'], { relativeTo: this.route });
+    //         // }
+    //       });
+    //     } else {
+    //       // add
+    //       this.service
+    //         .addProduct(this.form.value)
+    //         .pipe(
+    //           switchMap((x: Product | any) => {
+    //             let productInventory = this.inventoryForm.value;
+    //             productInventory.productId = x.productId;
+    //             // save inventory if managing inventory for this product
+    //             if (x.isInventory === true) {
+    //               return this.service.addProductInventory(productInventory);
+    //             } else {
+    //               return of(x);
+    //             }
+    //           })
+    //         )
+    //         .subscribe((x: Product | ProductInventory | any) => {
+    //           // this.app.noty.notifyClose('Product has been added');
+    //           if (addMore) {
+    //             this.form = this.app.meta.toFormGroup(this.defaultProduct, this.modelMeta);
+    //             this.inventoryForm.reset();
+    //             this.form.markAsPristine();
+    //             this.form.markAsUntouched();
+    //             this.form.updateValueAndValidity();
+    //             // this.cdr.markForCheck();
+    //           } else {
+    //             this.form.reset();
+    //             this.inventoryForm.reset();
 
-                // Check if the component was opened within a dialog, and close it
-                // if (this.data && this.data.isDialog) {
-                //   this.dialog.closeAll();
-                // } else {
-                this.router.navigate(['../', x.productId], {
-                  relativeTo: this.route,
-                });
-                // }
-              }
-            });
-        }
-      },
-      true
-    );
+    //             // Check if the component was opened within a dialog, and close it
+    //             // if (this.data && this.data.isDialog) {
+    //             //   this.dialog.closeAll();
+    //             // } else {
+    //             this.router.navigate(['../', x.productId], {
+    //               relativeTo: this.route,
+    //             });
+    //             // }
+    //           }
+    //         });
+    //     }
+    //   },
+    //   true
+    // );
   }
 
-  handleChange(event: any) {
+  handleUnitChange(event: any) {
     console.log('Unit of Measure changed:', event);
+  }
+
+  handleDiscountTypeChange(event: any) {
+    console.log('Discount Type changed:', event);
   }
 
 }

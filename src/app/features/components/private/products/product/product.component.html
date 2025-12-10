@@ -37,13 +37,29 @@
         </div>
 
         <div class="ion-margin-bottom">
-          <app-input [form]="form" name="purchaseCost" placeholder="Enter Price" labelPlacement="floating" type="number"
-            errorText="Please enter Price" fill="outline"></app-input>
+          <app-select [meta]="unitMeasureMeta" (onSelectionChange)="handleUnitChange($event)" />
         </div>
 
         <div class="ion-margin-bottom">
-          <app-select [meta]="unitMeasureMeta" (onSelectionChange)="handleChange($event)" />
+          <app-input [form]="form" name="purchaseCost" placeholder="Enter Purchase Cost" labelPlacement="floating" type="number"
+            errorText="Please enter Purchase Cost" fill="outline"></app-input>
         </div>
+
+        <!-- Discount Type and Value in one row -->
+        <div class="ion-margin-bottom">
+          <ion-grid class="ion-no-padding">
+            <ion-row>
+              <ion-col size="6">
+                <app-select [meta]="discountTypeMeta" (onSelectionChange)="handleDiscountTypeChange($event)" />
+              </ion-col>
+              <ion-col size="6">
+                <app-input [form]="form" name="discountValue" placeholder="Enter Discount" labelPlacement="floating"
+                  type="number" errorText="Please enter Discount" fill="outline"></app-input>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+
 
         <ion-list>
           <ion-item class="ion-no-padding" lines="none">

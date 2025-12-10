@@ -2,10 +2,20 @@ import { ModelMeta } from '@app/shared-services';
 import { UnitOfMeasure, UOM_LABELS } from './unit-of-measure.model';
 
 /**
- * Tax Types
+ * Tax Types Enum
  */
-export type TaxType = 'INCLUSIVE' | 'EXCLUSIVE';
-export type DiscountType = 'PERCENTAGE' | 'AMOUNT';
+export enum TaxType {
+  INCLUSIVE = 'INCLUSIVE',
+  EXCLUSIVE = 'EXCLUSIVE'
+}
+
+/**
+ * Discount Types Enum
+ */
+export enum DiscountType {
+  PERCENTAGE = 'PERCENTAGE',
+  AMOUNT = 'AMOUNT'
+}
 
 /**
  * Enhanced Product Model with GST Support
@@ -72,8 +82,8 @@ export function getProductMeta() {
       label: 'Purchase Tax Type',
       controlType: 'select',
       options: [
-        { key: 'INCLUSIVE', value: 'Tax Inclusive' },
-        { key: 'EXCLUSIVE', value: 'Tax Exclusive' },
+        { key: TaxType.INCLUSIVE, value: 'Tax Inclusive' },
+        { key: TaxType.EXCLUSIVE, value: 'Tax Exclusive' },
       ],
     },
     { key: 'purchaseGstRate', label: 'Purchase GST %', required: false, controlType: 'number' },
@@ -87,8 +97,8 @@ export function getProductMeta() {
       label: 'Sale Tax Type',
       controlType: 'select',
       options: [
-        { key: 'INCLUSIVE', value: 'Tax Inclusive' },
-        { key: 'EXCLUSIVE', value: 'Tax Exclusive' },
+        { key: TaxType.INCLUSIVE, value: 'Tax Inclusive' },
+        { key: TaxType.EXCLUSIVE, value: 'Tax Exclusive' },
       ],
     },
     { key: 'saleGstRate', label: 'Sale GST %', required: false, controlType: 'number' },
@@ -100,8 +110,8 @@ export function getProductMeta() {
       label: 'Discount Type',
       controlType: 'select',
       options: [
-        { key: 'PERCENTAGE', value: 'Percentage' },
-        { key: 'AMOUNT', value: 'Amount' },
+        { key: DiscountType.PERCENTAGE, value: 'Percentage' },
+        { key: DiscountType.AMOUNT, value: 'Amount' },
       ],
     },
     { key: 'discountValue', label: 'Discount Value', required: false, controlType: 'number' },
@@ -197,7 +207,7 @@ export function calculatePurchaseCost(product: Product, quantity: number = 1): n
   const gstRate = product.purchaseGstRate || 0;
   const cessRate = product.purchaseCessRate || 0;
   
-  if (product.purchaseTaxType === 'INCLUSIVE') {
+  if (product.purchaseTaxType === TaxType.INCLUSIVE) {
     return baseCost * quantity;
   } else {
     const taxAmount = baseCost * (gstRate + cessRate) / 100;
@@ -214,7 +224,7 @@ export function calculateSalePrice(product: Product, quantity: number = 1, useWh
   
   // Apply discount
   if (product.discountValue) {
-    if (product.discountType === 'PERCENTAGE') {
+    if (product.discountType === DiscountType.PERCENTAGE) {
       finalPrice = basePrice * (1 - product.discountValue / 100);
     } else {
       finalPrice = basePrice - product.discountValue;
@@ -222,7 +232,7 @@ export function calculateSalePrice(product: Product, quantity: number = 1, useWh
   }
   
   // Apply tax if exclusive
-  if (product.saleTaxType === 'EXCLUSIVE') {
+  if (product.saleTaxType === TaxType.EXCLUSIVE) {
     const gstRate = product.saleGstRate || 0;
     const cessRate = product.saleCessRate || 0;
     const taxAmount = finalPrice * (gstRate + cessRate) / 100;
