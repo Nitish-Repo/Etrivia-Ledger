@@ -8,7 +8,7 @@
 
   <ion-list>
     @for (result of results(); track result) {
-    <ion-item [button]="true" detail="false" lines="full" [routerLink]="`./${result.productId}`">
+    <ion-item [button]="true" detail="false" lines="full" (click)="updateProduct(result)">
       <ion-icon slot="start" name="cube-outline" class="ion-margin-end"></ion-icon>
       <ion-label>
         <strong>{{result.productName}}</strong>
@@ -21,7 +21,7 @@
         <ion-note color="medium">{{result.updatedAt | date:'dd MMM yyyy':'utc' }}</ion-note>
       </div>
       <div>
-        <ion-button slot="end" shape="round" size="large" fill="clear">
+        <ion-button slot="end" shape="round" size="large" fill="clear" (click)="presentActionSheet($event, result)">
           <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
         </ion-button>
       </div>

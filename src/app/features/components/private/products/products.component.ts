@@ -1,12 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Product } from '@app/features/models/product.model';
 import { ProductService } from '@app/features/services/product.service';
 import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
-import { IonHeader, IonContent, IonButton, IonToolbar, IonSearchbar, IonFab, IonFabButton, IonIcon, IonList, IonLabel, IonItem, IonText, IonNote } from "@ionic/angular/standalone";
+import {
+  IonHeader, IonContent, IonButton, IonToolbar, IonSearchbar, IonFab, IonFabButton, ActionSheetController,
+  IonIcon, IonList, IonLabel, IonItem, IonText, IonNote
+} from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
-import { add, cubeOutline, ellipsisVertical, chevronForward } from 'ionicons/icons';
+import { add, cubeOutline, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, close } from 'ionicons/icons';
 import { ViewWillEnter } from '@ionic/angular';
 
 @Component({
@@ -14,28 +17,32 @@ import { ViewWillEnter } from '@ionic/angular';
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
   standalone: true,
-  imports: [IonNote, IonText, IonItem, IonLabel, IonList, IonIcon, IonFabButton, IonFab, IonSearchbar, IonToolbar, IonButton, IonContent, IonHeader, CommonModule, ToolbarPage, RouterModule]
+  imports: [IonNote, IonText, IonItem, IonLabel, IonList, IonIcon, IonFabButton,
+    IonFab, IonSearchbar, IonToolbar, IonButton, IonContent, IonHeader, CommonModule,
+    ToolbarPage, RouterModule]
 })
 export class ProductsComponent implements OnInit, ViewWillEnter {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
+  private actionSheetCtrl = inject(ActionSheetController);
 
   products = signal<Product[]>([]);
   searchQuery = signal<string>('');
-  
+
   results = computed(() => {
     const query = this.searchQuery().toLowerCase();
     const allProducts = this.products();
-    
+
     if (!query) return allProducts;
-    
-    return allProducts.filter(product => 
+
+    return allProducts.filter(product =>
       product.productName.toLowerCase().includes(query)
     );
   });
 
   constructor() {
-    addIcons({cubeOutline,ellipsisVertical,chevronForward,add});
+    addIcons({ cubeOutline, ellipsisVertical, chevronForward, add, pencil, heart, eyeOff, trash, close });
   }
 
   ngOnInit() {
@@ -56,5 +63,51 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
     const target = event.target as HTMLIonSearchbarElement;
     this.searchQuery.set(target.value || '');
   }
+
+  updateProduct(product: Product) {
+    this.router.navigate([`./${product.productId}`], { relativeTo: this.route, })
+  }
+
+  async presentActionSheet(event: Event, product: Product) {
+    event.stopPropagation();
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Product Actions',
+      buttons: [
+        {
+          text: 'Edit Product',
+          icon: 'pencil',
+          handler: () => this.updateProduct(product)
+        },
+        {
+          text: 'Mark as Favourite',
+          icon: 'heart',
+          handler: () => this.addFavouriteProduct(product)
+        },
+        {
+          text: 'Mark as Inactive',
+          icon: 'eye-off',
+          handler: () => this.setInactive(product)
+        },
+        {
+          text: 'Delete Product',
+          role: 'destructive',
+          icon: 'trash',
+          handler: () => this.deleteProduct(product)
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          icon: 'close'
+        },
+      ],
+    });
+
+    await actionSheet.present();
+
+  }
+
+  deleteProduct(product: Product) { }
+  addFavouriteProduct(product: Product) { }
+  setInactive(product: Product) { }
 
 }
