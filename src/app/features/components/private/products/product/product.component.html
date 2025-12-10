@@ -9,84 +9,96 @@
     @if(form){
     <div>
       <form id="productForm" [formGroup]="form" (submit)="onSubmit()">
-
-        <div class="ion-margin-bottom">
-          <app-input [form]="form" name="productName" placeholder="Enter name" labelPlacement="floating"
-            errorText="Please enter product name" fill="outline" [maxlength]="50" [counter]="true"></app-input>
-        </div>
-
-        <div class="ion-margin-bottom">
-          <ion-textarea formControlName="description" label="Product Description" labelPlacement="floating"
-            fill="outline" placeholder="Enter description" autoGrow="true" [counter]="true"
-            maxlength="200"></ion-textarea>
-        </div>
-
-        <div class="ion-margin-bottom">
-          <app-input [form]="form" name="retailPrice" placeholder="Enter Retail Price" labelPlacement="floating"
-            type="number" errorText="Please enter Retail Price" fill="outline"></app-input>
-        </div>
-
-        <div class="ion-margin-bottom">
-          <app-input [form]="form" name="currentStock" placeholder="Enter Current Stock" labelPlacement="floating"
-            type="number" errorText="Please enter Current Stock" fill="outline"></app-input>
-        </div>
-
-        <div class="ion-margin-bottom">
-          <app-input [form]="form" name="hsnCode" placeholder="HSN" labelPlacement="floating" type="number"
-            errorText="Please enter HSN" fill="outline"></app-input>
-        </div>
-
-        <div class="ion-margin-bottom">
-          <app-select [meta]="unitMeasureMeta" (onSelectionChange)="handleUnitChange($event)" />
-        </div>
-
-        <div class="ion-margin-bottom">
-          <app-input [form]="form" name="purchaseCost" placeholder="Enter Purchase Cost" labelPlacement="floating" type="number"
-            errorText="Please enter Purchase Cost" fill="outline"></app-input>
-        </div>
-
-        <!-- Discount Type and Value in one row -->
-        <div class="ion-margin-bottom">
-          <ion-grid class="ion-no-padding">
-            <ion-row>
-              <ion-col size="6">
-                <app-select [meta]="discountTypeMeta" (onSelectionChange)="handleDiscountTypeChange($event)" />
-              </ion-col>
-              <ion-col size="6">
-                <app-input [form]="form" name="discountValue" placeholder="Enter Discount" labelPlacement="floating"
-                  type="number" errorText="Please enter Discount" fill="outline"></app-input>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </div>
-
-
-        <ion-list>
-          <ion-item class="ion-no-padding" lines="none">
-            <ion-toggle formControlName="isInventory">Manage Stock/Inventory</ion-toggle>
-          </ion-item>
-          @if(form.value.isInventory){
-          <div class="animate__animated animate__slideInUp animate__faster">
-            <app-input [form]="inventoryForm" name="count" placeholder="Enter Count" labelPlacement="floating"
-              type="number" errorText="Please enter Count" fill="outline"></app-input>
-          </div>
-          }
-          <ion-item class="ion-no-padding" lines="none">
-            <ion-toggle formControlName="isThreshold">Manage Threshold Alerts</ion-toggle>
-          </ion-item>
-          @if(form.value.isThreshold){
-          <div class="animate__animated animate__slideInUp animate__faster">
+        <ion-segment mode="ios" class="ion-margin-bottom">
+          <ion-segment-button value="first" content-id="first">
+            <ion-label>Basic Detail</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="second" content-id="second">
+            <ion-label>Option Detail</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+        <ion-segment-view>
+          <ion-segment-content id="first">
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="warnThresholdNumber" placeholder="Enter Price" labelPlacement="floating"
-                type="number" errorText="Please enter Price" fill="outline"></app-input>
+              <app-input [form]="form" name="productName" placeholder="Enter name" labelPlacement="floating"
+                errorText="Please enter product name" fill="outline" [maxlength]="50" [counter]="true"></app-input>
             </div>
-            <div>
-              <app-input [form]="form" name="infoThresholdNumber" placeholder="Enter Price" labelPlacement="floating"
-                type="number" errorText="Please enter Price" fill="outline"></app-input>
+
+            <div class="ion-margin-bottom">
+              <ion-textarea formControlName="description" label="Product Description" labelPlacement="floating"
+                fill="outline" placeholder="Enter description" autoGrow="true" [counter]="true"
+                maxlength="200"></ion-textarea>
             </div>
-          </div>
-          }
-        </ion-list>
+
+            <div class="ion-margin-bottom">
+              <app-input [form]="form" name="retailPrice" placeholder="Enter Retail Price" labelPlacement="floating"
+                type="number" errorText="Please enter Retail Price" fill="outline"></app-input>
+            </div>
+
+            <div class="ion-margin-bottom">
+              <app-input [form]="form" name="currentStock" placeholder="Enter Current Stock" labelPlacement="floating"
+                type="number" errorText="Please enter Current Stock" fill="outline"></app-input>
+            </div>
+
+            <div class="ion-margin-bottom">
+              <app-input [form]="form" name="hsnCode" placeholder="HSN" labelPlacement="floating" type="number"
+                errorText="Please enter HSN" fill="outline"></app-input>
+            </div>
+
+            <div class="ion-margin-bottom">
+              <app-select [meta]="unitMeasureMeta" (onSelectionChange)="handleUnitChange($event)" />
+            </div>
+
+            <div class="ion-margin-bottom">
+              <app-input [form]="form" name="purchaseCost" placeholder="Enter Purchase Cost" labelPlacement="floating"
+                type="number" errorText="Please enter Purchase Cost" fill="outline"></app-input>
+            </div>
+
+
+            <div class="ion-display-flex ion-margin-bottom">
+              <app-input class="ion-flex-1" [form]="form" name="discountValue" placeholder="Enter Discount"
+                labelPlacement="floating" type="number" errorText="Please enter Discount" fill="outline"></app-input>
+              <app-select class="ion-flex-1 ion-margin-start" [meta]="discountTypeMeta"
+                (onSelectionChange)="handleDiscountTypeChange($event)" />
+            </div>
+
+            <div class="ion-display-flex ion-margin-bottom">
+              <app-input class="ion-flex-1" [form]="form" name="saleGstRate" placeholder="Enter GST"
+                labelPlacement="floating" type="number" errorText="Please enter GST" fill="outline"></app-input>
+              <app-select class="ion-flex-1 ion-margin-start" [meta]="saleTaxTypeMeta"
+                (onSelectionChange)="handleDiscountTypeChange($event)" />
+            </div>
+
+          </ion-segment-content>
+          <ion-segment-content id="second">
+            <ion-list>
+              <ion-item class="ion-no-padding" lines="none">
+                <ion-toggle formControlName="isInventory">Manage Stock/Inventory</ion-toggle>
+              </ion-item>
+              @if(form.value.isInventory){
+              <div class="animate__animated animate__slideInUp animate__faster">
+                <app-input [form]="inventoryForm" name="count" placeholder="Enter Count" labelPlacement="floating"
+                  type="number" errorText="Please enter Count" fill="outline"></app-input>
+              </div>
+              }
+              <ion-item class="ion-no-padding" lines="none">
+                <ion-toggle formControlName="isThreshold">Manage Threshold Alerts</ion-toggle>
+              </ion-item>
+              @if(form.value.isThreshold){
+              <div class="animate__animated animate__slideInUp animate__faster">
+                <div class="ion-margin-bottom">
+                  <app-input [form]="form" name="warnThresholdNumber" placeholder="Enter Price"
+                    labelPlacement="floating" type="number" errorText="Please enter Price" fill="outline"></app-input>
+                </div>
+                <div>
+                  <app-input [form]="form" name="infoThresholdNumber" placeholder="Enter Price"
+                    labelPlacement="floating" type="number" errorText="Please enter Price" fill="outline"></app-input>
+                </div>
+              </div>
+              }
+            </ion-list>
+          </ion-segment-content>
+        </ion-segment-view>
 
         <div>
           @if(!isProductSave()){

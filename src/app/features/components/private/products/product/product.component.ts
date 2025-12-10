@@ -5,15 +5,14 @@ import { AppService } from '@app/core/app.service';
 import { getProductMeta, Product, DiscountType } from '@app/features/models/product.model';
 import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
 import { ModelMeta } from '@app/shared-services';
-import { FormHelper } from '@app/shared-services/helpers/form.helper';
 import { FormMeta } from '@app/shared-services/models/form-meta';
-import { IonHeader, IonContent, IonButton, IonSpinner, IonTextarea, IonIcon, IonToggle, IonItem, IonList, IonSelect, IonSelectOption, IonGrid, IonRow, IonCol } from "@ionic/angular/standalone";
+import { IonHeader, IonContent, IonButton, IonSpinner, IonTextarea, IonIcon, IonToggle, IonItem, IonList, IonSegment, IonSegmentButton, IonLabel, IonSegmentView, IonSegmentContent, IonFooter, IonTitle, IonToolbar } from "@ionic/angular/standalone";
 import { of, Subject, switchMap } from 'rxjs';
 import { InputComponent } from "@app/shared/input/input.component";
 import { addIcons } from 'ionicons';
 import { addCircleOutline, pricetagOutline, saveOutline } from 'ionicons/icons';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getProductInventoryMeta, ProductInventory } from '@app/features/models/product-inventory.model';
+import { getProductInventoryMeta } from '@app/features/models/product-inventory.model';
 import { ProductService } from '@app/features/services/product.service';
 import { SelectComponent } from "@app/shared/select/select.component";
 
@@ -22,7 +21,7 @@ import { SelectComponent } from "@app/shared/select/select.component";
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss'],
   standalone: true,
-  imports: [IonCol, IonRow, IonGrid, IonList, IonItem, IonToggle, IonIcon, IonTextarea, IonSpinner, IonButton, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent]
+  imports: [IonLabel, IonSegmentButton, IonSegment, IonList, IonItem, IonToggle, IonIcon, IonTextarea, IonSpinner, IonButton, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonSegmentView, IonSegmentContent]
 })
 export class ProductComponent implements OnInit {
   private app = inject(AppService);
@@ -42,6 +41,7 @@ export class ProductComponent implements OnInit {
   inventoryMeta!: ModelMeta[];
   unitMeasureMeta!: ModelMeta;
   discountTypeMeta!: ModelMeta;
+  saleTaxTypeMeta!: ModelMeta;
 
   // Default values for new product
   private readonly defaultProduct: Partial<Product> = {
@@ -61,11 +61,12 @@ export class ProductComponent implements OnInit {
   ngOnInit() {
     this.modelMeta = getProductMeta();
     this.inventoryMeta = getProductInventoryMeta();
-    
+
     // Find metadata for select components
     this.unitMeasureMeta = this.modelMeta.find(m => m.key === 'unitMeasure')!;
     this.discountTypeMeta = this.modelMeta.find(m => m.key === 'discountType')!;
-    
+    this.saleTaxTypeMeta = this.modelMeta.find(m => m.key === 'saleTaxType')!;
+
     this.route.params.subscribe((x) => {
       if (x['id']) {
         let productId = x['id'];
