@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { DatabaseService, PaginationOptionsModel } from '@app/core/database-services';
+import { DB_TABLES } from '@app/core/database-services/database-tables.constants';
 import { Product } from '../models/product.model';
-import { ProductInventory } from '../models/product-inventory.model';
 import { v7 as uuidv7 } from 'uuid';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class ProductService {
     product.updatedAt = product.createdAt;
     product.productId = uuidv7();
 
-    return this.db.insert$('products', product).pipe(
+    return this.db.insert$(DB_TABLES.PRODUCTS, product).pipe(
       map(() => product)  // Return the product object with productId
     );
   }
@@ -31,29 +31,29 @@ export class ProductService {
     product.updatedAt = product.createdAt;
     product.productId = uuidv7();
 
-    return this.db.insertAndReturn$<Product>('products', product);
+    return this.db.insertAndReturn$<Product>(DB_TABLES.PRODUCTS, product);
   }
 
   updateProduct(product: Product) {
     product.updatedAt = new Date().toISOString();
-    return this.db.update$('products', product.productId!, product, 'productId');
+    return this.db.update$(DB_TABLES.PRODUCTS, product.productId!, product, 'productId');
   }
 
   updateProductAndReturn(product: Product) {
     product.updatedAt = new Date().toISOString();
-    return this.db.updateAndReturn$<Product>('products', product.productId!, product, 'productId');
+    return this.db.updateAndReturn$<Product>(DB_TABLES.PRODUCTS, product.productId!, product, 'productId');
   }
 
   getAllProducts() {
-    return this.db.getAll$<Product>('products');
+    return this.db.getAll$<Product>(DB_TABLES.PRODUCTS);
   }
 
   getProductById(productId: string) {
-    return this.db.getById$<Product>('products', productId, 'productId');
+    return this.db.getById$<Product>(DB_TABLES.PRODUCTS, productId, 'productId');
   }
 
   deleteProduct(productId: string) {
-    return this.db.delete$('products', productId, 'productId');
+    return this.db.delete$(DB_TABLES.PRODUCTS, productId, 'productId');
   }
 
   /**
@@ -61,7 +61,7 @@ export class ProductService {
    * Uses SQLite RETURNING clause - useful for undo operations or logging
    */
   deleteProductAndReturn(productId: string) {
-    return this.db.deleteAndReturn$<Product>('products', productId, 'productId');
+    return this.db.deleteAndReturn$<Product>(DB_TABLES.PRODUCTS, productId, 'productId');
   }
 
   getProductsPaginated(page: number, limit: number, search: string) {
@@ -71,7 +71,7 @@ export class ProductService {
     if (searchObj.clause) whereParts.push(searchObj.clause);
 
     const options: PaginationOptionsModel = {
-      table: 'products',
+      table: DB_TABLES.PRODUCTS,
       columns: ['*'],
       join: '',
 
@@ -99,23 +99,6 @@ export class ProductService {
       params: likeParams
     };
   }
-
-
-
-  addProductInventory(productInventory: ProductInventory) {
-    productInventory.updatedAt = new Date().toISOString();
-    return this.db.insert$('inventory', productInventory);
-  }
-
-  updateProductInventory(productInventory: ProductInventory) {
-    productInventory.updatedAt = new Date().toISOString();
-    return this.db.update$('inventory', productInventory.productId, productInventory, 'productId');
-  }
-
-  getProductInventoryByProductId(productId: string) {
-    return this.db.getById$<ProductInventory>('inventory', productId, 'productId');
-  }
-
 
 
 }
