@@ -261,4 +261,20 @@ export class SqliteConnectionService {
   isNativePlatform(): boolean {
     return this.isNative;
   }
+
+  /**
+   * Save database to store (for web platform)
+   * Must be called after write operations on web to persist changes
+   */
+  async saveToStoreIfWeb(): Promise<void> {
+    try {
+      if (this.platform === 'web') {
+        await this.sqliteConnection.saveToStore(this.dbName);
+        console.log('💾 Database saved to IndexedDB');
+      }
+    } catch (error) {
+      console.error('❌ Error saving to store:', error);
+      throw error;
+    }
+  }
 }

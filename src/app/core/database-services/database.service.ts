@@ -75,6 +75,10 @@ export class DatabaseService {
     try {
       const db = this.connectionService.getConnection();
       const result = await db.run(sql, params);
+      
+      // Save to store for web platform after write operations
+      await this.connectionService.saveToStoreIfWeb();
+      
       return {
         changes: result.changes?.changes || 0,
         lastId: result.changes?.lastId || 0
@@ -172,6 +176,9 @@ export class DatabaseService {
       const sql = `INSERT INTO ${table} (${keys.join(', ')}) VALUES (${placeholders}) RETURNING *`;
       const results = await this.query<T>(sql, values);
 
+      // Save to store for web platform
+      await this.connectionService.saveToStoreIfWeb();
+
       console.log(`✅ Inserted into ${table} and returned record`);
       return results.length > 0 ? results[0] : null;
     } catch (error) {
@@ -234,8 +241,11 @@ export class DatabaseService {
       values.push(id);
 
       const results = await this.query<T>(sql, values);
-      console.log(`✅ Updated ${table} and returned record`);
       
+      // Save to store for web platform
+      await this.connectionService.saveToStoreIfWeb();
+      
+      console.log(`✅ Updated ${table} and returned record`);
       return results.length > 0 ? results[0] : null;
     } catch (error) {
       console.error(`❌ Update and return error in ${table}:`, error);
@@ -313,6 +323,10 @@ export class DatabaseService {
     try {
       const sql = `DELETE FROM ${table} WHERE ${idColumn} = ? RETURNING *`;
       const results = await this.query<T>(sql, [id]);
+      
+      // Save to store for web platform
+      await this.connectionService.saveToStoreIfWeb();
+      
       console.log(`✅ Deleted from ${table} and returned record`);
       return results.length > 0 ? results[0] : null;
     } catch (error) {
