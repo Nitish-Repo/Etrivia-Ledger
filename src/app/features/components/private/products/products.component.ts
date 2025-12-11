@@ -59,7 +59,7 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
   }
 
   ionViewWillEnter() {
-    this.loadProducts();
+    this.loadProducts(true); // Reset on each view enter to avoid duplicates
   }
 
   // loadProducts() {
