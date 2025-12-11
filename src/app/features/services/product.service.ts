@@ -48,16 +48,6 @@ export class ProductService {
     return this.db.getAll$<Product>('products');
   }
 
-  /**
-   * Get paginated products from database
-   * @param limit Number of products per page
-   * @param offset Starting position
-   * @returns Observable of paginated products
-   */
-  getProductsPaginated(limit: number, offset: number) {
-    return this.db.getPaginated$<Product>('products', limit, offset, 'updatedAt DESC');
-  }
-
   getProductById(productId: string) {
     return this.db.getById$<Product>('products', productId, 'productId');
   }

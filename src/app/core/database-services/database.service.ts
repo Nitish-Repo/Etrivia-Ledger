@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { SqliteConnectionService } from './sqlite-connection.service';
+import { PaginationBuilder, PaginationOptionsModel } from './database.model';
 
 /**
  * Generic Database Service
@@ -75,10 +76,10 @@ export class DatabaseService {
     try {
       const db = this.connectionService.getConnection();
       const result = await db.run(sql, params);
-      
+
       // Save to store for web platform after write operations
       await this.connectionService.saveToStoreIfWeb();
-      
+
       return {
         changes: result.changes?.changes || 0,
         lastId: result.changes?.lastId || 0
@@ -103,26 +104,30 @@ export class DatabaseService {
     return from(this.getAll<T>(table));
   }
 
-  /**
-   * Get paginated records from a table
-   * @param table Table name
-   * @param limit Number of records per page
-   * @param offset Starting position (page * limit)
-   * @param orderBy Optional ORDER BY clause (e.g., "createdAt DESC")
-   * @returns Array of paginated records
-   */
-  async getPaginated<T>(q: {table: string, limit: number, offset: number, orderBy?: string}): Promise<T[]> {
-    let sql = `SELECT * FROM ${q.table}`;
-    if (q.orderBy) {
-      sql += ` ORDER BY ${q.orderBy}`;
-    }
+  async getPaginated<T>(options: PaginationOptionsModel): Promise<T[]> {
+    const { table, limit, offset, columns, join, where, having, orderBy, params = [] } = options;
+
+    const select = PaginationBuilder.buildSelect(columns);
+    let sql = `SELECT ${select} FROM ${table}`;
+
+    sql += PaginationBuilder.buildJoin(join);
+    sql += PaginationBuilder.buildWhere(where);
+    sql += PaginationBuilder.buildHaving(having);
+    sql += PaginationBuilder.buildOrder(orderBy);
+
+    // Pagination always last
     sql += ` LIMIT ? OFFSET ?`;
-    return this.query<T>(sql, [q.limit, q.offset]);
+
+    const queryParams = PaginationBuilder.mergeParams(params, limit, offset);
+
+    return this.query<T>(sql, queryParams);
   }
 
-  getPaginated$<T>(table: string, limit: number, offset: number, orderBy?: string): Observable<T[]> {
-    return from(this.getPaginated<T>({table, limit, offset, orderBy}));
+  getPaginated$<T>(options: PaginationOptionsModel): Observable<T[]> {
+    return from(this.getPaginated<T>(options));
   }
+
+
 
   /**
    * Get a single record by ID
@@ -262,10 +267,10 @@ export class DatabaseService {
       values.push(id);
 
       const results = await this.query<T>(sql, values);
-      
+
       // Save to store for web platform
       await this.connectionService.saveToStoreIfWeb();
-      
+
       console.log(`✅ Updated ${table} and returned record`);
       return results.length > 0 ? results[0] : null;
     } catch (error) {
@@ -344,10 +349,10 @@ export class DatabaseService {
     try {
       const sql = `DELETE FROM ${table} WHERE ${idColumn} = ? RETURNING *`;
       const results = await this.query<T>(sql, [id]);
-      
+
       // Save to store for web platform
       await this.connectionService.saveToStoreIfWeb();
-      
+
       console.log(`✅ Deleted from ${table} and returned record`);
       return results.length > 0 ? results[0] : null;
     } catch (error) {
