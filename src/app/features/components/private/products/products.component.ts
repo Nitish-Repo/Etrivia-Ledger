@@ -107,10 +107,13 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
   }
 
   deleteProduct(product: Product) {
-    this.productService.deleteProduct(product.productId!).subscribe((x) => {
-      console.log(x);
-      const updatedProducts = this.products().filter(p => p.productId !== product.productId);
-      this.products.set(updatedProducts);
+    this.productService.deleteProductAndReturn(product.productId!).subscribe((deletedProduct) => {
+      console.log(deletedProduct);
+      if (deletedProduct) {
+        const updatedProducts = this.products().filter(p => p.productId !== deletedProduct.productId);
+        this.products.set(updatedProducts);
+      };
+
     });
   }
 
@@ -119,20 +122,20 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
     this.productService.updateProductAndReturn(product).subscribe((updatedProduct) => {
       if (updatedProduct) {
         // Replace the product with the updated one from database
-        const updatedProducts = this.products().map(p => 
+        const updatedProducts = this.products().map(p =>
           p.productId === updatedProduct.productId ? updatedProduct : p
         );
         this.products.set(updatedProducts);
       }
     });
   }
-  
+
   setInactive(product: Product) {
     product.isActive = false;
     this.productService.updateProductAndReturn(product).subscribe((updatedProduct) => {
       if (updatedProduct) {
         // Replace the product with the updated one from database
-        const updatedProducts = this.products().map(p => 
+        const updatedProducts = this.products().map(p =>
           p.productId === updatedProduct.productId ? updatedProduct : p
         );
         this.products.set(updatedProducts);

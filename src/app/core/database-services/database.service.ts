@@ -157,6 +157,34 @@ export class DatabaseService {
   }
 
   /**
+   * Insert a new record and return the inserted record
+   * Uses SQLite RETURNING clause (SQLite 3.35+)
+   * @param table Table name
+   * @param data Object with column names as keys
+   * @returns Inserted record with all columns including auto-generated values
+   */
+  async insertAndReturn<T>(table: string, data: any): Promise<T | null> {
+    try {
+      const keys = Object.keys(data).filter(key => data[key] !== undefined);
+      const values = keys.map(key => data[key]);
+      const placeholders = keys.map(() => '?').join(', ');
+
+      const sql = `INSERT INTO ${table} (${keys.join(', ')}) VALUES (${placeholders}) RETURNING *`;
+      const results = await this.query<T>(sql, values);
+
+      console.log(`✅ Inserted into ${table} and returned record`);
+      return results.length > 0 ? results[0] : null;
+    } catch (error) {
+      console.error(`❌ Insert and return error in ${table}:`, error);
+      throw error;
+    }
+  }
+
+  insertAndReturn$<T>(table: string, data: any): Observable<T | null> {
+    return from(this.insertAndReturn<T>(table, data));
+  }
+
+  /**
    * Update a record by ID
    * @param table Table name
    * @param id Record ID (value to match)
@@ -271,6 +299,30 @@ export class DatabaseService {
 
   delete$(table: string, id: string | number, idColumn: string = 'id') {
     return from(this.delete(table, id, idColumn));
+  }
+
+  /**
+   * Delete a record by ID and return the deleted record
+   * Uses SQLite RETURNING clause (SQLite 3.35+)
+   * @param table Table name
+   * @param id Record ID (value to match)
+   * @param idColumn Column name to match (default: 'id')
+   * @returns Deleted record
+   */
+  async deleteAndReturn<T>(table: string, id: string | number, idColumn: string = 'id'): Promise<T | null> {
+    try {
+      const sql = `DELETE FROM ${table} WHERE ${idColumn} = ? RETURNING *`;
+      const results = await this.query<T>(sql, [id]);
+      console.log(`✅ Deleted from ${table} and returned record`);
+      return results.length > 0 ? results[0] : null;
+    } catch (error) {
+      console.error(`❌ Delete and return error in ${table}:`, error);
+      throw error;
+    }
+  }
+
+  deleteAndReturn$<T>(table: string, id: string | number, idColumn: string = 'id'): Observable<T | null> {
+    return from(this.deleteAndReturn<T>(table, id, idColumn));
   }
 
   /**

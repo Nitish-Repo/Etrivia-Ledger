@@ -22,6 +22,18 @@ export class ProductService {
     );
   }
 
+  /**
+   * Add a product and return the inserted product data from database
+   * Uses SQLite RETURNING clause - gets exact database state including any defaults
+   */
+  addProductAndReturn(product: Product) {
+    product.createdAt = new Date().toISOString();
+    product.updatedAt = product.createdAt;
+    product.productId = uuidv7();
+    
+    return this.db.insertAndReturn$<Product>('products', product);
+  }
+
   updateProduct(product: Product) {
     product.updatedAt = new Date().toISOString();
     return this.db.update$('products', product.productId!, product, 'productId');
@@ -42,6 +54,14 @@ export class ProductService {
 
   deleteProduct(productId: string) {
     return this.db.delete$('products', productId, 'productId');
+  }
+
+  /**
+   * Delete a product and return the deleted product data
+   * Uses SQLite RETURNING clause - useful for undo operations or logging
+   */
+  deleteProductAndReturn(productId: string) {
+    return this.db.deleteAndReturn$<Product>('products', productId, 'productId');
   }
 
   addProductInventory(productInventory: ProductInventory) {
