@@ -239,6 +239,10 @@ export class DatabaseService {
     }
   }
 
+  delete$(table: string, id: string | number, idColumn: string = 'id') {
+    return from(this.delete(table, id, idColumn));
+  }
+
   /**
    * Delete records by condition
    * @param table Table name

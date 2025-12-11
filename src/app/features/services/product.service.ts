@@ -35,6 +35,10 @@ export class ProductService {
     return this.db.getById$<Product>('products', productId, 'productId');
   }
 
+  deleteProduct(productId: string) {
+    return this.db.delete$('products', productId, 'productId');
+  }
+
   addProductInventory(productInventory: ProductInventory) {
     productInventory.updatedAt = new Date().toISOString();
     return this.db.insert$('inventory', productInventory);

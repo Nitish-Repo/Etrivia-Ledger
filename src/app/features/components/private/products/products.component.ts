@@ -106,7 +106,14 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
 
   }
 
-  deleteProduct(product: Product) { }
+  deleteProduct(product: Product) {
+    this.productService.deleteProduct(product.productId!).subscribe((x) => {
+      console.log(x);
+      const updatedProducts = this.products().filter(p => p.productId !== product.productId);
+      this.products.set(updatedProducts);
+    });
+  }
+  
   addFavouriteProduct(product: Product) { }
   setInactive(product: Product) { }
 
