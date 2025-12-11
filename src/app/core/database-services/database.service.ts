@@ -187,7 +187,37 @@ export class DatabaseService {
     return from(this.update(table, id, data, idColumn));
   }
 
+  /**
+   * Update a record by ID and return the updated record
+   * Uses SQLite RETURNING clause (SQLite 3.35+)
+   * @param table Table name
+   * @param id Record ID (value to match)
+   * @param data Object with column names as keys
+   * @param idColumn Column name to match (default: 'id')
+   * @returns Updated record
+   */
+  async updateAndReturn<T>(table: string, id: string | number, data: any, idColumn: string = 'id'): Promise<T | null> {
+    try {
+      const keys = Object.keys(data).filter(key => data[key] !== undefined && key !== idColumn);
+      const values = keys.map(key => data[key]);
+      const setClause = keys.map(key => `${key} = ?`).join(', ');
 
+      const sql = `UPDATE ${table} SET ${setClause} WHERE ${idColumn} = ? RETURNING *`;
+      values.push(id);
+
+      const results = await this.query<T>(sql, values);
+      console.log(`✅ Updated ${table} and returned record`);
+      
+      return results.length > 0 ? results[0] : null;
+    } catch (error) {
+      console.error(`❌ Update and return error in ${table}:`, error);
+      throw error;
+    }
+  }
+
+  updateAndReturn$<T>(table: string, id: string | number, data: any, idColumn: string = 'id'): Observable<T | null> {
+    return from(this.updateAndReturn<T>(table, id, data, idColumn));
+  }
 
   /**
    * Update records by condition

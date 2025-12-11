@@ -113,8 +113,31 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
       this.products.set(updatedProducts);
     });
   }
+
+  addFavouriteProduct(product: Product) {
+    product.isfavourite = true;
+    this.productService.updateProductAndReturn(product).subscribe((updatedProduct) => {
+      if (updatedProduct) {
+        // Replace the product with the updated one from database
+        const updatedProducts = this.products().map(p => 
+          p.productId === updatedProduct.productId ? updatedProduct : p
+        );
+        this.products.set(updatedProducts);
+      }
+    });
+  }
   
-  addFavouriteProduct(product: Product) { }
-  setInactive(product: Product) { }
+  setInactive(product: Product) {
+    product.isActive = false;
+    this.productService.updateProductAndReturn(product).subscribe((updatedProduct) => {
+      if (updatedProduct) {
+        // Replace the product with the updated one from database
+        const updatedProducts = this.products().map(p => 
+          p.productId === updatedProduct.productId ? updatedProduct : p
+        );
+        this.products.set(updatedProducts);
+      }
+    });
+  }
 
 }

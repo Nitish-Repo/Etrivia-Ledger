@@ -27,6 +27,11 @@ export class ProductService {
     return this.db.update$('products', product.productId!, product, 'productId');
   }
 
+  updateProductAndReturn(product: Product) {
+    product.updatedAt = new Date().toISOString();
+    return this.db.updateAndReturn$<Product>('products', product.productId!, product, 'productId');
+  }
+
   getAllProducts() {
     return this.db.getAll$<Product>('products');
   }
