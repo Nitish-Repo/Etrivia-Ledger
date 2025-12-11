@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { DatabaseService } from '@app/core/database-services';
+import { DatabaseService, PaginationOptionsModel } from '@app/core/database-services';
 import { Product } from '../models/product.model';
 import { ProductInventory } from '../models/product-inventory.model';
 import { v7 as uuidv7 } from 'uuid';
@@ -16,7 +16,7 @@ export class ProductService {
     product.createdAt = new Date().toISOString();
     product.updatedAt = product.createdAt;
     product.productId = uuidv7();
-    
+
     return this.db.insert$('products', product).pipe(
       map(() => product)  // Return the product object with productId
     );
@@ -30,7 +30,7 @@ export class ProductService {
     product.createdAt = new Date().toISOString();
     product.updatedAt = product.createdAt;
     product.productId = uuidv7();
-    
+
     return this.db.insertAndReturn$<Product>('products', product);
   }
 
@@ -63,6 +63,44 @@ export class ProductService {
   deleteProductAndReturn(productId: string) {
     return this.db.deleteAndReturn$<Product>('products', productId, 'productId');
   }
+
+  getProductsPaginated(page: number, limit: number, search: string) {
+    const searchObj = this.buildSearch(['productName'], search);
+
+    const whereParts = [];
+    if (searchObj.clause) whereParts.push(searchObj.clause);
+
+    const options: PaginationOptionsModel = {
+      table: 'products',
+      columns: ['*'],
+      join: '',
+
+      where: whereParts.join(' AND '),
+      params: [...searchObj.params],
+
+      orderBy: 'productName',
+      limit,
+      offset: page * limit,
+    };
+
+    return this.db.getPaginated$<Product>(options);
+  }
+
+  buildSearch(columns: string[], search: string) {
+    if (!search || !search.trim()) {
+      return { clause: '', params: [] };
+    }
+
+    const likeClause = columns.map(col => `${col} LIKE ?`).join(' OR ');
+    const likeParams = columns.map(() => `%${search}%`);
+
+    return {
+      clause: `(${likeClause})`,
+      params: likeParams
+    };
+  }
+
+
 
   addProductInventory(productInventory: ProductInventory) {
     productInventory.updatedAt = new Date().toISOString();

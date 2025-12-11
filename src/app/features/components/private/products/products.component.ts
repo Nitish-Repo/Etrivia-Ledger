@@ -5,8 +5,9 @@ import { Product } from '@app/features/models/product.model';
 import { ProductService } from '@app/features/services/product.service';
 import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
 import {
+  InfiniteScrollCustomEvent,
   IonHeader, IonContent, IonButton, IonToolbar, IonSearchbar, IonFab, IonFabButton, ActionSheetController,
-  IonIcon, IonList, IonLabel, IonItem, IonText, IonNote, IonBadge
+  IonIcon, IonList, IonLabel, IonItem, IonText, IonNote, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent
 } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { add, cubeOutline, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, close, cube, heartDislike, eye } from 'ionicons/icons';
@@ -17,7 +18,7 @@ import { ViewWillEnter } from '@ionic/angular';
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
   standalone: true,
-  imports: [IonNote, IonText, IonItem, IonLabel, IonList, IonIcon, IonFabButton,
+  imports: [IonInfiniteScrollContent, IonInfiniteScroll, IonNote, IonText, IonItem, IonLabel, IonList, IonIcon, IonFabButton,
     IonFab, IonSearchbar, IonToolbar, IonButton, IonContent, IonHeader, IonBadge, CommonModule,
     ToolbarPage, RouterModule]
 })
@@ -30,12 +31,18 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
   products = signal<Product[]>([]);
   searchQuery = signal<string>('');
 
+  page = signal(0);
+  limit = 30;
+  loading = signal(false);
+  noMoreData = signal(false);
+
+
   results = computed(() => {
     const query = this.searchQuery().toLowerCase();
     const allProducts = this.products();
 
     // Filter by search query
-    let filtered = query 
+    let filtered = query
       ? allProducts.filter(product => product.productName.toLowerCase().includes(query))
       : allProducts;
 
@@ -55,16 +62,48 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
     this.loadProducts();
   }
 
-  loadProducts() {
-    this.productService.getAllProducts().subscribe((x) => {
-      this.products.set(x);
-    })
+  // loadProducts() {
+  //   this.productService.getAllProducts().subscribe((x) => {
+  //     this.products.set(x);
+  //   })
+  // }
+
+  loadProducts(reset = false) {
+    if (this.loading()) return;
+
+    this.loading.set(true);
+
+    if (reset) {
+      this.page.set(0);
+      this.products.set([]);
+      this.noMoreData.set(false);
+    }
+
+    this.productService.getProductsPaginated(
+      this.page(),
+      this.limit,
+      this.searchQuery()
+    ).subscribe(data => {
+      if (data.length < this.limit) this.noMoreData.set(true);
+
+      // Append new products
+      this.products.set([...this.products(), ...data]);
+
+      this.loading.set(false);
+    });
   }
+
 
   handleInput(event: Event) {
     const target = event.target as HTMLIonSearchbarElement;
-    this.searchQuery.set(target.value || '');
+    const value = target.value || '';
+
+    this.searchQuery.set(value);
+
+    // Reload from page 0
+    this.loadProducts(true);
   }
+
 
   private sortProducts(products: Product[]): Product[] {
     return products.sort((a, b) => {
@@ -180,5 +219,21 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
       }
     });
   }
+
+  onIonInfinite(event: InfiniteScrollCustomEvent) {
+    if (this.noMoreData()) {
+      event.target.complete();
+      return;
+    }
+
+    this.page.update(p => p + 1);
+
+    this.loadProducts();
+
+    setTimeout(() => {
+      event.target.complete();
+    }, 300);
+  }
+
 
 }
