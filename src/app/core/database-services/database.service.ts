@@ -111,17 +111,17 @@ export class DatabaseService {
    * @param orderBy Optional ORDER BY clause (e.g., "createdAt DESC")
    * @returns Array of paginated records
    */
-  async getPaginated<T>(table: string, limit: number, offset: number, orderBy?: string): Promise<T[]> {
-    let sql = `SELECT * FROM ${table}`;
-    if (orderBy) {
-      sql += ` ORDER BY ${orderBy}`;
+  async getPaginated<T>(q: {table: string, limit: number, offset: number, orderBy?: string}): Promise<T[]> {
+    let sql = `SELECT * FROM ${q.table}`;
+    if (q.orderBy) {
+      sql += ` ORDER BY ${q.orderBy}`;
     }
     sql += ` LIMIT ? OFFSET ?`;
-    return this.query<T>(sql, [limit, offset]);
+    return this.query<T>(sql, [q.limit, q.offset]);
   }
 
   getPaginated$<T>(table: string, limit: number, offset: number, orderBy?: string): Observable<T[]> {
-    return from(this.getPaginated<T>(table, limit, offset, orderBy));
+    return from(this.getPaginated<T>({table, limit, offset, orderBy}));
   }
 
   /**
