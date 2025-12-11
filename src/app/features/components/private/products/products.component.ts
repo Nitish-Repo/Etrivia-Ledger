@@ -34,11 +34,13 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
     const query = this.searchQuery().toLowerCase();
     const allProducts = this.products();
 
-    if (!query) return allProducts;
+    // Filter by search query
+    let filtered = query 
+      ? allProducts.filter(product => product.productName.toLowerCase().includes(query))
+      : allProducts;
 
-    return allProducts.filter(product =>
-      product.productName.toLowerCase().includes(query)
-    );
+    // Sort products
+    return this.sortProducts(filtered);
   });
 
   constructor() {
@@ -62,6 +64,18 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
   handleInput(event: Event) {
     const target = event.target as HTMLIonSearchbarElement;
     this.searchQuery.set(target.value || '');
+  }
+
+  private sortProducts(products: Product[]): Product[] {
+    return products.sort((a, b) => {
+      // First priority: Favourites (1 = favourite, 0 = not favourite)
+      const favDiff = (b.isfavourite ? 1 : 0) - (a.isfavourite ? 1 : 0);
+      if (favDiff !== 0) return favDiff;
+
+      // Second priority: Active status (1 = active, 0 = inactive)
+      const activeDiff = (b.isActive ? 1 : 0) - (a.isActive ? 1 : 0);
+      return activeDiff;
+    });
   }
 
   updateProduct(product: Product) {
