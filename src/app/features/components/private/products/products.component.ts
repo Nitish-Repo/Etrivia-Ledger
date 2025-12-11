@@ -9,7 +9,7 @@ import {
   IonIcon, IonList, IonLabel, IonItem, IonText, IonNote, IonBadge
 } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
-import { add, cubeOutline, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, close, cube } from 'ionicons/icons';
+import { add, cubeOutline, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, close, cube, heartDislike, eye } from 'ionicons/icons';
 import { ViewWillEnter } from '@ionic/angular';
 
 @Component({
@@ -42,7 +42,7 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
   });
 
   constructor() {
-    addIcons({ cubeOutline, ellipsisVertical, chevronForward, add, pencil, heart, eyeOff, trash, close, cube });
+    addIcons({ cubeOutline, ellipsisVertical, chevronForward, add, pencil, heart, eyeOff, trash, close, cube, heartDislike, eye });
   }
 
   ngOnInit() {
@@ -79,14 +79,14 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
           handler: () => this.updateProduct(product)
         },
         {
-          text: 'Mark as Favourite',
-          icon: 'heart',
-          handler: () => this.addFavouriteProduct(product)
+          text: product.isfavourite ? 'Remove from Favourite' : 'Mark as Favourite',
+          icon: product.isfavourite ? 'heart-dislike' : 'heart',
+          handler: () => this.toggleFavourite(product)
         },
         {
-          text: 'Mark as Inactive',
-          icon: 'eye-off',
-          handler: () => this.setInactive(product)
+          text: product.isActive ? 'Mark as Inactive' : 'Mark as Active',
+          icon: product.isActive ? 'eye-off' : 'eye',
+          handler: () => this.toggleActive(product)
         },
         {
           text: 'Delete Product',
@@ -130,11 +130,35 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
     });
   }
 
+  toggleFavourite(product: Product) {
+    product.isfavourite = !product.isfavourite;
+    this.productService.updateProductAndReturn(product).subscribe((updatedProduct) => {
+      if (updatedProduct) {
+        const updatedProducts = this.products().map(p =>
+          p.productId === updatedProduct.productId ? updatedProduct : p
+        );
+        this.products.set(updatedProducts);
+      }
+    });
+  }
+
   setInactive(product: Product) {
     product.isActive = false;
     this.productService.updateProductAndReturn(product).subscribe((updatedProduct) => {
       if (updatedProduct) {
         // Replace the product with the updated one from database
+        const updatedProducts = this.products().map(p =>
+          p.productId === updatedProduct.productId ? updatedProduct : p
+        );
+        this.products.set(updatedProducts);
+      }
+    });
+  }
+
+  toggleActive(product: Product) {
+    product.isActive = !product.isActive;
+    this.productService.updateProductAndReturn(product).subscribe((updatedProduct) => {
+      if (updatedProduct) {
         const updatedProducts = this.products().map(p =>
           p.productId === updatedProduct.productId ? updatedProduct : p
         );
