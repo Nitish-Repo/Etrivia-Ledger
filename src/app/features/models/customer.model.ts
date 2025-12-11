@@ -3,8 +3,16 @@ import { ModelMeta } from '@app/shared-services';
 /**
  * Customer Types
  */
-export type CustomerType = 'RETAIL' | 'WHOLESALE' | 'B2B';
-export type PriceListType = 'RETAIL' | 'WHOLESALE';
+export enum CustomerType {
+  RETAIL = 'RETAIL',
+  WHOLESALE = 'WHOLESALE',
+  B2B = 'B2B'
+}
+
+export enum PriceListType {
+  RETAIL = 'RETAIL',
+  WHOLESALE = 'WHOLESALE'
+}
 
 /**
  * Enhanced Customer Model with GST Support
@@ -109,9 +117,9 @@ export function getCustomerMeta() {
       label: 'Customer Type',
       controlType: 'select',
       options: [
-        { key: 'RETAIL', value: 'Retail' },
-        { key: 'WHOLESALE', value: 'Wholesale' },
-        { key: 'B2B', value: 'B2B' },
+        { key: CustomerType.RETAIL, value: 'Retail' },
+        { key: CustomerType.WHOLESALE, value: 'Wholesale' },
+        { key: CustomerType.B2B, value: 'B2B' },
       ],
     },
     {
@@ -119,8 +127,8 @@ export function getCustomerMeta() {
       label: 'Price List',
       controlType: 'select',
       options: [
-        { key: 'RETAIL', value: 'Retail Price' },
-        { key: 'WHOLESALE', value: 'Wholesale Price' },
+        { key: PriceListType.RETAIL, value: 'Retail Price' },
+        { key: PriceListType.WHOLESALE, value: 'Wholesale Price' },
       ],
     },
     {
