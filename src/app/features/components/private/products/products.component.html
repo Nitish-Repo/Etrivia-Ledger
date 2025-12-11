@@ -10,21 +10,32 @@
     @for (result of results(); track result) {
     <ion-item [button]="true" detail="false" lines="full" (click)="updateProduct(result)">
       <ion-icon slot="start" name="cube-outline" class="ion-margin-end"></ion-icon>
-      <ion-label>
-        <strong>{{result.productName}}</strong>
-        <ion-text>{{result.description}}</ion-text><br />
+      <ion-label class="ion-text-wrap">
+        <div class="product-header">
+          <strong>{{result.productName}}</strong>
+          <div class="badges">
+            @if (result.isfavourite) {
+              <ion-badge color="danger">
+                <ion-icon name="heart"></ion-icon>
+              </ion-badge>
+            }
+            @if (result.isActive) {
+              <ion-badge color="success">Active</ion-badge>
+            } @else {
+              <ion-badge color="medium">Inactive</ion-badge>
+            }
+          </div>
+        </div>
+        @if (result.description) {
+          <ion-text color="medium" class="description">{{result.description}}</ion-text>
+        }
         <ion-note color="medium" class="ion-text-wrap">
-          Stock : {{ result?.currentStock}} MRP : {{result.mrp}}
+          Stock: {{result?.currentStock}} | MRP: ₹{{result.mrp}}
         </ion-note>
       </ion-label>
-      <div class="metadata-end-wrapper" slot="end">
-        <ion-note color="medium">{{result.updatedAt | date:'dd MMM yyyy':'utc' }}</ion-note>
-      </div>
-      <div>
-        <ion-button slot="end" shape="round" size="large" fill="clear" (click)="presentActionSheet($event, result)">
-          <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-        </ion-button>
-      </div>
+      <ion-button slot="end" shape="round" size="large" fill="clear" (click)="presentActionSheet($event, result)">
+        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+      </ion-button>
     </ion-item>
     }
   </ion-list>

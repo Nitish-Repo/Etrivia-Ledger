@@ -6,10 +6,10 @@ import { ProductService } from '@app/features/services/product.service';
 import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
 import {
   IonHeader, IonContent, IonButton, IonToolbar, IonSearchbar, IonFab, IonFabButton, ActionSheetController,
-  IonIcon, IonList, IonLabel, IonItem, IonText, IonNote
+  IonIcon, IonList, IonLabel, IonItem, IonText, IonNote, IonBadge
 } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
-import { add, cubeOutline, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, close } from 'ionicons/icons';
+import { add, cubeOutline, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, close, cube } from 'ionicons/icons';
 import { ViewWillEnter } from '@ionic/angular';
 
 @Component({
@@ -18,7 +18,7 @@ import { ViewWillEnter } from '@ionic/angular';
   styleUrls: ['./products.component.scss'],
   standalone: true,
   imports: [IonNote, IonText, IonItem, IonLabel, IonList, IonIcon, IonFabButton,
-    IonFab, IonSearchbar, IonToolbar, IonButton, IonContent, IonHeader, CommonModule,
+    IonFab, IonSearchbar, IonToolbar, IonButton, IonContent, IonHeader, IonBadge, CommonModule,
     ToolbarPage, RouterModule]
 })
 export class ProductsComponent implements OnInit, ViewWillEnter {
@@ -42,7 +42,7 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
   });
 
   constructor() {
-    addIcons({ cubeOutline, ellipsisVertical, chevronForward, add, pencil, heart, eyeOff, trash, close });
+    addIcons({ cubeOutline, ellipsisVertical, chevronForward, add, pencil, heart, eyeOff, trash, close, cube });
   }
 
   ngOnInit() {
