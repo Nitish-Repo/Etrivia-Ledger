@@ -37,33 +37,6 @@ export class DatabaseUtilityService {
   }
 
   /**
-   * Build WHERE clause from multiple conditions
-   * @param conditions Array of condition objects
-   * @returns Combined WHERE clause and parameters
-   * 
-   * @example
-   * const result = this.dbUtil.buildWhere([
-   *   { clause: 'isActive = ?', params: [1] },
-   *   { clause: 'price > ?', params: [100] }
-   * ]);
-   * // Returns: { clause: 'isActive = ? AND price > ?', params: [1, 100] }
-   */
-  buildWhere(
-    conditions: Array<{ clause: string; params: any[] }>
-  ): { clause: string; params: any[] } {
-    const validConditions = conditions.filter(c => c.clause);
-    
-    if (validConditions.length === 0) {
-      return { clause: '', params: [] };
-    }
-
-    const clause = validConditions.map(c => c.clause).join(' AND ');
-    const params = validConditions.flatMap(c => c.params);
-
-    return { clause, params };
-  }
-
-  /**
    * Sanitize table/column names to prevent SQL injection
    * @param name Table or column name
    * @returns Sanitized name
