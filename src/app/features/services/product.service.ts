@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { DatabaseService, PaginationOptionsModel } from '@app/core/database-services';
-import { DB_TABLES } from '@app/core/database-services/database-tables.constants';
+import { DatabaseService, DatabaseUtilityService, PaginationOptionsModel, DB_TABLES } from '@app/core/database-services';
 import { Product } from '../models/product.model';
 import { v7 as uuidv7 } from 'uuid';
 
@@ -10,6 +9,7 @@ import { v7 as uuidv7 } from 'uuid';
 })
 export class ProductService {
   private db = inject(DatabaseService);
+  private dbUtil = inject(DatabaseUtilityService);
 
 
   addProduct(product: Product) {
@@ -65,7 +65,7 @@ export class ProductService {
   }
 
   getProductsPaginated(page: number, limit: number, search: string) {
-    const searchObj = this.buildSearch(['productName'], search);
+    const searchObj = this.dbUtil.buildSearch(['productName'], search);
 
     const whereParts = [];
     if (searchObj.clause) whereParts.push(searchObj.clause);
@@ -84,20 +84,6 @@ export class ProductService {
     };
 
     return this.db.getPaginated$<Product>(options);
-  }
-
-  buildSearch(columns: string[], search: string) {
-    if (!search || !search.trim()) {
-      return { clause: '', params: [] };
-    }
-
-    const likeClause = columns.map(col => `${col} LIKE ?`).join(' OR ');
-    const likeParams = columns.map(() => `%${search}%`);
-
-    return {
-      clause: `(${likeClause})`,
-      params: likeParams
-    };
   }
 
 
