@@ -32,7 +32,7 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
   searchQuery = signal<string>('');
 
   page = signal(0);
-  limit = 30;
+  limit = 20;
   loading = signal(false);
   noMoreData = signal(false);
 
