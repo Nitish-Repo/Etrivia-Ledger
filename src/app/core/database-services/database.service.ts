@@ -104,6 +104,27 @@ export class DatabaseService {
   }
 
   /**
+   * Get paginated records from a table
+   * @param table Table name
+   * @param limit Number of records per page
+   * @param offset Starting position (page * limit)
+   * @param orderBy Optional ORDER BY clause (e.g., "createdAt DESC")
+   * @returns Array of paginated records
+   */
+  async getPaginated<T>(table: string, limit: number, offset: number, orderBy?: string): Promise<T[]> {
+    let sql = `SELECT * FROM ${table}`;
+    if (orderBy) {
+      sql += ` ORDER BY ${orderBy}`;
+    }
+    sql += ` LIMIT ? OFFSET ?`;
+    return this.query<T>(sql, [limit, offset]);
+  }
+
+  getPaginated$<T>(table: string, limit: number, offset: number, orderBy?: string): Observable<T[]> {
+    return from(this.getPaginated<T>(table, limit, offset, orderBy));
+  }
+
+  /**
    * Get a single record by ID
    * @param table Table name
    * @param id Record ID (value to match)

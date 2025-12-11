@@ -68,6 +68,8 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
       CREATE INDEX IF NOT EXISTS idx_products_hsn ON products(hsnCode);
       CREATE INDEX IF NOT EXISTS idx_products_barcode ON products(barcode);
       CREATE INDEX IF NOT EXISTS idx_products_active ON products(isActive);
+      CREATE INDEX IF NOT EXISTS idx_products_updated ON products(updatedAt DESC);
+      CREATE INDEX IF NOT EXISTS idx_products_favourite ON products(isfavourite);
 
       -- ============================================
       -- CUSTOMERS TABLE (Enhanced)
