@@ -18,16 +18,16 @@ export class CustomerService {
     return this.db.insertAndReturn$<Customer>(DB_TABLES.CUSTOMERS, customer);
   }
 
-  updateProductAndReturn(customer: Customer) {
+  updateCustomerAndReturn(customer: Customer) {
     customer.updatedAt = new Date().toISOString();
     return this.db.updateAndReturn$<Customer>(DB_TABLES.CUSTOMERS, customer.customerId!, customer, 'productId');
   }
 
-  getProductById(customerId: string) {
+  getCustomerById(customerId: string) {
     return this.db.getById$<Customer>(DB_TABLES.CUSTOMERS, customerId, 'customerId');
   }
 
-  deleteProductAndReturn(customerId: string) {
+  deleteCustomerAndReturn(customerId: string) {
     return this.db.deleteAndReturn$<Customer>(DB_TABLES.CUSTOMERS, customerId, 'customerId');
   }
 
