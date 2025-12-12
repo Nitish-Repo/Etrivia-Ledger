@@ -20,7 +20,7 @@ export class CustomerService {
 
   updateCustomerAndReturn(customer: Customer) {
     customer.updatedAt = new Date().toISOString();
-    return this.db.updateAndReturn$<Customer>(DB_TABLES.CUSTOMERS, customer.customerId!, customer, 'productId');
+    return this.db.updateAndReturn$<Customer>(DB_TABLES.CUSTOMERS, customer.customerId!, customer, 'customerId');
   }
 
   getCustomerById(customerId: string) {

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from '@app/core/app.service';
 import { Customer, getCustomerMeta } from '@app/features/models';
@@ -9,11 +9,17 @@ import { FormHelper } from '@app/shared-services/helpers/form.helper';
 import { FormMeta } from '@app/shared-services/models/form-meta';
 import { addIcons } from 'ionicons';
 import { addCircleOutline, pricetagOutline, saveOutline } from 'ionicons/icons';
+import { IonHeader, IonContent, IonButton, IonSpinner, IonTextarea, IonIcon, IonToggle, IonItem, IonList, IonSegment, IonSegmentButton, IonLabel, IonSegmentView, IonSegmentContent, IonFooter, IonToolbar, IonTabBar, IonTabButton, IonItemDivider } from "@ionic/angular/standalone";
+import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
+import { CommonModule } from '@angular/common';
+import { InputComponent } from '@app/shared/input/input.component';
+import { SelectComponent } from '@app/shared/select/select.component';
 
 @Component({
   selector: 'app-customer',
   templateUrl: './customer.component.html',
   styleUrls: ['./customer.component.scss'],
+   imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonIcon, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonSegment, IonSegmentContent, IonTabBar, IonTabButton, IonSegmentView]
 })
 export class CustomerComponent implements OnInit {
   private app = inject(AppService);

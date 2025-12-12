@@ -112,6 +112,7 @@ export function getCustomerMeta() {
     { key: 'country', label: 'Country', required: false },
     { key: 'creditLimit', label: 'Credit Limit', required: false, controlType: 'number' },
     { key: 'openingBalance', label: 'Opening Balance', required: false, controlType: 'number' },
+    { key: 'currentBalance', label: 'Current Balance', required: false, controlType: 'number' },
     {
       key: 'customerType',
       label: 'Customer Type',
