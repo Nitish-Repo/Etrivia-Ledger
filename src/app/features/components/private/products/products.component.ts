@@ -12,6 +12,7 @@ import {
 import { addIcons } from 'ionicons';
 import { add, cubeOutline, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, close, cube, heartDislike, eye } from 'ionicons/icons';
 import { ViewWillEnter } from '@ionic/angular';
+import { AppService } from '@app/core/app.service';
 
 @Component({
   selector: 'app-products',
@@ -23,6 +24,7 @@ import { ViewWillEnter } from '@ionic/angular';
     ToolbarPage, RouterModule]
 })
 export class ProductsComponent implements OnInit, ViewWillEnter {
+  private app = inject(AppService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
@@ -165,21 +167,9 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
       if (deletedProduct) {
         const updatedProducts = this.products().filter(p => p.productId !== deletedProduct.productId);
         this.products.set(updatedProducts);
+        this.app.noty.presentToast(`Product has been deleted.`, 3000, 'top', 'success');
       };
 
-    });
-  }
-
-  addFavouriteProduct(product: Product) {
-    product.isfavourite = true;
-    this.productService.updateProductAndReturn(product).subscribe((updatedProduct) => {
-      if (updatedProduct) {
-        // Replace the product with the updated one from database
-        const updatedProducts = this.products().map(p =>
-          p.productId === updatedProduct.productId ? updatedProduct : p
-        );
-        this.products.set(updatedProducts);
-      }
     });
   }
 
@@ -191,19 +181,7 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
           p.productId === updatedProduct.productId ? updatedProduct : p
         );
         this.products.set(updatedProducts);
-      }
-    });
-  }
-
-  setInactive(product: Product) {
-    product.isActive = false;
-    this.productService.updateProductAndReturn(product).subscribe((updatedProduct) => {
-      if (updatedProduct) {
-        // Replace the product with the updated one from database
-        const updatedProducts = this.products().map(p =>
-          p.productId === updatedProduct.productId ? updatedProduct : p
-        );
-        this.products.set(updatedProducts);
+        this.app.noty.presentToast(`Product has been updated.`, 3000, 'top', 'success');
       }
     });
   }
@@ -216,6 +194,7 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
           p.productId === updatedProduct.productId ? updatedProduct : p
         );
         this.products.set(updatedProducts);
+        this.app.noty.presentToast(`Product has been updated.`, 3000, 'top', 'success');
       }
     });
   }

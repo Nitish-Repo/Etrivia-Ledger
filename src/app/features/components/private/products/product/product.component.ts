@@ -87,7 +87,7 @@ export class ProductComponent implements OnInit {
     this.service.getProductById(productId).subscribe((y) => {
       this.form = this.app.meta.toFormGroup(y, this.modelMeta);
     });
- 
+
   }
 
   onSubmit(addMore?: boolean) {
@@ -101,7 +101,7 @@ export class ProductComponent implements OnInit {
         this.isProductSave.set(true);
         if (productId) {
           this.service.updateProduct(this.form.value).subscribe((x) => {
-            // this.app.noty.notifyUpdated('Product has been');
+            this.app.noty.presentToast(`Product has been updated.`, 3000, 'top', 'success');
             this.isProductSave.set(false);
             this.formMeta.submitProcessing = false;
             this.router.navigate(['../'], { relativeTo: this.route });
@@ -109,7 +109,7 @@ export class ProductComponent implements OnInit {
         } else {
           // add
           this.service.addProduct(this.form.value).subscribe((x: Product | ProductInventory | any) => {
-            // this.app.noty.notifyClose('Product has been added');
+            this.app.noty.presentToast(`Product has been added.`, 3000, 'top', 'success');
             if (addMore) {
               this.isProductSave.set(false);
               this.formMeta.submitProcessing = false;
