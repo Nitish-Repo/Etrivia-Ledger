@@ -29,7 +29,7 @@ export function calculateGst(
   amount: number,
   gstRate: number,
   cessRate: number = 0,
-  taxType: TaxType = 'INCLUSIVE',
+  taxType: TaxType.INCLUSIVE,
   isInterState: boolean = false
 ): GstCalculationResult {
   
@@ -109,7 +109,7 @@ export function calculateLineItemTotal(
   pricePerUnit: number,
   gstRate: number,
   cessRate: number = 0,
-  taxType: TaxType = 'INCLUSIVE',
+  taxType: TaxType.INCLUSIVE,
   isInterState: boolean = false,
   discountType: 'NONE' | 'PERCENTAGE' | 'AMOUNT' = 'NONE',
   discountValue: number = 0

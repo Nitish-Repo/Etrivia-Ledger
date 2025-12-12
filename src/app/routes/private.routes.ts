@@ -36,8 +36,16 @@ export const PRIVATE_ROUTES: Routes = [
                 loadComponent: () => import('../features/components/private/products/product/product.component').then(m => m.ProductComponent)
             },
             {
-                path: 'customers',
+                path: 'customer',
                 loadComponent: () => import('../features/components/private/customers/customers.component').then(m => m.CustomersComponent)
+            },
+            {
+                path: 'customer/new',
+                loadComponent: () => import('../features/components/private/customers/customer/customer.component').then(m => m.CustomerComponent)
+            },
+            {
+                path: 'customer/:id',
+                loadComponent: () => import('../features/components/private/customers/customer/customer.component').then(m => m.CustomerComponent)
             },
             {
                 path: '', redirectTo: 'home', pathMatch: 'full'
