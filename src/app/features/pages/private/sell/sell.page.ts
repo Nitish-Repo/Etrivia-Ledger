@@ -9,13 +9,14 @@ import { ModelMeta } from '@app/shared-services';
 import { AppService } from '@app/core/app.service';
 import { getSellModelMeta } from '@app/features/models/sell.model';
 import { FormHelper } from '@app/shared-services/helpers/form.helper';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sell',
   templateUrl: './sell.page.html',
   styleUrls: ['./sell.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, CommonModule, ReactiveFormsModule, ToolbarPage]
+  imports: [IonContent, IonHeader, CommonModule, ReactiveFormsModule, ToolbarPage, TranslateModule]
 })
 export class SellPage implements OnInit {
   private app = inject(AppService);
