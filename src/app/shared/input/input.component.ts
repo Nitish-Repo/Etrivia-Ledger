@@ -9,13 +9,14 @@ import { CommonModule } from '@angular/common';
 import { AbstractControl, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { IrsControl } from '@app/shared-services';
 import { IonInput, IonIcon, IonInputPasswordToggle } from '@ionic/angular/standalone';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-input',
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IonInput, IonIcon, IonInputPasswordToggle]
+  imports: [CommonModule, ReactiveFormsModule, IonInput, IonIcon, IonInputPasswordToggle, TranslateModule]
 })
 export class InputComponent implements OnInit {
   @Input() form!: AbstractControl;
@@ -103,30 +104,10 @@ export class InputComponent implements OnInit {
 
   /**
    * Get error message for the input field
-   * @returns Error message string
+   * @returns Error message string or empty string (let ion-input handle with errorText)
    */
   getErrorText(): string {
-    // Defensive check for control existence
-    if (!this.control) {
-      return 'Enter the value';
-    }
-
-    const fieldName = this.label || this.placeholder || this.control.label || 'This field';
-
-    if (this.control.invalid && (this.control.dirty || this.control.touched)) {
-      if (this.control.errors?.['required']) {
-        return `${fieldName} is required.`;
-      }
-      if (this.control.errors?.['minlength']) {
-        return this.minlengthErrorMessage || `${fieldName} Minimum length is ${this.control.errors['minlength'].requiredLength}.`;
-      }
-      if (this.control.errors?.['maxlength']) {
-        return `${fieldName} Maximum length is ${this.control.errors['maxlength'].requiredLength}.`;
-      }
-      if (this.control.errors?.['pattern']) {
-        return this.patternErrorMessage || `Invalid ${this.type} format.`;
-      }
-    }
-    return 'Enter the value';
+    // Return empty string to let the template handle error text via translate pipe
+    return '';
   }
 }

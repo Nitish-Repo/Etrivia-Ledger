@@ -16,13 +16,14 @@ import { getProductInventoryMeta, ProductInventory } from '@app/features/models/
 import { ProductService } from '@app/features/services/product.service';
 import { SelectComponent } from "@app/shared/select/select.component";
 import { FormHelper } from '@app/shared-services/helpers/form.helper';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss'],
   standalone: true,
-  imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonList, IonItem, IonToggle, IonIcon, IonTextarea, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonSegmentView, IonSegmentContent, IonTabBar, IonTabButton]
+  imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonList, IonItem, IonToggle, IonIcon, IonTextarea, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonSegmentView, IonSegmentContent, IonTabBar, IonTabButton, TranslateModule]
 })
 export class ProductComponent implements OnInit {
   private app = inject(AppService);

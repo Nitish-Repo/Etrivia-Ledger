@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <app-toolbar title="Product"></app-toolbar>
+  <app-toolbar title="page.products.title_singular"></app-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
   <div class="ion-margin">
@@ -8,38 +8,38 @@
       <form id="productForm" [formGroup]="form" (submit)="onSubmit()">
         <ion-segment mode="ios">
           <ion-segment-button value="first" content-id="first">
-            <ion-label>Basic Detail</ion-label>
+            <ion-label>{{ 'page.products.basic_detail' | translate }}</ion-label>
           </ion-segment-button>
           <ion-segment-button value="second" content-id="second">
-            <ion-label>Option Detail</ion-label>
+            <ion-label>{{ 'page.products.option_detail' | translate }}</ion-label>
           </ion-segment-button>
         </ion-segment>
         <ion-segment-view>
           <ion-segment-content id="first">
             <div class="ion-margin-bottom ion-margin-top">
-              <app-input [form]="form" name="productName" placeholder="Enter name" labelPlacement="floating"
-                errorText="Please enter product name" fill="outline" [maxlength]="50" [counter]="true"></app-input>
+              <app-input [form]="form" name="productName" [placeholder]="'placeholder.enter_product_name' | translate" labelPlacement="floating"
+                [errorText]="'error.required' | translate" fill="outline" [maxlength]="50" [counter]="true"></app-input>
             </div>
 
             <div class="ion-margin-bottom">
-              <ion-textarea formControlName="description" label="Product Description" labelPlacement="floating"
-                fill="outline" placeholder="Enter description" autoGrow="true" [counter]="true"
+              <ion-textarea formControlName="description" [label]="'label.description' | translate" labelPlacement="floating"
+                fill="outline" [placeholder]="'placeholder.enter_description' | translate" autoGrow="true" [counter]="true"
                 maxlength="200"></ion-textarea>
             </div>
 
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="mrp" placeholder="Enter MRP" labelPlacement="floating" type="number"
-                errorText="Please enter MRP" fill="outline"></app-input>
+              <app-input [form]="form" name="mrp" [placeholder]="'placeholder.enter_mrp' | translate" labelPlacement="floating" type="number"
+                [errorText]="'error.required' | translate" fill="outline"></app-input>
             </div>
 
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="currentStock" placeholder="Enter Current Stock" labelPlacement="floating"
-                type="number" errorText="Please enter Current Stock" fill="outline"></app-input>
+              <app-input [form]="form" name="currentStock" [placeholder]="'placeholder.enter_stock' | translate" labelPlacement="floating"
+                type="number" [errorText]="'error.required' | translate" fill="outline"></app-input>
             </div>
 
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="hsnCode" placeholder="HSN" labelPlacement="floating"
-                errorText="Please enter HSN" fill="outline"></app-input>
+              <app-input [form]="form" name="hsnCode" [placeholder]="'label.hsn_code' | translate" labelPlacement="floating"
+                [errorText]="'error.required' | translate" fill="outline"></app-input>
             </div>
 
             <div class="ion-margin-bottom">
@@ -69,7 +69,7 @@
           </ion-segment-content>
           <ion-segment-content id="second">
             <ion-item-divider>
-              <ion-label>Sale Pricing </ion-label>
+              <ion-label>{{ 'page.products.sale_pricing' | translate }}</ion-label>
             </ion-item-divider>
             <div class="ion-margin-bottom ion-margin-top">
               <app-input [form]="form" name="saleCessRate" placeholder="Enter CESS" labelPlacement="floating"
@@ -86,7 +86,7 @@
             </div>
 
             <ion-item-divider>
-              <ion-label>Purchase Pricing</ion-label>
+              <ion-label>{{ 'page.products.purchase_pricing' | translate }}</ion-label>
             </ion-item-divider>
 
             <div class="ion-display-flex ion-margin-bottom ion-margin-top">
@@ -108,7 +108,7 @@
 
             <ion-list>
               <ion-item class="ion-no-padding" lines="none">
-                <ion-toggle formControlName="isInventory">Manage Stock/Inventory</ion-toggle>
+                <ion-toggle formControlName="isInventory">{{ 'page.products.manage_inventory' | translate }}</ion-toggle>
               </ion-item>
               @if(form.value.isInventory){
               <div class="animate__animated animate__slideInUp animate__faster">
@@ -149,11 +149,11 @@
   <ion-tab-bar>
     <ion-tab-button (click)="onSubmit(true)" [disabled]="formMeta.submitProcessing">
       <ion-icon name="add-circle-outline"></ion-icon>
-      <ion-label>Add more</ion-label>
+      <ion-label>{{ 'button.add_more' | translate }}</ion-label>
     </ion-tab-button>
     <ion-tab-button (click)="onSubmit(false)" [disabled]="formMeta.submitProcessing">
       <ion-icon name="save-outline"></ion-icon>
-      <ion-label>Save</ion-label>
+      <ion-label>{{ 'button.save' | translate }}</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
   } @else {
@@ -165,7 +165,7 @@
   <ion-tab-bar>
     <ion-tab-button [disabled]="formMeta.submitProcessing">
       <ion-spinner name="crescent"></ion-spinner>
-      <ion-label>Saving..</ion-label>
+      <ion-label>{{ 'common.saving' | translate }}</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
   }

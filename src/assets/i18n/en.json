@@ -27,6 +27,7 @@
         "delete": "Delete",
         "edit": "Edit",
         "add": "Add",
+        "add_more": "Add more",
         "search": "Search",
         "confirm": "Confirm",
         "actions": "Actions",
@@ -39,6 +40,7 @@
         "yes": "Yes",
         "no": "No",
         "loading": "Loading...",
+        "saving": "Saving...",
         "no_data": "No data available",
         "app_name": "Etrivia Ledger",
         "welcome": "Welcome",
@@ -93,18 +95,26 @@
         },
         "products": {
             "title": "Products",
+            "title_singular": "Product",
             "add": "Add Product",
             "edit": "Edit Product",
             "delete": "Delete Product",
-            "actions": "Product Actions"
+            "actions": "Product Actions",
+            "basic_detail": "Basic Detail",
+            "option_detail": "Option Detail",
+            "sale_pricing": "Sale Pricing",
+            "purchase_pricing": "Purchase Pricing",
+            "manage_inventory": "Manage Stock/Inventory"
         },
         "customers": {
             "title": "Customers",
+            "title_singular": "Customer",
             "add": "Add Customer",
             "edit": "Edit Customer"
         },
         "suppliers": {
             "title": "Suppliers",
+            "title_singular": "Supplier",
             "add": "Add Supplier",
             "edit": "Edit Supplier"
         },
@@ -133,6 +143,9 @@
         "enter_customer_name": "Enter customer name",
         "enter_supplier_name": "Enter supplier name",
         "enter_email": "Enter email address",
-        "enter_phone": "Enter phone number"
+        "enter_phone": "Enter phone number",
+        "enter_description": "Enter description",
+        "enter_mrp": "Enter MRP",
+        "enter_stock": "Enter stock"
     }
 }
