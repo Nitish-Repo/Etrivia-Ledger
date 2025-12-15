@@ -19,7 +19,8 @@ import { SelectComponent } from '@app/shared/select/select.component';
   selector: 'app-customer',
   templateUrl: './customer.component.html',
   styleUrls: ['./customer.component.scss'],
-   imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonIcon, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonSegment, IonSegmentContent, IonTabBar, IonTabButton, IonSegmentView]
+  standalone: true,
+  imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonIcon, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonSegment, IonSegmentContent, IonTabBar, IonTabButton, IonSegmentView]
 })
 export class CustomerComponent implements OnInit {
   private app = inject(AppService);
@@ -37,8 +38,8 @@ export class CustomerComponent implements OnInit {
   customerTypeMeta!: ModelMeta;
   priceListMeta!: ModelMeta;
 
-  // Default values for new product
-  private readonly defaultProduct: Partial<Customer> = {
+  // Default values for new customer
+  private readonly defaultCustomer: Partial<Customer> = {
     isActive: true,
     
   };
@@ -68,7 +69,7 @@ export class CustomerComponent implements OnInit {
   }
 
   private buildNewCustomerForm() {
-    this.form = this.app.meta.toFormGroup(this.defaultProduct, this.modelMeta);
+    this.form = this.app.meta.toFormGroup(this.defaultCustomer, this.modelMeta);
   }
 
   private buildCustomerForm(customerId: string) {
@@ -86,9 +87,9 @@ export class CustomerComponent implements OnInit {
       this.form,
       this.formMeta,
       () => {
-        let productId = this.form.value['customerId'];
+        let customerId = this.form.value['customerId'];
         this.isCustomerSave.set(true);
-        if (productId) {
+        if (customerId) {
           this.service.updateCustomerAndReturn(this.form.value).subscribe((x) => {
             this.app.noty.presentToast(`Customer has been updated.`, 3000, 'top', 'success');
             this.isCustomerSave.set(false);
@@ -103,7 +104,7 @@ export class CustomerComponent implements OnInit {
               this.isCustomerSave.set(false);
               this.formMeta.submitProcessing = false;
               // Reset form with default values
-              this.form.reset(this.defaultProduct);
+              this.form.reset(this.defaultCustomer);
               this.form.markAsPristine();
               this.form.markAsUntouched();
               this.form.updateValueAndValidity();

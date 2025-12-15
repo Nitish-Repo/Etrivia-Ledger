@@ -12,6 +12,7 @@ export interface Supplier {
   city?: string;
   state?: string;
   pincode?: string;
+  country?: string;
   
   openingBalance: number;
   currentBalance: number;       // Current payable
@@ -33,6 +34,7 @@ export function getSupplierMeta() {
     { key: 'city', label: 'City', required: false },
     { key: 'state', label: 'State', required: false },
     { key: 'pincode', label: 'Pincode', required: false },
+    { key: 'country', label: 'Country', required: false },
     { key: 'openingBalance', label: 'Opening Balance', required: false, controlType: 'number' },
     { key: 'currentBalance', label: 'Current Balance', required: false, controlType: 'number' },
     {

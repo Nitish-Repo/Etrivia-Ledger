@@ -121,6 +121,7 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
         city TEXT,
         state TEXT,
         pincode TEXT,
+        country TEXT DEFAULT 'India',
         
         openingBalance REAL DEFAULT 0,
         currentBalance REAL DEFAULT 0,
