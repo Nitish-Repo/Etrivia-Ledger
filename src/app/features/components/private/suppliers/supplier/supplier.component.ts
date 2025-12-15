@@ -21,7 +21,7 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './supplier.component.html',
   styleUrls: ['./supplier.component.scss'],
   standalone: true,
-  imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonIcon, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, IonSegment, IonSegmentContent, IonTabBar, IonTabButton, IonSegmentView, TranslateModule]
+  imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonIcon, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, IonSegment, IonTabBar, IonTabButton, TranslateModule]
 })
 export class SupplierComponent implements OnInit {
   private app = inject(AppService);

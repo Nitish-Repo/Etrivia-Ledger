@@ -16,10 +16,6 @@ export const PRIVATE_ROUTES: Routes = [
                 loadComponent: () => import('../features/pages/private/dashboard/dashboard.page').then(m => m.DashboardPage)
             },
             {
-                path: 'sell',
-                loadComponent: () => import('../features/pages/private/sell/sell.page').then(m => m.SellPage)
-            },
-            {
                 path: 'settings',
                 loadComponent: () => import('../features/pages/private/settings/settings.page').then(m => m.SettingsPage)
             },
@@ -58,6 +54,18 @@ export const PRIVATE_ROUTES: Routes = [
             {
                 path: 'supplier/:id',
                 loadComponent: () => import('../features/components/private/suppliers/supplier/supplier.component').then(m => m.SupplierComponent)
+            },
+            {
+                path: 'sales',
+                loadComponent: () => import('../features/pages/private/sales/sales.page').then(m => m.SalesPage)
+            },
+            {
+                path: 'sell/new',
+                loadComponent: () => import('../features/pages/private/sell/sell.page').then(m => m.SellPage)
+            },
+            {
+                path: 'sell/:id',
+                loadComponent: () => import('../features/pages/private/sell/sell.page').then(m => m.SellPage)
             },
             {
                 path: '', redirectTo: 'home', pathMatch: 'full'

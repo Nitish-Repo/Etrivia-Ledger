@@ -4,7 +4,12 @@
     "error": "त्रुटि",
     "warning": "चेतावनी",
     "info": "जानकारी",
-    "confirm": "क्या आप निश्चित हैं?"
+    "confirm": "क्या आप निश्चित हैं?",
+    "are_you_sure_delete": "क्या आप वाकई इसे हटाना चाहते हैं?",
+    "deleted_successfully": "सफलतापूर्वक हटाया गया",
+    "added_successfully": "सफलतापूर्वक जोड़ा गया",
+    "updated_successfully": "सफलतापूर्वक अपडेट किया गया",
+    "add_at_least_one_item": "कृपया कम से कम एक आइटम जोड़ें"
   },
   "api": {
     "save_success": "सफलतापूर्वक सहेजा गया",
@@ -19,7 +24,15 @@
     "favourite": "पसंदीदा",
     "retail": "खुदरा",
     "wholesale": "थोक",
-    "b2b": "बी2बी"
+    "b2b": "बी2बी",
+    "cash": "नकद",
+    "credit": "उधार",
+    "paid": "भुगतान किया गया",
+    "unpaid": "भुगतान नहीं किया गया",
+    "partial": "आंशिक",
+    "draft": "ड्राफ्ट",
+    "completed": "पूर्ण",
+    "cancelled": "रद्द"
   },
   "button": {
     "save": "सहेजें",
@@ -34,7 +47,9 @@
     "mark_as_favourite": "पसंदीदा के रूप में चिह्नित करें",
     "remove_from_favourite": "पसंदीदा से हटाएं",
     "mark_as_active": "सक्रिय के रूप में चिह्नित करें",
-    "mark_as_inactive": "निष्क्रिय के रूप में चिह्नित करें"
+    "mark_as_inactive": "निष्क्रिय के रूप में चिह्नित करें",
+    "update": "अपडेट करें",
+    "view_all": "सभी देखें"
   },
   "common": {
     "yes": "हाँ",
@@ -48,7 +63,8 @@
     "mrp": "एम.आर.पी.",
     "select": "चुनें",
     "basic_detail": "मूल विवरण",
-    "option_detail": "विकल्प विवरण"
+    "option_detail": "विकल्प विवरण",
+    "none": "कोई नहीं"
   },
   "desc": {
     "delete_confirm": "क्या आप वाकई हटाना चाहते हैं?",
@@ -114,11 +130,43 @@
     "created_at": "बनाया गया",
     "updated_at": "अपडेट किया गया",
     "language": "भाषा",
-    "theme": "थीम"
+    "theme": "थीम",
+    "invoice_number": "चालान नंबर",
+    "invoice_date": "चालान तिथि",
+    "customer_gstin": "ग्राहक जी.एस.टी.आई.एन.",
+    "sale_type": "बिक्री प्रकार",
+    "items": "आइटम",
+    "quantity": "मात्रा",
+    "price_per_unit": "प्रति इकाई मूल्य",
+    "subtotal": "उप-योग",
+    "taxable_amount": "कर योग्य राशि",
+    "cgst": "सी.जी.एस.टी.",
+    "sgst": "एस.जी.एस.टी.",
+    "igst": "आई.जी.एस.टी.",
+    "total_amount": "कुल राशि",
+    "grand_total": "सकल योग",
+    "round_off": "राउंड ऑफ",
+    "paid_amount": "भुगतान की गई राशि",
+    "due_amount": "बकाया राशि",
+    "payment_status": "भुगतान की स्थिति",
+    "notes": "नोट्स",
+    "status": "स्थिति",
+    "product": "उत्पाद",
+    "product_name": "उत्पाद का नाम",
+    "tax_type": "कर प्रकार",
+    "inclusive": "सहित",
+    "exclusive": "अतिरिक्त",
+    "discount_value": "छूट मूल्य",
+    "discount_amount": "छूट राशि",
+    "gst_rate": "जी.एस.टी. दर",
+    "cess_rate": "उपकर दर",
+    "due": "बकाया",
+    "payment_details": "भुगतान विवरण"
   },
   "menu": {
     "dashboard": "डैशबोर्ड",
     "sell": "बिक्री",
+    "sale": "बिक्री",
     "logout": "लॉग आउट"
   },
   "page": {
@@ -152,7 +200,23 @@
       "balancing": "संतुलन"
     },
     "sales": {
-      "title": "बिक्री"
+      "title": "बिक्री",
+      "view": "बिक्री देखें",
+      "edit": "बिक्री संपादित करें",
+      "add_new": "नई बिक्री जोड़ें",
+      "no_sales": "कोई बिक्री नहीं मिली",
+      "no_sales_desc": "अपनी पहली बिक्री बनाना शुरू करें",
+      "add_first": "पहली बिक्री जोड़ें",
+      "no_items": "अभी तक कोई आइटम नहीं जोड़ा गया"
+    },
+    "sell": {
+      "title": "बिक्री",
+      "create_new_sale": "नई बिक्री बनाएं",
+      "view_all_sales": "सभी बिक्री देखें",
+      "total_sales_this_month": "इस महीने की कुल बिक्री",
+      "total_due": "कुल बकाया",
+      "recent_sales": "हाल की बिक्री",
+      "no_recent_sales": "कोई हाल की बिक्री नहीं मिली"
     },
     "purchases": {
       "title": "खरीद"
@@ -189,7 +253,12 @@
     "enter_state": "राज्य दर्ज करें",
     "enter_pincode": "पिनकोड दर्ज करें",
     "enter_country": "देश दर्ज करें",
-    "enter_address": "पता दर्ज करें"
+    "enter_address": "पता दर्ज करें",
+    "invoice_number": "चालान नंबर दर्ज करें",
+    "invoice_date": "चालान तिथि चुनें",
+    "customer_gstin": "ग्राहक जी.एस.टी.आई.एन. दर्ज करें",
+    "paid_amount": "भुगतान की गई राशि दर्ज करें",
+    "select": "चुनें"
   },
   "uom": {
     "bags": "बैग",

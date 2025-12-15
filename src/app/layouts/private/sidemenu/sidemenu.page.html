@@ -52,10 +52,10 @@
                 {{ 'page.suppliers.title' | translate }}
             </ion-item>
 
-            <ion-item [routerLink]="'/sell'" [button]="true" lines="none"
-                [ngClass]="{'selected': currentRoute() === '/sell'}">
-                <ion-icon [name]="currentRoute() === '/sell' ? 'cart' : 'cart-outline'" slot="start"></ion-icon>
-                {{ 'menu.sell' | translate }}
+            <ion-item [routerLink]="'/sales'" [button]="true" lines="none"
+                [ngClass]="{'selected': currentRoute() === '/sales'}">
+                <ion-icon [name]="currentRoute() === '/sales' ? 'cart' : 'cart-outline'" slot="start"></ion-icon>
+                {{ 'menu.sale' | translate }}
             </ion-item>
 
             <ion-item [routerLink]="'/settings'" [button]="true" lines="none"
