@@ -48,6 +48,18 @@ export const PRIVATE_ROUTES: Routes = [
                 loadComponent: () => import('../features/components/private/customers/customer/customer.component').then(m => m.CustomerComponent)
             },
             {
+                path: 'supplier',
+                loadComponent: () => import('../features/components/private/suppliers/suppliers.component').then(m => m.SuppliersComponent)
+            },
+            {
+                path: 'supplier/new',
+                loadComponent: () => import('../features/components/private/suppliers/supplier/supplier.component').then(m => m.SupplierComponent)
+            },
+            {
+                path: 'supplier/:id',
+                loadComponent: () => import('../features/components/private/suppliers/supplier/supplier.component').then(m => m.SupplierComponent)
+            },
+            {
                 path: '', redirectTo: 'home', pathMatch: 'full'
             }
         ]

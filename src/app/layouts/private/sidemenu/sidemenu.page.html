@@ -46,6 +46,12 @@
                 Customers
             </ion-item>
 
+            <ion-item [routerLink]="'/supplier'" [button]="true" lines="none"
+                [ngClass]="{'selected': currentRoute() === '/supplier'}">
+                <ion-icon [name]="currentRoute() === '/supplier' ? 'people-circle' : 'people-circle-outline'" slot="start"></ion-icon>
+                Suppliers
+            </ion-item>
+
             <ion-item [routerLink]="'/sell'" [button]="true" lines="none"
                 [ngClass]="{'selected': currentRoute() === '/sell'}">
                 <ion-icon [name]="currentRoute() === '/sell' ? 'cart' : 'cart-outline'" slot="start"></ion-icon>
