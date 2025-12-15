@@ -30,7 +30,7 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
         sku TEXT UNIQUE,
         description TEXT,
         category TEXT,
-        unit TEXT,
+        unitMeasure TEXT,
         isfavourite INTEGER,
         
         -- Purchase Pricing

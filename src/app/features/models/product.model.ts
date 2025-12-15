@@ -50,7 +50,7 @@ export interface Product {
   discountValue?: number;
   
   // Inventory
-  unit?: string;                       // Unit of measure (PCS, KG, etc.)
+  unitMeasure?: string;                       // Unit of measure (PCS, KG, etc.)
   isInventory?: boolean;               // Enable inventory management
   currentStock?: number;  
   minStockLevel?: number;              // Minimum stock alert level
@@ -121,7 +121,15 @@ export function getProductMeta() {
     { key: 'discountValue', label: 'Discount Value', required: false, controlType: 'number' },
     
     // Inventory
-    { key: 'unit', label: 'Unit', required: false },
+    {
+      key: 'unitMeasure',
+      label: 'Unit Measurement',
+      controlType: 'select',
+      options: Object.entries(UOM_LABELS).map(([key, value]) => ({
+        key: key as UnitOfMeasure,
+        value
+      })),
+    },
     { key: 'currentStock', label: 'Current Stock', required: false, controlType: 'number' },
     { key: 'minStockLevel', label: 'Min Stock Level', required: false, controlType: 'number' },
     { key: 'maxStockLevel', label: 'Max Stock Level', required: false, controlType: 'number' },
