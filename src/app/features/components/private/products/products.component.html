@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <app-toolbar title="Page.Products.Title"></app-toolbar>
+  <app-toolbar title="page.products.title"></app-toolbar>
   <ion-toolbar color="primary" mode="ios">
     <ion-searchbar color="light" show-clear-button="always" (ionInput)="handleInput($event)"></ion-searchbar>
   </ion-toolbar>
@@ -15,23 +15,32 @@
           <strong>{{result.productName}}</strong>
           <div class="badges">
             @if (result.isfavourite) {
-              <ion-badge color="danger">
-                <ion-icon name="heart"></ion-icon>
-              </ion-badge>
+            <ion-badge color="danger">
+              <ion-icon name="heart"></ion-icon>
+            </ion-badge>
             }
             @if (result.isActive) {
-              <ion-badge color="success">{{'Active.Common' | translate}}</ion-badge>
+            <ion-badge color="success">{{'badge.active' | translate}}</ion-badge>
             } @else {
-              <ion-badge color="medium">Inactive</ion-badge>
+            <ion-badge color="medium">{{'badge.inactive' | translate}}</ion-badge>
             }
           </div>
         </div>
         @if (result.description) {
-          <ion-text color="medium" class="description">{{result.description}}</ion-text>
+        <ion-text color="medium" class="description">{{result.description}}</ion-text>
         }
         <ion-note color="medium" class="ion-text-wrap">
-          Stock: {{result?.currentStock}} | MRP: ₹{{result.mrp}}
+          @if (result?.currentStock != null) {
+          {{'common.stock' | translate}}: {{ result.currentStock }}
+          }
+          @if (result?.currentStock != null && result?.mrp != null) {
+          |
+          }
+          @if (result?.mrp != null) {
+          {{'common.mrp' | translate}}: ₹{{ result.mrp }}
+          }
         </ion-note>
+
       </ion-label>
       <ion-button slot="end" shape="round" size="large" fill="clear" (click)="presentActionSheet($event, result)">
         <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>

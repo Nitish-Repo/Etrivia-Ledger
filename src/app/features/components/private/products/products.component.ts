@@ -129,31 +129,31 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
   async presentActionSheet(event: Event, product: Product) {
     event.stopPropagation();
     const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Product Actions',
+      header: this.translateService.t('page.products.actions'),
       buttons: [
         {
-          text: this.translateService.t('Page.Products.Edit'),
+          text: this.translateService.t('page.products.edit'),
           icon: 'pencil',
           handler: () => this.updateProduct(product)
         },
         {
-          text: product.isfavourite ? 'Remove from Favourite' : 'Mark as Favourite',
+          text: product.isfavourite ? this.translateService.t('button.remove_from_favourite') : this.translateService.t('button.mark_as_favourite'),
           icon: product.isfavourite ? 'heart-dislike' : 'heart',
           handler: () => this.toggleFavourite(product)
         },
         {
-          text: product.isActive ? 'Mark as Inactive' : 'Mark as Active',
+          text: product.isActive ? this.translateService.t('button.mark_as_inactive') : this.translateService.t('button.mark_as_inactive'),
           icon: product.isActive ? 'eye-off' : 'eye',
           handler: () => this.toggleActive(product)
         },
         {
-          text: 'Delete Product',
+          text: this.translateService.t('page.products.delete'),
           role: 'destructive',
           icon: 'trash',
           handler: () => this.deleteProduct(product)
         },
         {
-          text: 'Cancel',
+          text: this.translateService.t('button.cancel'),
           role: 'cancel',
           icon: 'close'
         },

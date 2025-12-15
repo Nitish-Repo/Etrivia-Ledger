@@ -20,7 +20,7 @@ import { SelectComponent } from '@app/shared/select/select.component';
   templateUrl: './supplier.component.html',
   styleUrls: ['./supplier.component.scss'],
   standalone: true,
-  imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonIcon, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonSegment, IonSegmentContent, IonTabBar, IonTabButton, IonSegmentView]
+  imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonIcon, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, IonSegment, IonSegmentContent, IonTabBar, IonTabButton, IonSegmentView]
 })
 export class SupplierComponent implements OnInit {
   private app = inject(AppService);

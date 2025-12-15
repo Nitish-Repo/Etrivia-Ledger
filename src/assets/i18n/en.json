@@ -1,130 +1,138 @@
 {
-  "Alert": {
-    "Success": "Success",
-    "Error": "Error",
-    "Warning": "Warning",
-    "Info": "Information",
-    "Confirm": "Are you sure?"
-  },
-  "Api": {
-    "SaveSuccess": "Saved successfully",
-    "DeleteSuccess": "Deleted successfully",
-    "UpdateSuccess": "Updated successfully",
-    "ServerError": "An error occurred",
-    "NoInternet": "No internet connection"
-  },
-  "Badge": {
-    "Active": "Active",
-    "Inactive": "Inactive",
-    "Favourite": "Favourite",
-    "Retail": "Retail",
-    "Wholesale": "Wholesale",
-    "B2B": "B2B"
-  },
-  "Button": {
-    "Save": "Save",
-    "Cancel": "Cancel",
-    "Delete": "Delete",
-    "Edit": "Edit",
-    "Add": "Add",
-    "Search": "Search",
-    "Confirm": "Confirm",
-    "Actions": "Actions",
-    "MarkAsFavourite": "Mark as Favourite",
-    "RemoveFromFavourite": "Remove from Favourite",
-    "MarkAsActive": "Mark as Active",
-    "MarkAsInactive": "Mark as Inactive"
-  },
-  "Common": {
-    "Yes": "Yes",
-    "No": "No",
-    "Loading": "Loading...",
-    "NoData": "No data available",
-    "AppName": "Etrivia Ledger",
-    "Welcome": "Welcome"
-  },
-  "Desc": {
-    "DeleteConfirm": "Are you sure you want to delete?",
-    "UseDeviceTheme": "Follow system dark mode settings",
-    "AlwaysLight": "Always use light mode",
-    "AlwaysDark": "Always use dark mode"
-  },
-  "Error": {
-    "Required": "This field is required",
-    "InvalidEmail": "Invalid email address",
-    "InvalidPhone": "Invalid phone number",
-    "MinLength": "Minimum length is {{min}}",
-    "MaxLength": "Maximum length is {{max}}"
-  },
-  "Label": {
-    "ProductName": "Product Name",
-    "Description": "Description",
-    "Price": "Price",
-    "MRP": "MRP",
-    "Stock": "Stock",
-    "HSNCode": "HSN Code",
-    "Barcode": "Barcode",
-    "Category": "Category",
-    "Unit": "Unit",
-    "WholesalePrice": "Wholesale Price",
-    "RetailPrice": "Retail Price",
-    "CustomerName": "Customer Name",
-    "Phone": "Phone Number",
-    "Email": "Email",
-    "GSTIN": "GSTIN",
-    "Address": "Address",
-    "City": "City",
-    "State": "State",
-    "Pincode": "Pincode",
-    "CreditLimit": "Credit Limit",
-    "OpeningBalance": "Opening Balance",
-    "CustomerType": "Customer Type",
-    "Language": "Language",
-    "Theme": "Theme"
-  },
-  "Page": {
-    "Home": {
-      "Title": "Home"
+    "alert": {
+        "success": "Success",
+        "error": "Error",
+        "warning": "Warning",
+        "info": "Information",
+        "confirm": "Are you sure?"
     },
-    "Products": {
-      "Title": "Products",
-      "Add": "Add Product",
-      "Edit": "Edit Product",
-      "Delete": "Delete Product",
-      "Actions": "Product Actions"
+    "api": {
+        "save_success": "Saved successfully",
+        "delete_success": "Deleted successfully",
+        "update_success": "Updated successfully",
+        "server_error": "An error occurred",
+        "no_internet": "No internet connection"
     },
-    "Customers": {
-      "Title": "Customers",
-      "Add": "Add Customer",
-      "Edit": "Edit Customer"
+    "badge": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "favourite": "Favourite",
+        "retail": "Retail",
+        "wholesale": "Wholesale",
+        "b2b": "B2B"
     },
-    "Suppliers": {
-      "Title": "Suppliers"
+    "button": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "add": "Add",
+        "search": "Search",
+        "confirm": "Confirm",
+        "actions": "Actions",
+        "mark_as_favourite": "Mark as Favourite",
+        "remove_from_favourite": "Remove from Favourite",
+        "mark_as_active": "Mark as Active",
+        "mark_as_inactive": "Mark as Inactive"
     },
-    "Sales": {
-      "Title": "Sales"
+    "common": {
+        "yes": "Yes",
+        "no": "No",
+        "loading": "Loading...",
+        "no_data": "No data available",
+        "app_name": "Etrivia Ledger",
+        "welcome": "Welcome",
+        "stock": "Stock",
+        "mrp": "MRP"
     },
-    "Purchases": {
-      "Title": "Purchases"
+    "desc": {
+        "delete_confirm": "Are you sure you want to delete?",
+        "use_device_theme": "Follow system dark mode settings",
+        "always_light": "Always use light mode",
+        "always_dark": "Always use dark mode"
     },
-    "Expenses": {
-      "Title": "Expenses"
+    "error": {
+        "required": "This field is required",
+        "invalid_email": "Invalid email address",
+        "invalid_phone": "Invalid phone number",
+        "min_length": "Minimum length is {{min}}",
+        "max_length": "Maximum length is {{max}}"
     },
-    "Reports": {
-      "Title": "Reports"
+    "label": {
+        "product_name": "Product Name",
+        "description": "Description",
+        "price": "Price",
+        "mrp": "MRP",
+        "stock": "Stock",
+        "hsn_code": "HSN Code",
+        "barcode": "Barcode",
+        "category": "Category",
+        "unit": "Unit",
+        "wholesale_price": "Wholesale Price",
+        "retail_price": "Retail Price",
+        "customer_name": "Customer Name",
+        "supplier_name": "Supplier Name",
+        "phone": "Phone Number",
+        "email": "Email",
+        "gstin": "GSTIN",
+        "pan": "PAN",
+        "address": "Address",
+        "city": "City",
+        "state": "State",
+        "pincode": "Pincode",
+        "credit_limit": "Credit Limit",
+        "opening_balance": "Opening Balance",
+        "current_balance": "Current Balance",
+        "customer_type": "Customer Type",
+        "language": "Language",
+        "theme": "Theme"
     },
-    "Settings": {
-      "Title": "Settings",
-      "BusinessInfo": "Business Information",
-      "Backup": "Backup & Restore",
-      "About": "About"
+    "page": {
+        "home": {
+            "title": "Home"
+        },
+        "products": {
+            "title": "Products",
+            "add": "Add Product",
+            "edit": "Edit Product",
+            "delete": "Delete Product",
+            "actions": "Product Actions"
+        },
+        "customers": {
+            "title": "Customers",
+            "add": "Add Customer",
+            "edit": "Edit Customer"
+        },
+        "suppliers": {
+            "title": "Suppliers",
+            "add": "Add Supplier",
+            "edit": "Edit Supplier"
+        },
+        "sales": {
+            "title": "Sales"
+        },
+        "purchases": {
+            "title": "Purchases"
+        },
+        "expenses": {
+            "title": "Expenses"
+        },
+        "reports": {
+            "title": "Reports"
+        },
+        "settings": {
+            "title": "Settings",
+            "business_info": "Business Information",
+            "backup": "Backup & Restore",
+            "about": "About"
+        }
+    },
+    "placeholder": {
+        "search": "Search...",
+        "enter_product_name": "Enter product name",
+        "enter_customer_name": "Enter customer name",
+        "enter_supplier_name": "Enter supplier name",
+        "enter_email": "Enter email address",
+        "enter_phone": "Enter phone number"
     }
-  },
-  "Placeholder": {
-    "Search": "Search...",
-    "EnterProductName": "Enter product name",
-    "EnterCustomerName": "Enter customer name",
-    "EnterEmail": "Enter email address",
-    "EnterPhone": "Enter phone number"
-  }
 }

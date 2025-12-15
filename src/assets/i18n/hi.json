@@ -1,130 +1,138 @@
 {
-  "Alert": {
-    "Success": "सफलता",
-    "Error": "त्रुटि",
-    "Warning": "चेतावनी",
-    "Info": "जानकारी",
-    "Confirm": "क्या आप निश्चित हैं?"
+  "alert": {
+    "success": "सफलता",
+    "error": "त्रुटि",
+    "warning": "चेतावनी",
+    "info": "जानकारी",
+    "confirm": "क्या आप निश्चित हैं?"
   },
-  "Api": {
-    "SaveSuccess": "सफलतापूर्वक सहेजा गया",
-    "DeleteSuccess": "सफलतापूर्वक हटाया गया",
-    "UpdateSuccess": "सफलतापूर्वक अपडेट किया गया",
-    "ServerError": "एक त्रुटि हुई",
-    "NoInternet": "कोई इंटरनेट कनेक्शन नहीं"
+  "api": {
+    "save_success": "सफलतापूर्वक सहेजा गया",
+    "delete_success": "सफलतापूर्वक हटाया गया",
+    "update_success": "सफलतापूर्वक अपडेट किया गया",
+    "server_error": "एक त्रुटि हुई",
+    "no_internet": "कोई इंटरनेट कनेक्शन नहीं"
   },
-  "Badge": {
-    "Active": "सक्रिय",
-    "Inactive": "निष्क्रिय",
-    "Favourite": "पसंदीदा",
-    "Retail": "खुदरा",
-    "Wholesale": "थोक",
-    "B2B": "बी2बी"
+  "badge": {
+    "active": "सक्रिय",
+    "inactive": "निष्क्रिय",
+    "favourite": "पसंदीदा",
+    "retail": "खुदरा",
+    "wholesale": "थोक",
+    "b2b": "बी2बी"
   },
-  "Button": {
-    "Save": "सहेजें",
-    "Cancel": "रद्द करें",
-    "Delete": "हटाएं",
-    "Edit": "संपादित करें",
-    "Add": "जोड़ें",
-    "Search": "खोजें",
-    "Confirm": "पुष्टि करें",
-    "Actions": "कार्य",
-    "MarkAsFavourite": "पसंदीदा के रूप में चिह्नित करें",
-    "RemoveFromFavourite": "पसंदीदा से हटाएं",
-    "MarkAsActive": "सक्रिय के रूप में चिह्नित करें",
-    "MarkAsInactive": "निष्क्रिय के रूप में चिह्नित करें"
+  "button": {
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "add": "जोड़ें",
+    "search": "खोजें",
+    "confirm": "पुष्टि करें",
+    "actions": "कार्य",
+    "mark_as_favourite": "पसंदीदा के रूप में चिह्नित करें",
+    "remove_from_favourite": "पसंदीदा से हटाएं",
+    "mark_as_active": "सक्रिय के रूप में चिह्नित करें",
+    "mark_as_inactive": "निष्क्रिय के रूप में चिह्नित करें"
   },
-  "Common": {
-    "Yes": "हाँ",
-    "No": "नहीं",
-    "Loading": "लोड हो रहा है...",
-    "NoData": "कोई डेटा उपलब्ध नहीं",
-    "AppName": "एट्रिविया लेजर",
-    "Welcome": "स्वागत है"
+  "common": {
+    "yes": "हाँ",
+    "no": "नहीं",
+    "loading": "लोड हो रहा है...",
+    "no_data": "कोई डेटा उपलब्ध नहीं",
+    "app_name": "एट्रिविया लेजर",
+    "welcome": "स्वागत है",
+    "stock": "स्टॉक",
+    "mrp": "एम.आर.पी."
   },
-  "Desc": {
-    "DeleteConfirm": "क्या आप वाकई हटाना चाहते हैं?",
-    "UseDeviceTheme": "सिस्टम डार्क मोड सेटिंग्स का पालन करें",
-    "AlwaysLight": "हमेशा लाइट मोड का उपयोग करें",
-    "AlwaysDark": "हमेशा डार्क मोड का उपयोग करें"
+  "desc": {
+    "delete_confirm": "क्या आप वाकई हटाना चाहते हैं?",
+    "use_device_theme": "सिस्टम डार्क मोड सेटिंग्स का पालन करें",
+    "always_light": "हमेशा लाइट मोड का उपयोग करें",
+    "always_dark": "हमेशा डार्क मोड का उपयोग करें"
   },
-  "Error": {
-    "Required": "यह फ़ील्ड आवश्यक है",
-    "InvalidEmail": "अमान्य ईमेल पता",
-    "InvalidPhone": "अमान्य फोन नंबर",
-    "MinLength": "न्यूनतम लंबाई {{min}} है",
-    "MaxLength": "अधिकतम लंबाई {{max}} है"
+  "error": {
+    "required": "यह फ़ील्ड आवश्यक है",
+    "invalid_email": "अमान्य ईमेल पता",
+    "invalid_phone": "अमान्य फोन नंबर",
+    "min_length": "न्यूनतम लंबाई {{min}} है",
+    "max_length": "अधिकतम लंबाई {{max}} है"
   },
-  "Label": {
-    "ProductName": "उत्पाद का नाम",
-    "Description": "विवरण",
-    "Price": "मूल्य",
-    "MRP": "एम.आर.पी.",
-    "Stock": "स्टॉक",
-    "HSNCode": "एच.एस.एन. कोड",
-    "Barcode": "बारकोड",
-    "Category": "श्रेणी",
-    "Unit": "इकाई",
-    "WholesalePrice": "थोक मूल्य",
-    "RetailPrice": "खुदरा मूल्य",
-    "CustomerName": "ग्राहक का नाम",
-    "Phone": "फोन नंबर",
-    "Email": "ईमेल",
-    "GSTIN": "जी.एस.टी.आई.एन.",
-    "Address": "पता",
-    "City": "शहर",
-    "State": "राज्य",
-    "Pincode": "पिनकोड",
-    "CreditLimit": "क्रेडिट लिमिट",
-    "OpeningBalance": "प्रारंभिक शेष",
-    "CustomerType": "ग्राहक प्रकार",
-    "Language": "भाषा",
-    "Theme": "थीम"
+  "label": {
+    "product_name": "उत्पाद का नाम",
+    "description": "विवरण",
+    "price": "मूल्य",
+    "mrp": "एम.आर.पी.",
+    "stock": "स्टॉक",
+    "hsn_code": "एच.एस.एन. कोड",
+    "barcode": "बारकोड",
+    "category": "श्रेणी",
+    "unit": "इकाई",
+    "wholesale_price": "थोक मूल्य",
+    "retail_price": "खुदरा मूल्य",
+    "customer_name": "ग्राहक का नाम",
+    "supplier_name": "आपूर्तिकर्ता का नाम",
+    "phone": "फोन नंबर",
+    "email": "ईमेल",
+    "gstin": "जी.एस.टी.आई.एन.",
+    "pan": "पैन",
+    "address": "पता",
+    "city": "शहर",
+    "state": "राज्य",
+    "pincode": "पिनकोड",
+    "credit_limit": "क्रेडिट लिमिट",
+    "opening_balance": "प्रारंभिक शेष",
+    "current_balance": "वर्तमान शेष",
+    "customer_type": "ग्राहक प्रकार",
+    "language": "भाषा",
+    "theme": "थीम"
   },
-  "Page": {
-    "Home": {
-      "Title": "होम"
+  "page": {
+    "home": {
+      "title": "होम"
     },
-    "Products": {
-      "Title": "उत्पाद",
-      "Add": "उत्पाद जोड़ें",
-      "Edit": "उत्पाद संपादित करें",
-      "Delete": "उत्पाद हटाएं",
-      "Actions": "उत्पाद कार्य"
+    "products": {
+      "title": "उत्पाद",
+      "add": "उत्पाद जोड़ें",
+      "edit": "उत्पाद संपादित करें",
+      "delete": "उत्पाद हटाएं",
+      "actions": "उत्पाद कार्य"
     },
-    "Customers": {
-      "Title": "ग्राहक",
-      "Add": "ग्राहक जोड़ें",
-      "Edit": "ग्राहक संपादित करें"
+    "customers": {
+      "title": "ग्राहक",
+      "add": "ग्राहक जोड़ें",
+      "edit": "ग्राहक संपादित करें"
     },
-    "Suppliers": {
-      "Title": "आपूर्तिकर्ता"
+    "suppliers": {
+      "title": "आपूर्तिकर्ता",
+      "add": "आपूर्तिकर्ता जोड़ें",
+      "edit": "आपूर्तिकर्ता संपादित करें"
     },
-    "Sales": {
-      "Title": "बिक्री"
+    "sales": {
+      "title": "बिक्री"
     },
-    "Purchases": {
-      "Title": "खरीद"
+    "purchases": {
+      "title": "खरीद"
     },
-    "Expenses": {
-      "Title": "खर्चे"
+    "expenses": {
+      "title": "खर्चे"
     },
-    "Reports": {
-      "Title": "रिपोर्ट"
+    "reports": {
+      "title": "रिपोर्ट"
     },
-    "Settings": {
-      "Title": "सेटिंग्स",
-      "BusinessInfo": "व्यवसाय की जानकारी",
-      "Backup": "बैकअप और पुनर्स्थापना",
-      "About": "के बारे में"
+    "settings": {
+      "title": "सेटिंग्स",
+      "business_info": "व्यवसाय की जानकारी",
+      "backup": "बैकअप और पुनर्स्थापना",
+      "about": "के बारे में"
     }
   },
-  "Placeholder": {
-    "Search": "खोजें...",
-    "EnterProductName": "उत्पाद का नाम दर्ज करें",
-    "EnterCustomerName": "ग्राहक का नाम दर्ज करें",
-    "EnterEmail": "ईमेल पता दर्ज करें",
-    "EnterPhone": "फोन नंबर दर्ज करें"
+  "placeholder": {
+    "search": "खोजें...",
+    "enter_product_name": "उत्पाद का नाम दर्ज करें",
+    "enter_customer_name": "ग्राहक का नाम दर्ज करें",
+    "enter_supplier_name": "आपूर्तिकर्ता का नाम दर्ज करें",
+    "enter_email": "ईमेल पता दर्ज करें",
+    "enter_phone": "फोन नंबर दर्ज करें"
   }
 }
