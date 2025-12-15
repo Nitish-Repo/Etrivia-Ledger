@@ -12,6 +12,7 @@ import {
 } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { add, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, close, cube, heartDislike, eye, personOutline } from 'ionicons/icons';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-customers',
@@ -20,7 +21,7 @@ import { add, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, cl
   standalone: true,
   imports: [IonInfiniteScrollContent, IonInfiniteScroll, IonNote, IonItem, IonLabel, IonList, IonIcon, IonFabButton,
     IonFab, IonSearchbar, IonToolbar, IonButton, IonContent, IonHeader, IonBadge, CommonModule,
-    ToolbarPage, RouterModule]
+    ToolbarPage, RouterModule, TranslateModule]
 })
 export class CustomersComponent implements OnInit {
   private app = inject(AppService);
@@ -28,6 +29,7 @@ export class CustomersComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private service = inject(CustomerService);
   private actionSheetCtrl = inject(ActionSheetController);
+  private translate = inject(TranslateService);
 
   customers = signal<Customer[]>([]);
   searchQuery = signal<string>('');
@@ -120,31 +122,31 @@ export class CustomersComponent implements OnInit {
   async presentActionSheet(event: Event, customer: Customer) {
     event.stopPropagation();
     const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Customer Actions',
+      header: this.translate.instant('button.actions'),
       buttons: [
         {
-          text: 'Edit Customer',
+          text: this.translate.instant('page.customers.edit'),
           icon: 'pencil',
           handler: () => this.updateCustomer(customer)
         },
         // {
-        //   text: customer.isfavourite ? 'Remove from Favourite' : 'Mark as Favourite',
+        //   text: customer.isfavourite ? this.translate.instant('button.remove_from_favourite') : this.translate.instant('button.mark_as_favourite'),
         //   icon: customer.isfavourite ? 'heart-dislike' : 'heart',
         //   handler: () => this.toggleFavourite(customer)
         // },
         {
-          text: customer.isActive ? 'Mark as Inactive' : 'Mark as Active',
+          text: customer.isActive ? this.translate.instant('button.mark_as_inactive') : this.translate.instant('button.mark_as_active'),
           icon: customer.isActive ? 'eye-off' : 'eye',
           handler: () => this.toggleActive(customer)
         },
         {
-          text: 'Delete Customer',
+          text: this.translate.instant('button.delete'),
           role: 'destructive',
           icon: 'trash',
           handler: () => this.deleteCustomer(customer)
         },
         {
-          text: 'Cancel',
+          text: this.translate.instant('button.cancel'),
           role: 'cancel',
           icon: 'close'
         },

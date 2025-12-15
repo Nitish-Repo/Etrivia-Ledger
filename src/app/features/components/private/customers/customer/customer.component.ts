@@ -14,13 +14,14 @@ import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
 import { CommonModule } from '@angular/common';
 import { InputComponent } from '@app/shared/input/input.component';
 import { SelectComponent } from '@app/shared/select/select.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-customer',
   templateUrl: './customer.component.html',
   styleUrls: ['./customer.component.scss'],
   standalone: true,
-  imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonIcon, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonSegment, IonSegmentContent, IonTabBar, IonTabButton, IonSegmentView]
+  imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonIcon, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonSegment, IonSegmentContent, IonTabBar, IonTabButton, IonSegmentView, TranslateModule]
 })
 export class CustomerComponent implements OnInit {
   private app = inject(AppService);

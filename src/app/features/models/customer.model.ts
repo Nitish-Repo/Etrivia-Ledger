@@ -115,21 +115,21 @@ export function getCustomerMeta() {
     { key: 'currentBalance', label: 'Current Balance', required: false, controlType: 'number' },
     {
       key: 'customerType',
-      label: 'Customer Type',
+      label: 'label.customer_type',
       controlType: 'select',
       options: [
-        { key: CustomerType.RETAIL, value: 'Retail' },
-        { key: CustomerType.WHOLESALE, value: 'Wholesale' },
-        { key: CustomerType.B2B, value: 'B2B' },
+        { key: CustomerType.RETAIL, value: 'badge.retail' },
+        { key: CustomerType.WHOLESALE, value: 'badge.wholesale' },
+        { key: CustomerType.B2B, value: 'badge.b2b' },
       ],
     },
     {
       key: 'priceList',
-      label: 'Price List',
+      label: 'label.price_list',
       controlType: 'select',
       options: [
-        { key: PriceListType.RETAIL, value: 'Retail Price' },
-        { key: PriceListType.WHOLESALE, value: 'Wholesale Price' },
+        { key: PriceListType.RETAIL, value: 'label.retail_price' },
+        { key: PriceListType.WHOLESALE, value: 'label.wholesale_price' },
       ],
     },
     {
@@ -137,8 +137,8 @@ export function getCustomerMeta() {
       label: 'Is Active',
       controlType: 'radio',
       options: [
-        { key: true, value: 'Yes' },
-        { key: false, value: 'No' },
+        { key: true, value: 'common.yes' },
+        { key: false, value: 'common.no' },
       ],
     },
     { key: 'createdAt', label: 'Created at', required: false, hide: true },

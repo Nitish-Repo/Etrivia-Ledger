@@ -46,7 +46,9 @@
     "welcome": "स्वागत है",
     "stock": "स्टॉक",
     "mrp": "एम.आर.पी.",
-    "select": "चुनें"
+    "select": "चुनें",
+    "basic_detail": "मूल विवरण",
+    "option_detail": "विकल्प विवरण"
   },
   "desc": {
     "delete_confirm": "क्या आप वाकई हटाना चाहते हैं?",
@@ -103,6 +105,14 @@
     "opening_balance": "प्रारंभिक शेष",
     "current_balance": "वर्तमान शेष",
     "customer_type": "ग्राहक प्रकार",
+    "price_list": "मूल्य सूची",
+    "billing_address": "बिलिंग पता",
+    "shipping_address": "शिपिंग पता",
+    "country": "देश",
+    "is_active": "सक्रिय है",
+    "customer_id": "ग्राहक आईडी",
+    "created_at": "बनाया गया",
+    "updated_at": "अपडेट किया गया",
     "language": "भाषा",
     "theme": "थीम"
   },
@@ -122,8 +132,6 @@
       "edit": "उत्पाद संपादित करें",
       "delete": "उत्पाद हटाएं",
       "actions": "उत्पाद कार्य",
-      "basic_detail": "मूल विवरण",
-      "option_detail": "विकल्प विवरण",
       "sale_pricing": "बिक्री मूल्य निर्धारण",
       "purchase_pricing": "खरीद मूल्य निर्धारण",
       "manage_inventory": "स्टॉक/इन्वेंट्री प्रबंधित करें"
@@ -132,7 +140,9 @@
       "title": "ग्राहक",
       "title_singular": "ग्राहक",
       "add": "ग्राहक जोड़ें",
-      "edit": "ग्राहक संपादित करें"
+      "edit": "ग्राहक संपादित करें",
+      "credit_management": "क्रेडिट प्रबंधन",
+      "classification": "वर्गीकरण"
     },
     "suppliers": {
       "title": "आपूर्तिकर्ता",
@@ -169,7 +179,15 @@
     "enter_description": "विवरण दर्ज करें",
     "enter_mrp": "एम.आर.पी. दर्ज करें",
     "enter_stock": "स्टॉक दर्ज करें",
-    "enter_value": "मान दर्ज करें"
+    "enter_value": "मान दर्ज करें",
+    "enter_gstin": "जी.एस.टी.आई.एन. दर्ज करें",
+    "enter_pan": "पैन दर्ज करें",
+    "enter_billing_address": "बिलिंग पता दर्ज करें",
+    "enter_shipping_address": "शिपिंग पता दर्ज करें",
+    "enter_city": "शहर दर्ज करें",
+    "enter_state": "राज्य दर्ज करें",
+    "enter_pincode": "पिनकोड दर्ज करें",
+    "enter_country": "देश दर्ज करें"
   },
   "uom": {
     "bags": "बैग",

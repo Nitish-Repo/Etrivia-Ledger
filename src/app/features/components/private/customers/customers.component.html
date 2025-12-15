@@ -1,8 +1,8 @@
 
 <ion-header [translucent]="true">
-  <app-toolbar title="Customers"></app-toolbar>
+  <app-toolbar [title]="'page.customers.title' | translate"></app-toolbar>
   <ion-toolbar color="primary" mode="ios">
-    <ion-searchbar color="light" show-clear-button="always" (ionInput)="handleInput($event)"></ion-searchbar>
+    <ion-searchbar color="light" show-clear-button="always" [placeholder]="'placeholder.search' | translate" (ionInput)="handleInput($event)"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
@@ -21,9 +21,9 @@
               </ion-badge>
             } -->
             @if (result.isActive) {
-              <ion-badge color="success">Active</ion-badge>
+              <ion-badge color="success">{{ 'badge.active' | translate }}</ion-badge>
             } @else {
-              <ion-badge color="medium">Inactive</ion-badge>
+              <ion-badge color="medium">{{ 'badge.inactive' | translate }}</ion-badge>
             }
           </div>
         </div>
@@ -31,7 +31,7 @@
           <ion-text color="medium" class="description">{{result.description}}</ion-text>
         } -->
         <ion-note color="medium" class="ion-text-wrap">
-          currentBalance: {{result?.currentBalance}} | openingBalance: ₹{{result.openingBalance}}
+          {{ 'label.current_balance' | translate }}: {{result?.currentBalance}} | {{ 'label.opening_balance' | translate }}: ₹{{result.openingBalance}}
         </ion-note>
       </ion-label>
       <ion-button slot="end" shape="round" size="large" fill="clear" (click)="presentActionSheet($event, result)">

@@ -46,7 +46,9 @@
         "welcome": "Welcome",
         "stock": "Stock",
         "mrp": "MRP",
-        "select": "Select"
+        "select": "Select",
+        "basic_detail": "Basic Detail",
+        "option_detail": "Option Detail"
     },
     "desc": {
         "delete_confirm": "Are you sure you want to delete?",
@@ -103,6 +105,14 @@
         "opening_balance": "Opening Balance",
         "current_balance": "Current Balance",
         "customer_type": "Customer Type",
+        "price_list": "Price List",
+        "billing_address": "Billing Address",
+        "shipping_address": "Shipping Address",
+        "country": "Country",
+        "is_active": "Is Active",
+        "customer_id": "Customer ID",
+        "created_at": "Created At",
+        "updated_at": "Updated At",
         "language": "Language",
         "theme": "Theme"
     },
@@ -122,8 +132,6 @@
             "edit": "Edit Product",
             "delete": "Delete Product",
             "actions": "Product Actions",
-            "basic_detail": "Basic Detail",
-            "option_detail": "Option Detail",
             "sale_pricing": "Sale Pricing",
             "purchase_pricing": "Purchase Pricing",
             "manage_inventory": "Manage Stock/Inventory"
@@ -132,7 +140,9 @@
             "title": "Customers",
             "title_singular": "Customer",
             "add": "Add Customer",
-            "edit": "Edit Customer"
+            "edit": "Edit Customer",
+            "credit_management": "Credit Management",
+            "classification": "Classification"
         },
         "suppliers": {
             "title": "Suppliers",
@@ -169,7 +179,15 @@
         "enter_description": "Enter description",
         "enter_mrp": "Enter MRP",
         "enter_stock": "Enter stock",
-        "enter_value": "Enter value"
+        "enter_value": "Enter value",
+        "enter_gstin": "Enter GSTIN",
+        "enter_pan": "Enter PAN",
+        "enter_billing_address": "Enter billing address",
+        "enter_shipping_address": "Enter shipping address",
+        "enter_city": "Enter city",
+        "enter_state": "Enter state",
+        "enter_pincode": "Enter pincode",
+        "enter_country": "Enter country"
     },
     "uom": {
         "bags": "Bags",
