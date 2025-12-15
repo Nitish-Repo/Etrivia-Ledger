@@ -82,11 +82,11 @@ export function getProductMeta() {
     { key: 'purchaseCost', label: 'Purchase Cost', required: false, controlType: 'number' },
     {
       key: 'purchaseTaxType',
-      label: 'Purchase Tax Type',
+      label: 'label.purchase_tax_type',
       controlType: 'select',
       options: [
-        { key: TaxType.INCLUSIVE, value: 'Tax Inclusive' },
-        { key: TaxType.EXCLUSIVE, value: 'Tax Exclusive' },
+        { key: TaxType.INCLUSIVE, value: 'label.tax_inclusive' },
+        { key: TaxType.EXCLUSIVE, value: 'label.tax_exclusive' },
       ],
     },
     { key: 'purchaseGstRate', label: 'Purchase GST %', required: false, controlType: 'number' },
@@ -98,11 +98,11 @@ export function getProductMeta() {
     { key: 'mrp', label: 'MRP', required: false, controlType: 'number' },
     {
       key: 'saleTaxType',
-      label: 'Sale Tax Type',
+      label: 'label.sale_tax_type',
       controlType: 'select',
       options: [
-        { key: TaxType.INCLUSIVE, value: 'Tax Inclusive' },
-        { key: TaxType.EXCLUSIVE, value: 'Tax Exclusive' },
+        { key: TaxType.INCLUSIVE, value: 'label.tax_inclusive' },
+        { key: TaxType.EXCLUSIVE, value: 'label.tax_exclusive' },
       ],
     },
     { key: 'saleGstRate', label: 'Sale GST %', required: false, controlType: 'number' },
@@ -111,11 +111,11 @@ export function getProductMeta() {
     // Discount
     {
       key: 'discountType',
-      label: 'Discount Type',
+      label: 'label.discount_type',
       controlType: 'select',
       options: [
-        { key: DiscountType.PERCENTAGE, value: 'Percentage' },
-        { key: DiscountType.AMOUNT, value: 'Amount' },
+        { key: DiscountType.PERCENTAGE, value: 'label.percentage' },
+        { key: DiscountType.AMOUNT, value: 'label.amount' },
       ],
     },
     { key: 'discountValue', label: 'Discount Value', required: false, controlType: 'number' },
@@ -123,7 +123,7 @@ export function getProductMeta() {
     // Inventory
     {
       key: 'unitMeasure',
-      label: 'Unit Measurement',
+      label: 'label.unit_measurement',
       controlType: 'select',
       options: Object.entries(UOM_LABELS).map(([key, value]) => ({
         key: key as UnitOfMeasure,
