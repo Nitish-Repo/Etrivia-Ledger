@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <app-toolbar title="Customer"></app-toolbar>
+  <app-toolbar [title]="'page.suppliers.title_singular' | translate"></app-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
   <div class="ion-margin">
@@ -8,73 +8,73 @@
       <form id="customerForm" [formGroup]="form" (submit)="onSubmit()">
         <ion-segment mode="ios">
           <ion-segment-button value="first" content-id="first">
-            <ion-label>Basic Detail</ion-label>
+            <ion-label>{{ 'common.basic_detail' | translate }}</ion-label>
           </ion-segment-button>
           <ion-segment-button value="second" content-id="second">
-            <ion-label>Option Detail</ion-label>
+            <ion-label>{{ 'common.option_detail' | translate }}</ion-label>
           </ion-segment-button>
         </ion-segment>
         <ion-segment-view>
           <ion-segment-content id="first">
             <div class="ion-margin-bottom ion-margin-top">
-              <app-input [form]="form" name="supplierName" placeholder="Enter name" labelPlacement="floating"
-                errorText="Please enter supplier name" fill="outline" [maxlength]="50" [counter]="true"></app-input>
+              <app-input [form]="form" name="supplierName" label="label.supplier_name" [placeholder]="'placeholder.enter_supplier_name'"
+                [errorText]="'error.required'" labelPlacement="floating" fill="outline" [maxlength]="50" [counter]="true"></app-input>
             </div>
 
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="gstin" placeholder="Enter GSTIN" labelPlacement="floating"
-                errorText="Please enter GSTIN" fill="outline"></app-input>
+              <app-input [form]="form" name="gstin" label="label.gstin" [placeholder]="'placeholder.enter_gstin'"
+                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
             </div>
 
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="phone" placeholder="Enter Number" labelPlacement="floating"
-                type="number" errorText="Please enter phone number" fill="outline"></app-input>
+              <app-input [form]="form" name="phone" label="label.phone" [placeholder]="'placeholder.enter_phone'"
+                [errorText]="'error.required'" labelPlacement="floating" type="number" fill="outline"></app-input>
             </div>
 
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="pan" placeholder="PAN" labelPlacement="floating"
-                errorText="Please enter pan number" fill="outline"></app-input>
+              <app-input [form]="form" name="pan" label="label.pan" [placeholder]="'placeholder.enter_pan'"
+                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
             </div>
 
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="address" placeholder="Enter Address" labelPlacement="floating"
-                errorText="Please enter address" fill="outline"></app-input>
+              <app-input [form]="form" name="address" label="label.address" [placeholder]="'placeholder.enter_address'"
+                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
             </div>
 
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="city" placeholder="city" labelPlacement="floating"
-                errorText="Please enter city" fill="outline"></app-input>
+              <app-input [form]="form" name="city" label="label.city" [placeholder]="'placeholder.enter_city'"
+                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
             </div>
 
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="state" placeholder="state" labelPlacement="floating"
-                errorText="Please enter state" fill="outline"></app-input>
+              <app-input [form]="form" name="state" label="label.state" [placeholder]="'placeholder.enter_state'"
+                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
             </div>
 
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="pincode" placeholder="pincode" labelPlacement="floating"
-                errorText="Please enter Pincode" fill="outline"></app-input>
+              <app-input [form]="form" name="pincode" label="label.pincode" [placeholder]="'placeholder.enter_pincode'"
+                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
             </div>
 
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="country" placeholder="country" labelPlacement="floating"
-                errorText="Please enter country" fill="outline"></app-input>
+              <app-input [form]="form" name="country" label="label.country" [placeholder]="'placeholder.enter_country'"
+                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
             </div>
 
           </ion-segment-content>
           <ion-segment-content id="second">
             <ion-item-divider>
-              <ion-label>Balacinig </ion-label>
+              <ion-label>{{ 'page.suppliers.balancing' | translate }}</ion-label>
             </ion-item-divider>
 
             <div class="ion-margin-bottom ion-margin-top">
-              <app-input [form]="form" name="openingBalance" placeholder="Enter openingBalance" labelPlacement="floating"
-                type="number" errorText="Please enter openingBalance" fill="outline"></app-input>
+              <app-input [form]="form" name="openingBalance" label="label.opening_balance" [placeholder]="'placeholder.enter_value'"
+                [errorText]="'error.required'" labelPlacement="floating" type="number" fill="outline"></app-input>
             </div>
 
             <div class="ion-margin-bottom">
-              <app-input [form]="form" name="currentBalance" placeholder="Enter currentBalance" labelPlacement="floating"
-                type="number" errorText="Please enter currentBalance" fill="outline"></app-input>
+              <app-input [form]="form" name="currentBalance" label="label.current_balance" [placeholder]="'placeholder.enter_value'"
+                [errorText]="'error.required'" labelPlacement="floating" type="number" fill="outline"></app-input>
             </div>
 
           </ion-segment-content>
@@ -91,18 +91,18 @@
   <ion-tab-bar>
     <ion-tab-button (click)="onSubmit(true)" [disabled]="formMeta.submitProcessing">
       <ion-icon name="add-circle-outline"></ion-icon>
-      <ion-label>Add more</ion-label>
+      <ion-label>{{ 'button.add_more' | translate }}</ion-label>
     </ion-tab-button>
     <ion-tab-button (click)="onSubmit(false)" [disabled]="formMeta.submitProcessing">
       <ion-icon name="save-outline"></ion-icon>
-      <ion-label>Save</ion-label>
+      <ion-label>{{ 'button.save' | translate }}</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
   } @else {
   <ion-tab-bar>
     <ion-tab-button [disabled]="formMeta.submitProcessing">
       <ion-spinner name="crescent"></ion-spinner>
-      <ion-label>Saving..</ion-label>
+      <ion-label>{{ 'common.saving' | translate }}</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
   }

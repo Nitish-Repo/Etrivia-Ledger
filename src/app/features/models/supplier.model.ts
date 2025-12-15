@@ -42,8 +42,8 @@ export function getSupplierMeta() {
       label: 'Is Active',
       controlType: 'radio',
       options: [
-        { key: true, value: 'Yes' },
-        { key: false, value: 'No' },
+        { key: true, value: 'common.yes' },
+        { key: false, value: 'common.no' },
       ],
     },
     { key: 'createdAt', label: 'Created At', required: false, hide: true },

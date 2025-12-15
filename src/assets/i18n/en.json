@@ -148,7 +148,8 @@
             "title": "Suppliers",
             "title_singular": "Supplier",
             "add": "Add Supplier",
-            "edit": "Edit Supplier"
+            "edit": "Edit Supplier",
+            "balancing": "Balancing"
         },
         "sales": {
             "title": "Sales"
@@ -187,7 +188,8 @@
         "enter_city": "Enter city",
         "enter_state": "Enter state",
         "enter_pincode": "Enter pincode",
-        "enter_country": "Enter country"
+        "enter_country": "Enter country",
+        "enter_address": "Enter address"
     },
     "uom": {
         "bags": "Bags",

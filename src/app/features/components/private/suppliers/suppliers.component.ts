@@ -12,7 +12,7 @@ import {
 } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { add, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, close, cube, heartDislike, eye, personOutline } from 'ionicons/icons';
-
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-suppliers',
@@ -21,7 +21,7 @@ import { add, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, cl
   standalone: true,
   imports: [IonInfiniteScrollContent, IonInfiniteScroll, IonNote, IonItem, IonLabel, IonList, IonIcon, IonFabButton,
     IonFab, IonSearchbar, IonToolbar, IonButton, IonContent, IonHeader, IonBadge, CommonModule,
-    ToolbarPage, RouterModule]
+    ToolbarPage, RouterModule, TranslateModule]
 })
 export class SuppliersComponent implements OnInit {
   private app = inject(AppService);
@@ -29,6 +29,7 @@ export class SuppliersComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private service = inject(SupplierService);
   private actionSheetCtrl = inject(ActionSheetController);
+  private translate = inject(TranslateService);
 
   suppliers = signal<Supplier[]>([]);
   searchQuery = signal<string>('');
@@ -121,31 +122,31 @@ export class SuppliersComponent implements OnInit {
   async presentActionSheet(event: Event, supplier: Supplier) {
     event.stopPropagation();
     const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Supplier Actions',
+      header: this.translate.instant('button.actions'),
       buttons: [
         {
-          text: 'Edit Supplier',
+          text: this.translate.instant('page.suppliers.edit'),
           icon: 'pencil',
           handler: () => this.updateSupplier(supplier)
         },
         // {
-        //   text: supplier.isfavourite ? 'Remove from Favourite' : 'Mark as Favourite',
+        //   text: supplier.isfavourite ? this.translate.instant('button.remove_from_favourite') : this.translate.instant('button.mark_as_favourite'),
         //   icon: supplier.isfavourite ? 'heart-dislike' : 'heart',
         //   handler: () => this.toggleFavourite(supplier)
         // },
         {
-          text: supplier.isActive ? 'Mark as Inactive' : 'Mark as Active',
+          text: supplier.isActive ? this.translate.instant('button.mark_as_inactive') : this.translate.instant('button.mark_as_active'),
           icon: supplier.isActive ? 'eye-off' : 'eye',
           handler: () => this.toggleActive(supplier)
         },
         {
-          text: 'Delete Customer',
+          text: this.translate.instant('button.delete'),
           role: 'destructive',
           icon: 'trash',
           handler: () => this.deleteSupplier(supplier)
         },
         {
-          text: 'Cancel',
+          text: this.translate.instant('button.cancel'),
           role: 'cancel',
           icon: 'close'
         },

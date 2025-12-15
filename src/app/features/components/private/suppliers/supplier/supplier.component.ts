@@ -14,13 +14,14 @@ import { FormHelper } from '@app/shared-services/helpers/form.helper';
 import { CommonModule } from '@angular/common';
 import { InputComponent } from '@app/shared/input/input.component';
 import { SelectComponent } from '@app/shared/select/select.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-supplier',
   templateUrl: './supplier.component.html',
   styleUrls: ['./supplier.component.scss'],
   standalone: true,
-  imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonIcon, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, IonSegment, IonSegmentContent, IonTabBar, IonTabButton, IonSegmentView]
+  imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonIcon, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, IonSegment, IonSegmentContent, IonTabBar, IonTabButton, IonSegmentView, TranslateModule]
 })
 export class SupplierComponent implements OnInit {
   private app = inject(AppService);
