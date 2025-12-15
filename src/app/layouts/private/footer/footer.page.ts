@@ -43,6 +43,8 @@ export class FooterPage implements OnInit {
     '/product-add',
     '/customer/',
     '/customer-add',
+    '/supplier/',
+    '/supplier-add',
     // Add more routes as needed
   ];
 
