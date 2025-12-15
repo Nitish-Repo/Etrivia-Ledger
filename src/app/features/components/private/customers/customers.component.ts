@@ -40,14 +40,14 @@ export class CustomersComponent implements OnInit {
 
   results = computed(() => {
     const query = this.searchQuery().toLowerCase();
-    const allProducts = this.customers();
+    const allCustomers = this.customers();
 
     // Filter by search query
     let filtered = query
-      ? allProducts.filter(product => product.customerName.toLowerCase().includes(query))
-      : allProducts;
+      ? allCustomers.filter(customer => customer.customerName.toLowerCase().includes(query))
+      : allCustomers;
 
-    // Sort products
+    // Sort customers
     return filtered;
     // return this.sortCustomers(filtered);
   });
@@ -61,10 +61,10 @@ export class CustomersComponent implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.loadProducts(true); // Reset on each view enter to avoid duplicates
+    this.loadCustomers(true); // Reset on each view enter to avoid duplicates
   }
 
-  loadProducts(reset = false) {
+  loadCustomers(reset = false) {
     if (this.loading()) return;
 
     this.loading.set(true);
@@ -82,7 +82,7 @@ export class CustomersComponent implements OnInit {
     ).subscribe(data => {
       if (data.length < this.limit) this.noMoreData.set(true);
 
-      // Append new products
+      // Append new customers
       this.customers.set([...this.customers(), ...data]);
 
       this.loading.set(false);
@@ -97,7 +97,7 @@ export class CustomersComponent implements OnInit {
     this.searchQuery.set(value);
 
     // Reload from page 0
-    this.loadProducts(true);
+    this.loadCustomers(true);
   }
 
 
@@ -184,8 +184,8 @@ export class CustomersComponent implements OnInit {
     customer.isActive = !customer.isActive;
     this.service.updateCustomerAndReturn(customer).subscribe((updatedCustomer) => {
       if (updatedCustomer) {
-        const updatedProducts = this.customers().map(p =>
-          p.customerId === updatedCustomer.customerId ? updatedCustomer : p
+        const updatedProducts = this.customers().map(c =>
+          c.customerId === updatedCustomer.customerId ? updatedCustomer : c
         );
         this.customers.set(updatedProducts);
         this.app.noty.presentToast(`Customer has been updated.`, 3000, 'top', 'success');
@@ -201,7 +201,7 @@ export class CustomersComponent implements OnInit {
 
     this.page.update(p => p + 1);
 
-    this.loadProducts();
+    this.loadCustomers();
 
     setTimeout(() => {
       event.target.complete();
