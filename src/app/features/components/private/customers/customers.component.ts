@@ -18,7 +18,7 @@ import { add, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, cl
   templateUrl: './customers.component.html',
   styleUrls: ['./customers.component.scss'],
   standalone: true,
-  imports: [IonInfiniteScrollContent, IonInfiniteScroll, IonNote, IonText, IonItem, IonLabel, IonList, IonIcon, IonFabButton,
+  imports: [IonInfiniteScrollContent, IonInfiniteScroll, IonNote, IonItem, IonLabel, IonList, IonIcon, IonFabButton,
     IonFab, IonSearchbar, IonToolbar, IonButton, IonContent, IonHeader, IonBadge, CommonModule,
     ToolbarPage, RouterModule]
 })
