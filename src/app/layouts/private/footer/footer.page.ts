@@ -14,6 +14,7 @@ import { addIcons } from 'ionicons';
 import {
   home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline,
 } from 'ionicons/icons';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-footer',
@@ -26,7 +27,8 @@ import {
     IonTabBar,
     IonTabButton,
     IonIcon,
-    IonLabel
+    IonLabel,
+    TranslateModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

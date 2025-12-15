@@ -16,6 +16,7 @@ import {
   peopleCircleOutline
 } from 'ionicons/icons';
 import { IONIC_COMMON_IMPORTS } from '@app/shared/ionic-imports';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sidemenu',
@@ -28,6 +29,7 @@ import { IONIC_COMMON_IMPORTS } from '@app/shared/ionic-imports';
     IonMenu,
     IonAvatar,
     IonMenuToggle,
+    TranslateModule,
     ...IONIC_COMMON_IMPORTS
   ]
 })
