@@ -1,14 +1,18 @@
-import { APP_INITIALIZER, provideZonelessChangeDetection } from '@angular/core';
+import { APP_INITIALIZER, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { Capacitor } from '@capacitor/core';
 import { defineCustomElements as pwaElements } from '@ionic/pwa-elements/loader';
 import { defineCustomElements as jeepSqlite } from 'jeep-sqlite/loader';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { DatabaseService } from '@app/core/database-services/database.service';
+import { createTranslateLoader } from '@app/core/translate-loader';
 
 
 // Web platform setup for SQLite
@@ -59,6 +63,21 @@ bootstrapApplication(AppComponent, {
   providers: [
     // Modern Angular: Zoneless Change Detection (better performance)
     provideZonelessChangeDetection(),
+    
+    // HTTP Client for translations
+    provideHttpClient(),
+    
+    // Translation Module
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        defaultLanguage: 'en',
+        loader: {
+          provide: TranslateLoader,
+          useFactory: createTranslateLoader,
+          deps: [HttpClient]
+        }
+      })
+    ),
     
     // Database Service
     DatabaseService,

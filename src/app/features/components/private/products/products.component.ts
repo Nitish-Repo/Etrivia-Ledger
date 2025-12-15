@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Product } from '@app/features/models/product.model';
 import { ProductService } from '@app/features/services/product.service';
 import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
@@ -13,6 +14,7 @@ import { addIcons } from 'ionicons';
 import { add, cubeOutline, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, close, cube, heartDislike, eye } from 'ionicons/icons';
 import { ViewWillEnter } from '@ionic/angular';
 import { AppService } from '@app/core/app.service';
+import { LanguageService } from '@app/core/language.service';
 
 @Component({
   selector: 'app-products',
@@ -21,7 +23,7 @@ import { AppService } from '@app/core/app.service';
   standalone: true,
   imports: [IonInfiniteScrollContent, IonInfiniteScroll, IonNote, IonText, IonItem, IonLabel, IonList, IonIcon, IonFabButton,
     IonFab, IonSearchbar, IonToolbar, IonButton, IonContent, IonHeader, IonBadge, CommonModule,
-    ToolbarPage, RouterModule]
+    ToolbarPage, RouterModule, TranslateModule]
 })
 export class ProductsComponent implements OnInit, ViewWillEnter {
   private app = inject(AppService);
@@ -29,6 +31,7 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
   private actionSheetCtrl = inject(ActionSheetController);
+  private translateService = inject(LanguageService);
 
   products = signal<Product[]>([]);
   searchQuery = signal<string>('');
@@ -129,7 +132,7 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
       header: 'Product Actions',
       buttons: [
         {
-          text: 'Edit Product',
+          text: this.translateService.t('Page.Products.Edit'),
           icon: 'pencil',
           handler: () => this.updateProduct(product)
         },

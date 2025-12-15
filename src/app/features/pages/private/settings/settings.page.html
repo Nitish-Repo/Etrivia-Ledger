@@ -1,11 +1,31 @@
 <ion-header [translucent]="true">
-  <app-toolbar title="Settings"></app-toolbar>
+  <app-toolbar [title]="'Settings.Title' | translate"></app-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Language Settings -->
   <ion-list>
     <ion-list-header>
-      <ion-label>Appearance</ion-label>
+      <ion-label>{{ 'Settings.Language' | translate }}</ion-label>
+    </ion-list-header>
+
+    <ion-radio-group [value]="lang.current()" (ionChange)="onLanguageChange($event)">
+      @for (language of lang.languages; track language.code) {
+        <ion-item [lines]="$last ? 'none' : 'full'">
+          <ion-radio slot="start" [value]="language.code"></ion-radio>
+          <ion-label>
+            <h2>{{ language.native }}</h2>
+            <p>{{ language.name }}</p>
+          </ion-label>
+        </ion-item>
+      }
+    </ion-radio-group>
+  </ion-list>
+
+  <!-- Theme Settings -->
+  <ion-list>
+    <ion-list-header>
+      <ion-label>{{ 'Settings.Theme' | translate }}</ion-label>
     </ion-list-header>
 
     <ion-radio-group [value]="selectedTheme()" (ionChange)="onThemeChange($event)">

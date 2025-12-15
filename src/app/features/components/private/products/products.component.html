@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <app-toolbar title="Products"></app-toolbar>
+  <app-toolbar title="Page.Products.Title"></app-toolbar>
   <ion-toolbar color="primary" mode="ios">
     <ion-searchbar color="light" show-clear-button="always" (ionInput)="handleInput($event)"></ion-searchbar>
   </ion-toolbar>
@@ -20,7 +20,7 @@
               </ion-badge>
             }
             @if (result.isActive) {
-              <ion-badge color="success">Active</ion-badge>
+              <ion-badge color="success">{{'Active.Common' | translate}}</ion-badge>
             } @else {
               <ion-badge color="medium">Inactive</ion-badge>
             }

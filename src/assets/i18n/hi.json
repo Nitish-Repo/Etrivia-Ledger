@@ -1,0 +1,130 @@
+{
+  "Alert": {
+    "Success": "सफलता",
+    "Error": "त्रुटि",
+    "Warning": "चेतावनी",
+    "Info": "जानकारी",
+    "Confirm": "क्या आप निश्चित हैं?"
+  },
+  "Api": {
+    "SaveSuccess": "सफलतापूर्वक सहेजा गया",
+    "DeleteSuccess": "सफलतापूर्वक हटाया गया",
+    "UpdateSuccess": "सफलतापूर्वक अपडेट किया गया",
+    "ServerError": "एक त्रुटि हुई",
+    "NoInternet": "कोई इंटरनेट कनेक्शन नहीं"
+  },
+  "Badge": {
+    "Active": "सक्रिय",
+    "Inactive": "निष्क्रिय",
+    "Favourite": "पसंदीदा",
+    "Retail": "खुदरा",
+    "Wholesale": "थोक",
+    "B2B": "बी2बी"
+  },
+  "Button": {
+    "Save": "सहेजें",
+    "Cancel": "रद्द करें",
+    "Delete": "हटाएं",
+    "Edit": "संपादित करें",
+    "Add": "जोड़ें",
+    "Search": "खोजें",
+    "Confirm": "पुष्टि करें",
+    "Actions": "कार्य",
+    "MarkAsFavourite": "पसंदीदा के रूप में चिह्नित करें",
+    "RemoveFromFavourite": "पसंदीदा से हटाएं",
+    "MarkAsActive": "सक्रिय के रूप में चिह्नित करें",
+    "MarkAsInactive": "निष्क्रिय के रूप में चिह्नित करें"
+  },
+  "Common": {
+    "Yes": "हाँ",
+    "No": "नहीं",
+    "Loading": "लोड हो रहा है...",
+    "NoData": "कोई डेटा उपलब्ध नहीं",
+    "AppName": "एट्रिविया लेजर",
+    "Welcome": "स्वागत है"
+  },
+  "Desc": {
+    "DeleteConfirm": "क्या आप वाकई हटाना चाहते हैं?",
+    "UseDeviceTheme": "सिस्टम डार्क मोड सेटिंग्स का पालन करें",
+    "AlwaysLight": "हमेशा लाइट मोड का उपयोग करें",
+    "AlwaysDark": "हमेशा डार्क मोड का उपयोग करें"
+  },
+  "Error": {
+    "Required": "यह फ़ील्ड आवश्यक है",
+    "InvalidEmail": "अमान्य ईमेल पता",
+    "InvalidPhone": "अमान्य फोन नंबर",
+    "MinLength": "न्यूनतम लंबाई {{min}} है",
+    "MaxLength": "अधिकतम लंबाई {{max}} है"
+  },
+  "Label": {
+    "ProductName": "उत्पाद का नाम",
+    "Description": "विवरण",
+    "Price": "मूल्य",
+    "MRP": "एम.आर.पी.",
+    "Stock": "स्टॉक",
+    "HSNCode": "एच.एस.एन. कोड",
+    "Barcode": "बारकोड",
+    "Category": "श्रेणी",
+    "Unit": "इकाई",
+    "WholesalePrice": "थोक मूल्य",
+    "RetailPrice": "खुदरा मूल्य",
+    "CustomerName": "ग्राहक का नाम",
+    "Phone": "फोन नंबर",
+    "Email": "ईमेल",
+    "GSTIN": "जी.एस.टी.आई.एन.",
+    "Address": "पता",
+    "City": "शहर",
+    "State": "राज्य",
+    "Pincode": "पिनकोड",
+    "CreditLimit": "क्रेडिट लिमिट",
+    "OpeningBalance": "प्रारंभिक शेष",
+    "CustomerType": "ग्राहक प्रकार",
+    "Language": "भाषा",
+    "Theme": "थीम"
+  },
+  "Page": {
+    "Home": {
+      "Title": "होम"
+    },
+    "Products": {
+      "Title": "उत्पाद",
+      "Add": "उत्पाद जोड़ें",
+      "Edit": "उत्पाद संपादित करें",
+      "Delete": "उत्पाद हटाएं",
+      "Actions": "उत्पाद कार्य"
+    },
+    "Customers": {
+      "Title": "ग्राहक",
+      "Add": "ग्राहक जोड़ें",
+      "Edit": "ग्राहक संपादित करें"
+    },
+    "Suppliers": {
+      "Title": "आपूर्तिकर्ता"
+    },
+    "Sales": {
+      "Title": "बिक्री"
+    },
+    "Purchases": {
+      "Title": "खरीद"
+    },
+    "Expenses": {
+      "Title": "खर्चे"
+    },
+    "Reports": {
+      "Title": "रिपोर्ट"
+    },
+    "Settings": {
+      "Title": "सेटिंग्स",
+      "BusinessInfo": "व्यवसाय की जानकारी",
+      "Backup": "बैकअप और पुनर्स्थापना",
+      "About": "के बारे में"
+    }
+  },
+  "Placeholder": {
+    "Search": "खोजें...",
+    "EnterProductName": "उत्पाद का नाम दर्ज करें",
+    "EnterCustomerName": "ग्राहक का नाम दर्ज करें",
+    "EnterEmail": "ईमेल पता दर्ज करें",
+    "EnterPhone": "फोन नंबर दर्ज करें"
+  }
+}

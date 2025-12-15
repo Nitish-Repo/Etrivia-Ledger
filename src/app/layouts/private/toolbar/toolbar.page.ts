@@ -5,6 +5,7 @@ import {
 import { addIcons } from 'ionicons';
 import { appsOutline, notificationsOutline, statsChartOutline } from 'ionicons/icons';
 import { MenuController } from '@ionic/angular/standalone';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-toolbar',
@@ -12,7 +13,7 @@ import { MenuController } from '@ionic/angular/standalone';
   styleUrls: ['./toolbar.page.scss'],
   standalone: true,
   imports: [
-    IonToolbar, IonButtons, IonButton, IonIcon, IonTitle,
+    IonToolbar, IonButtons, IonButton, IonIcon, IonTitle,TranslateModule
   ]
 })
 export class ToolbarPage {
