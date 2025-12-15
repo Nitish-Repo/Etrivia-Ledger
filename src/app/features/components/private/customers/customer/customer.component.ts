@@ -31,6 +31,7 @@ export class CustomerComponent implements OnInit {
 
 
   isCustomerSave = signal<boolean>(false);
+  segment = signal<string>('first');
       
   form!: FormGroup;
   isEdit = signal<boolean>(false);

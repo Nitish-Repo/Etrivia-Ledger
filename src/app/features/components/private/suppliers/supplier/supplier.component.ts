@@ -31,6 +31,7 @@ export class SupplierComponent implements OnInit {
 
 
   isSupplierSave = signal<boolean>(false);
+  segment = signal<string>('first');
 
   form!: FormGroup;
   isEdit = signal<boolean>(false);

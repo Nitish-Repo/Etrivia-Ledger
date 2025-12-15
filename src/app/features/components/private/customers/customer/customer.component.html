@@ -6,16 +6,17 @@
     @if(form){
     <div>
       <form id="customerForm" [formGroup]="form" (submit)="onSubmit()">
-        <ion-segment mode="ios">
-          <ion-segment-button value="first" content-id="first">
+        <ion-segment mode="ios" [value]="segment()" (ionChange)="segment.set($any($event).detail.value)">
+          <ion-segment-button value="first">
             <ion-label>{{ 'common.basic_detail' | translate }}</ion-label>
           </ion-segment-button>
-          <ion-segment-button value="second" content-id="second">
+          <ion-segment-button value="second">
             <ion-label>{{ 'common.option_detail' | translate }}</ion-label>
           </ion-segment-button>
         </ion-segment>
-        <ion-segment-view>
-          <ion-segment-content id="first">
+        
+        @if (segment() === 'first') {
+        <div>
             <div class="ion-margin-bottom ion-margin-top">
               <app-input [form]="form" name="customerName" label="label.customer_name" [placeholder]="'placeholder.enter_customer_name'"
                 [errorText]="'error.required'" labelPlacement="floating" fill="outline" [maxlength]="50" [counter]="true"></app-input>
@@ -78,9 +79,11 @@
               <app-select class="ion-flex-1 ion-margin-start" [meta]="discountTypeMeta"
                 (onSelectionChange)="handleDiscountTypeChange($event)" />
             </div> -->
+        </div>
+        }
 
-          </ion-segment-content>
-          <ion-segment-content id="second">
+        @if (segment() === 'second') {
+        <div>
             <ion-item-divider>
               <ion-label>{{ 'page.customers.credit_management' | translate }}</ion-label>
             </ion-item-divider>
@@ -109,9 +112,9 @@
               <app-select class="ion-flex-1 ion-margin-start" [meta]="priceListMeta"
                 (onSelectionChange)="handleDiscountTypeChange($event)" />
             </div>
-
-          </ion-segment-content>
-        </ion-segment-view>
+        </div>
+        }
+        
         <button type="submit" style="display: none;" [disabled]="formMeta.submitProcessing"></button>
       </form>
     </div>

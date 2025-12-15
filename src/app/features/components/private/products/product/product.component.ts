@@ -35,6 +35,7 @@ export class ProductComponent implements OnInit {
   private destroy$: Subject<void> = new Subject<void>();
 
   isProductSave = signal<boolean>(false);
+  segment = signal<string>('first');
 
   form!: FormGroup;
   isEdit = signal<boolean>(false);
