@@ -142,7 +142,7 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
           handler: () => this.toggleFavourite(product)
         },
         {
-          text: product.isActive ? this.translateService.t('button.mark_as_inactive') : this.translateService.t('button.mark_as_inactive'),
+          text: product.isActive ? this.translateService.t('button.mark_as_inactive') : this.translateService.t('button.mark_as_active'),
           icon: product.isActive ? 'eye-off' : 'eye',
           handler: () => this.toggleActive(product)
         },
