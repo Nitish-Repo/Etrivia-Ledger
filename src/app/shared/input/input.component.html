@@ -1,9 +1,15 @@
-<ion-input *ngIf="control" [placeholder]="placeholder | translate" [formControl]="control" [type]="type" [pattern]="pattern"
-  [label]="(label || control.label) | translate" [fill]="fill" [helperText]="helperText | translate" [labelPlacement]="labelPlacement"
-  [minlength]="minlength" [maxlength]="maxlength" [counter]="counter" [errorText]="errorText | translate">
-  <ion-icon *ngIf="iconName" [name]="iconName" [slot]="iconSlot"></ion-icon>
+@if(control){
+<ion-input [placeholder]="placeholder | translate" [formControl]="control" [type]="type" [pattern]="pattern"
+  [label]="(label || control.label) | translate" [fill]="fill" [helperText]="helperText | translate"
+  [labelPlacement]="labelPlacement" [minlength]="minlength" [maxlength]="maxlength" [counter]="counter"
+  [errorText]="errorText | translate">
+  @if(iconName){
+  <ion-icon [name]="iconName" [slot]="iconSlot"></ion-icon>
+  }
   <ion-input-password-toggle *ngIf="type === 'password'" slot="end"></ion-input-password-toggle>
 </ion-input>
+
+}
 
 
 <!-- <ion-note *ngIf="control.invalid && (control.dirty || control.touched)" color="danger">

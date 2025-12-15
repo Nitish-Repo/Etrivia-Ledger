@@ -45,7 +45,8 @@
     "app_name": "एट्रिविया लेजर",
     "welcome": "स्वागत है",
     "stock": "स्टॉक",
-    "mrp": "एम.आर.पी."
+    "mrp": "एम.आर.पी.",
+    "select": "चुनें"
   },
   "desc": {
     "delete_confirm": "क्या आप वाकई हटाना चाहते हैं?",
@@ -66,12 +67,20 @@
     "price": "मूल्य",
     "mrp": "एम.आर.पी.",
     "stock": "स्टॉक",
+    "current_stock": "वर्तमान स्टॉक",
     "hsn_code": "एच.एस.एन. कोड",
     "barcode": "बारकोड",
     "category": "श्रेणी",
     "unit": "इकाई",
     "wholesale_price": "थोक मूल्य",
     "retail_price": "खुदरा मूल्य",
+    "purchase_cost": "खरीद लागत",
+    "discount": "छूट",
+    "gst": "जी.एस.टी.",
+    "cess": "उपकर",
+    "min_stock": "न्यूनतम स्टॉक",
+    "max_stock": "अधिकतम स्टॉक",
+    "sku": "एस.के.यू.",
     "customer_name": "ग्राहक का नाम",
     "supplier_name": "आपूर्तिकर्ता का नाम",
     "phone": "फोन नंबर",
@@ -146,6 +155,7 @@
     "enter_phone": "फोन नंबर दर्ज करें",
     "enter_description": "विवरण दर्ज करें",
     "enter_mrp": "एम.आर.पी. दर्ज करें",
-    "enter_stock": "स्टॉक दर्ज करें"
+    "enter_stock": "स्टॉक दर्ज करें",
+    "enter_value": "मान दर्ज करें"
   }
 }

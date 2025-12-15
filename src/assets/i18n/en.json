@@ -45,7 +45,8 @@
         "app_name": "Etrivia Ledger",
         "welcome": "Welcome",
         "stock": "Stock",
-        "mrp": "MRP"
+        "mrp": "MRP",
+        "select": "Select"
     },
     "desc": {
         "delete_confirm": "Are you sure you want to delete?",
@@ -66,12 +67,20 @@
         "price": "Price",
         "mrp": "MRP",
         "stock": "Stock",
+        "current_stock": "Current Stock",
         "hsn_code": "HSN Code",
         "barcode": "Barcode",
         "category": "Category",
         "unit": "Unit",
         "wholesale_price": "Wholesale Price",
         "retail_price": "Retail Price",
+        "purchase_cost": "Purchase Cost",
+        "discount": "Discount",
+        "gst": "GST",
+        "cess": "CESS",
+        "min_stock": "Min Stock",
+        "max_stock": "Max Stock",
+        "sku": "SKU",
         "customer_name": "Customer Name",
         "supplier_name": "Supplier Name",
         "phone": "Phone Number",
@@ -146,6 +155,7 @@
         "enter_phone": "Enter phone number",
         "enter_description": "Enter description",
         "enter_mrp": "Enter MRP",
-        "enter_stock": "Enter stock"
+        "enter_stock": "Enter stock",
+        "enter_value": "Enter value"
     }
 }

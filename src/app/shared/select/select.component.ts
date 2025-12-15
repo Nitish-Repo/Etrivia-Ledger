@@ -3,13 +3,14 @@ import { Component, input, signal, effect, inject, ChangeDetectionStrategy, Outp
 import { FormControl, FormGroupDirective, ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { ModelMeta } from '@app/shared-services';
 import { IonSelect, IonSelectOption } from "@ionic/angular/standalone";
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-select',
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IonSelect, IonSelectOption],
+  imports: [CommonModule, ReactiveFormsModule, IonSelect, IonSelectOption, TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectComponent {
