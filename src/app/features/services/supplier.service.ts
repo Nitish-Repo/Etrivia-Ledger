@@ -7,7 +7,7 @@ import { Supplier } from '../models';
   providedIn: 'root',
 })
 export class SupplierService {
- private db = inject(DatabaseService);
+  private db = inject(DatabaseService);
   private dbUtil = inject(DatabaseUtilityService);
 
   addSupplierAndReturn(supplier: Supplier) {

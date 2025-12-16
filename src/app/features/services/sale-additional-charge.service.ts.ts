@@ -1,0 +1,44 @@
+import { inject, Injectable } from '@angular/core';
+import { DatabaseService, DatabaseUtilityService, DB_TABLES } from '@app/core/database-services';
+import { AdditionalCharge } from '../models';
+import { Observable } from 'rxjs';
+import { v7 as uuidv7 } from 'uuid';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class SaleAdditionalChargeServiceTs {
+  private db = inject(DatabaseService);
+  private dbUtil = inject(DatabaseUtilityService);
+
+  addAdditionalChargeAndReturn(additionalCharge: AdditionalCharge): Observable<AdditionalCharge | null> {
+    additionalCharge.createdAt = new Date().toISOString();
+    additionalCharge.chargeId = additionalCharge.chargeId || uuidv7();
+
+    return this.db.insertAndReturn$<AdditionalCharge>(DB_TABLES.ADDITIONAL_CHARGES, additionalCharge);
+  }
+
+  /**
+   * Bulk insert multiple additional charges (single SQL query)
+   * @param additionalCharges Array of additional charges
+   * @returns Observable of inserted records
+   */
+  addAdditionalChargesAndReturn(additionalCharges: AdditionalCharge[]): Observable<AdditionalCharge[]> {
+    if (!additionalCharges || !additionalCharges.length) {
+      return new Observable(observer => {
+        observer.next([]);
+        observer.complete();
+      });
+    }
+
+    const timestamp = new Date().toISOString();
+    const charges = additionalCharges.map(charge => ({
+      ...charge,
+      createdAt: timestamp,
+      chargeId: charge.chargeId || uuidv7()
+    }));
+
+    return this.db.insertManyAndReturn$<AdditionalCharge>(DB_TABLES.ADDITIONAL_CHARGES, charges);
+  }
+
+}

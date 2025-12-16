@@ -218,6 +218,87 @@ export class DatabaseService {
   }
 
   /**
+   * Bulk insert multiple records in ONE SQLite query
+   * More efficient than multiple insert() calls
+   * @param table Table name
+   * @param dataArray Array of objects with column names as keys
+   * @returns Number of inserted records
+   */
+  async insertMany(table: string, dataArray: any[]): Promise<number> {
+    if (!dataArray || !dataArray.length) return 0;
+
+    try {
+      // Get keys from first object (all objects must have same structure)
+      const keys = Object.keys(dataArray[0]).filter(key => dataArray[0][key] !== undefined);
+
+      // Build placeholders: (?, ?, ?), (?, ?, ?), ...
+      const placeholdersPerRow = `(${keys.map(() => '?').join(', ')})`;
+      const placeholders = dataArray.map(() => placeholdersPerRow).join(', ');
+
+      // Flatten all values into single array
+      const values: any[] = [];
+      dataArray.forEach(row => {
+        keys.forEach(key => values.push(row[key]));
+      });
+
+      const sql = `INSERT INTO ${table} (${keys.join(', ')}) VALUES ${placeholders}`;
+      const result = await this.executeNonQuery(sql, values);
+
+      console.log(`✅ Bulk inserted ${dataArray.length} rows into ${table}`);
+      return result.changes || dataArray.length;
+    } catch (error) {
+      console.error(`❌ Bulk insert error in ${table}:`, error);
+      throw error;
+    }
+  }
+
+  insertMany$(table: string, dataArray: any[]): Observable<number> {
+    return from(this.insertMany(table, dataArray));
+  }
+
+  /**
+   * Bulk insert multiple records and return all inserted records
+   * Uses SQLite RETURNING clause (SQLite 3.35+)
+   * @param table Table name
+   * @param dataArray Array of objects with column names as keys
+   * @returns Array of inserted records with all columns
+   */
+  async insertManyAndReturn<T>(table: string, dataArray: any[]): Promise<T[]> {
+    if (!dataArray || !dataArray.length) return [];
+
+    try {
+      // Get keys from first object
+      const keys = Object.keys(dataArray[0]).filter(key => dataArray[0][key] !== undefined);
+
+      // Build placeholders: (?, ?, ?), (?, ?, ?), ...
+      const placeholdersPerRow = `(${keys.map(() => '?').join(', ')})`;
+      const placeholders = dataArray.map(() => placeholdersPerRow).join(', ');
+
+      // Flatten all values into single array
+      const values: any[] = [];
+      dataArray.forEach(row => {
+        keys.forEach(key => values.push(row[key]));
+      });
+
+      const sql = `INSERT INTO ${table} (${keys.join(', ')}) VALUES ${placeholders} RETURNING *`;
+      const results = await this.query<T>(sql, values);
+
+      // Save to store for web platform
+      await this.connectionService.saveToStoreIfWeb();
+
+      console.log(`✅ Bulk inserted ${dataArray.length} rows into ${table} and returned records`);
+      return results;
+    } catch (error) {
+      console.error(`❌ Bulk insert and return error in ${table}:`, error);
+      throw error;
+    }
+  }
+
+  insertManyAndReturn$<T>(table: string, dataArray: any[]): Observable<T[]> {
+    return from(this.insertManyAndReturn<T>(table, dataArray));
+  }
+
+  /**
    * Update a record by ID
    * @param table Table name
    * @param id Record ID (value to match)
