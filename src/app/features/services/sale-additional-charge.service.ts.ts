@@ -41,4 +41,21 @@ export class SaleAdditionalChargeServiceTs {
     return this.db.insertManyAndReturn$<AdditionalCharge>(DB_TABLES.ADDITIONAL_CHARGES, charges);
   }
 
+  updateAdditionalChargeAndReturn(additionalCharge: AdditionalCharge) {
+    // additionalCharge.updatedAt = new Date().toISOString();
+    return this.db.updateAndReturn$<AdditionalCharge>(DB_TABLES.ADDITIONAL_CHARGES, additionalCharge.chargeId!, additionalCharge, 'additionalCharge');
+  }
+
+  getAdditionalChargeBySaleId(saleId: string) {
+    return this.db.getById$<AdditionalCharge>(DB_TABLES.ADDITIONAL_CHARGES, saleId, 'saleId');
+  }
+
+  getAdditionalChargesById(chargeId: string) {
+    return this.db.getById$<AdditionalCharge>(DB_TABLES.ADDITIONAL_CHARGES, chargeId, 'chargeId');
+  }
+
+  deleteAdditionalChargeAndReturn(chargeId: string) {
+    return this.db.deleteAndReturn$<AdditionalCharge>(DB_TABLES.ADDITIONAL_CHARGES, chargeId, 'chargeId');
+  }
+
 }

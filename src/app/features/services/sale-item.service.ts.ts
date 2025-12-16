@@ -40,4 +40,22 @@ export class SaleItemServiceTs {
 
     return this.db.insertManyAndReturn$<SaleItem>(DB_TABLES.SALE_ITEMS, items);
   }
+
+  updateSaleItemAndReturn(saleItem: SaleItem) {
+    // saleItem.updatedAt = new Date().toISOString();
+    return this.db.updateAndReturn$<SaleItem>(DB_TABLES.SALE_ITEMS, saleItem.saleItemId!, saleItem, 'saleItem');
+  }
+
+  getSaleItemsBySaleId(saleId: string) {
+    return this.db.getById$<SaleItem>(DB_TABLES.SALE_ITEMS, saleId, 'saleId');
+  }
+
+  getSaleItemById(saleItemId: string) {
+    return this.db.getById$<SaleItem>(DB_TABLES.SALE_ITEMS, saleItemId, 'saleItemId');
+  }
+
+  deleteSaleItemAndReturn(saleItemId: string) {
+    return this.db.deleteAndReturn$<SaleItem>(DB_TABLES.SALE_ITEMS, saleItemId, 'saleItemId');
+  }
 }
+    
