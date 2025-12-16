@@ -3,6 +3,7 @@
  */
 
 import { ModelMeta } from '@app/shared-services';
+import { TaxType, DiscountType } from './product.model';
 
 /**
  * Payment Status Enum
@@ -29,23 +30,6 @@ export enum SaleStatus {
   DRAFT = 'DRAFT',
   COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED'
-}
-
-/**
- * Discount Type Enum
- */
-export enum DiscountType {
-  NONE = 'NONE',
-  PERCENTAGE = 'PERCENTAGE',
-  AMOUNT = 'AMOUNT'
-}
-
-/**
- * Tax Type Enum
- */
-export enum TaxType {
-  INCLUSIVE = 'INCLUSIVE',
-  EXCLUSIVE = 'EXCLUSIVE'
 }
 
 /**

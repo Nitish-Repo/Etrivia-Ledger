@@ -13,6 +13,7 @@ export enum TaxType {
  * Discount Types Enum
  */
 export enum DiscountType {
+  NONE = 'NONE',
   PERCENTAGE = 'PERCENTAGE',
   AMOUNT = 'AMOUNT'
 }
