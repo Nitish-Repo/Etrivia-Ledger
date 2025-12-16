@@ -148,9 +148,9 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
         
         subtotal REAL NOT NULL DEFAULT 0,
         
-        discountType TEXT DEFAULT 'NONE',
-        discountValue REAL DEFAULT 0,
-        discountAmount REAL DEFAULT 0,
+        invoiceDiscountType TEXT DEFAULT 'NONE',
+        invoiceDiscountValue REAL DEFAULT 0,
+        TotalDiscountAmount REAL DEFAULT 0,
         
         taxableAmount REAL NOT NULL DEFAULT 0,
         cgst REAL DEFAULT 0,
@@ -221,6 +221,36 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
 
       CREATE INDEX IF NOT EXISTS idx_sale_items_sale ON sale_items(saleId);
       CREATE INDEX IF NOT EXISTS idx_sale_items_product ON sale_items(productId);
+
+      -- ============================================
+      -- ADDITIONAL CHARGES TABLE
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS additional_charges (
+        chargeId TEXT PRIMARY KEY,
+        saleId TEXT NOT NULL,
+        
+        chargeName TEXT NOT NULL,
+        amount REAL NOT NULL,
+        hsnCode TEXT,
+        
+        taxType TEXT DEFAULT 'EXCLUSIVE',
+        gstRate REAL DEFAULT 0,
+        cessRate REAL DEFAULT 0,
+        
+        taxableAmount REAL NOT NULL,
+        cgst REAL DEFAULT 0,
+        sgst REAL DEFAULT 0,
+        igst REAL DEFAULT 0,
+        cess REAL DEFAULT 0,
+        
+        totalAmount REAL NOT NULL,
+        
+        createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
+        
+        FOREIGN KEY (saleId) REFERENCES sales(saleId) ON DELETE CASCADE
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_additional_charges_sale ON additional_charges(saleId);
 
       -- ============================================
       -- PURCHASES TABLE
