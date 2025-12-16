@@ -25,11 +25,13 @@ export class SellPage implements OnInit {
   private router = inject(Router);
 
   private destroy$: Subject<void> = new Subject<void>();
-  form!: FormGroup;
+  saleForm!: FormGroup;
+  saleItemForm!: FormGroup[];
+  additionalChargeForm!: FormGroup[];
   isEdit = signal<boolean>(false);
   formMeta = new FormMeta();
   saleModelMeta!: ModelMeta[];
-  SaleItemModelMeta!: ModelMeta[];
+  saleItemModelMeta!: ModelMeta[];
   additionalChargeModelMeta!: ModelMeta[];
   isLogin = signal<boolean>(false);
 
@@ -37,7 +39,7 @@ export class SellPage implements OnInit {
 
   ngOnInit() {
     this.saleModelMeta = getSaleMeta();
-    this.SaleItemModelMeta = getSaleItemMeta();
+    this.saleItemModelMeta = getSaleItemMeta();
     this.additionalChargeModelMeta = getAdditionalChargeMeta();
 
     // Find metadata for select components
@@ -57,7 +59,13 @@ export class SellPage implements OnInit {
   }
 
   private buildNewSellForm() {
-    this.form = this.app.meta.toFormGroup({}, this.saleModelMeta);
+    this.saleForm = this.app.meta.toFormGroup({}, this.saleModelMeta);
+
+    this.saleItemForm = [];
+    this.saleItemForm.push(this.app.meta.toFormGroup({}, this.saleItemModelMeta));
+
+    this.additionalChargeForm = [];
+    this.additionalChargeForm.push(this.app.meta.toFormGroup({}, this.additionalChargeModelMeta));
   }
 
   private buildSellForm(saleId: string) {
@@ -70,11 +78,11 @@ export class SellPage implements OnInit {
 
 
   onSubmit() {
-    FormHelper.submit(this.form, this.formMeta, () => {
+    FormHelper.submit(this.saleForm, this.formMeta, () => {
       this.isLogin.set(true);
       // this.token.setToken("loggedIn");
       // this.route.navigate(['/home'], { replaceUrl: true });
-      console.log(this.form.value);
+      console.log(this.saleForm.value);
     }, true);
   }
 
