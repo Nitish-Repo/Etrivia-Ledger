@@ -9,6 +9,7 @@ export const DB_TABLES = {
   SUPPLIERS: 'suppliers',
   SALES: 'sales',
   SALE_ITEMS: 'sale_items',
+  ADDITIONAL_CHARGES: 'additional_charges',
   PURCHASES: 'purchases',
   PURCHASE_ITEMS: 'purchase_items',
   PAYMENTS: 'payments',
