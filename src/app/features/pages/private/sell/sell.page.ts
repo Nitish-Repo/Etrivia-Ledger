@@ -1,8 +1,8 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider, 
-  IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider, IonDatetime, IonModal, IonButtons,
+  IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonItem, IonDatetimeButton } from '@ionic/angular/standalone';
 import { ToolbarPage } from "@app/layouts/private/toolbar/toolbar.page";
 import { Subject } from 'rxjs';
 import { FormMeta } from '@app/shared-services/models/form-meta';
@@ -16,15 +16,16 @@ import { InputComponent } from '@app/shared/input/input.component';
 import { SelectComponent } from '@app/shared/select/select.component';
 import { addIcons } from 'ionicons';
 import { add, saveOutline, trash } from 'ionicons/icons';
+import { LuxonDateService } from '@app/core/luxon-Date.service';
 
 @Component({
   selector: 'app-sell',
   templateUrl: './sell.page.html',
   styleUrls: ['./sell.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonDatetimeButton, IonItem, 
     IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider,
-    IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar,
+    IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonDatetime, IonModal, IonButtons,
     CommonModule, ReactiveFormsModule, ToolbarPage, InputComponent, SelectComponent, TranslateModule
   ]
 })
@@ -32,6 +33,7 @@ export class SellPage implements OnInit {
   private app = inject(AppService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private luxonDateService = inject (LuxonDateService)
 
   private destroy$: Subject<void> = new Subject<void>();
   
@@ -69,7 +71,7 @@ export class SellPage implements OnInit {
 
   // Default values
   private readonly defaultSale: Partial<Sale> = {
-    invoiceDate: new Date().toISOString().split('T')[0],
+    invoiceDate : this.luxonDateService.now().toUTC().startOf('day').toISO() || new Date().toISOString().split('T')[0],
     subtotal: 0,
     taxableAmount: 0,
     cgst: 0,
@@ -147,6 +149,12 @@ export class SellPage implements OnInit {
     //     this.additionalChargeFormsArray.set(chargeForms);
     //   });
     // });
+  }
+
+  onDateChange(event: any, controlName: string) {
+    const selectedDate = event.detail.value; // ISO string from ion-datetime
+    const utcDate = this.luxonDateService.toDateTime(selectedDate).startOf('day').toISO();
+    this.saleForm.get(controlName)?.setValue(utcDate);
   }
 
   addSaleItem() {

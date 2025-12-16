@@ -23,6 +23,21 @@
             <ion-item-divider>
               <ion-label>{{ 'common.invoice_information' | translate }}</ion-label>
             </ion-item-divider>
+             <ion-item>
+            <ion-label>Invoice Date</ion-label>
+            <ion-datetime-button datetime="startDatetime"></ion-datetime-button>
+          </ion-item>
+          <ion-modal [keepContentsMounted]="true" #startDatetimeModal>
+            <ng-template>
+              <ion-datetime #startDatetime id="startDatetime" presentation="date" formControlName="invoiceDate"
+                (ionChange)="onDateChange($event, 'invoiceDate')">
+                <ion-buttons slot="buttons">
+                  <!-- <ion-button color="danger" (click)="startDatetime.reset()">Reset</ion-button> -->
+                  <ion-button color="primary"
+                    (click)="startDatetime.confirm(); startDatetimeModal.dismiss()">Ok</ion-button>
+                </ion-buttons></ion-datetime>
+            </ng-template>
+          </ion-modal>
 
             <div class="ion-margin-bottom">
               <app-input [form]="saleForm" name="invoiceDate" label="label.invoice_date" [placeholder]="'placeholder.select_date'"
