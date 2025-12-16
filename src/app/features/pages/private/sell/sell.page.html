@@ -24,11 +24,6 @@
               <ion-label>{{ 'common.invoice_information' | translate }}</ion-label>
             </ion-item-divider>
 
-            <div class="ion-margin-bottom ion-margin-top">
-              <app-input [form]="saleForm" name="invoiceNumber" label="label.invoice_number" [placeholder]="'placeholder.enter_invoice_number'"
-                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
-            </div>
-
             <div class="ion-margin-bottom">
               <app-input [form]="saleForm" name="invoiceDate" label="label.invoice_date" [placeholder]="'placeholder.select_date'"
                 [errorText]="'error.required'" labelPlacement="floating" type="date" fill="outline"></app-input>
