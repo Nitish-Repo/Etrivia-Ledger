@@ -64,7 +64,20 @@
         "select": "Select",
         "basic_detail": "Basic Detail",
         "option_detail": "Option Detail",
-        "none": "None"
+        "none": "None",
+        "invoice_detail": "Invoice Details",
+        "sale_items": "Sale Items",
+        "additional_charges": "Additional Charges",
+        "invoice_information": "Invoice Information",
+        "customer_details": "Customer Details",
+        "invoice_totals": "Invoice Totals",
+        "payment_details": "Payment Details",
+        "add_item": "Add Item",
+        "remove_item": "Remove Item",
+        "add_charge": "Add Charge",
+        "remove_charge": "Remove Charge",
+        "create_sale": "Create Sale",
+        "update_sale": "Update Sale"
     },
     "desc": {
         "delete_confirm": "Are you sure you want to delete?",
@@ -160,7 +173,9 @@
         "gst_rate": "GST Rate",
         "cess_rate": "CESS Rate",
         "due": "Due",
-        "payment_details": "Payment Details"
+        "payment_details": "Payment Details",
+        "total_discount_amount": "Total Discount Amount",
+        "charge_name": "Charge Name"
     },
     "menu": {
         "dashboard": "Dashboard",
@@ -257,7 +272,15 @@
         "invoice_date": "Select invoice date",
         "customer_gstin": "Enter customer GSTIN",
         "paid_amount": "Enter paid amount",
-        "select": "Select"
+        "select": "Select",
+        "enter_invoice_number": "Enter invoice number",
+        "select_date": "Select date",
+        "calculated": "Auto calculated",
+        "enter_notes": "Enter notes",
+        "enter_product_name": "Enter product name",
+        "enter_hsn": "Enter HSN/SAC code",
+        "enter_unit": "Enter unit",
+        "enter_charge_name": "Enter charge name (e.g., Shipping, Packaging)"
     },
     "uom": {
         "bags": "Bags",
