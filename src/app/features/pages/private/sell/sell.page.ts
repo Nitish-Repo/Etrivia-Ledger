@@ -7,9 +7,10 @@ import { Subject } from 'rxjs';
 import { FormMeta } from '@app/shared-services/models/form-meta';
 import { ModelMeta } from '@app/shared-services';
 import { AppService } from '@app/core/app.service';
-import { getSellModelMeta } from '@app/features/models/sell.model';
 import { FormHelper } from '@app/shared-services/helpers/form.helper';
 import { TranslateModule } from '@ngx-translate/core';
+import { getAdditionalChargeMeta, getSaleItemMeta, getSaleMeta } from '@app/features/models';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sell',
@@ -20,25 +21,28 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class SellPage implements OnInit {
   private app = inject(AppService);
-  // private token = inject(TokenService);
-  // private route = inject(Router);
+  private route = inject(Router);
 
   private destroy$: Subject<void> = new Subject<void>();
   form!: FormGroup;
   formMeta = new FormMeta();
-  modelMeta!: ModelMeta[];
+  saleModelMeta!: ModelMeta[];
+  SaleItemModelMeta!: ModelMeta[];
+  additionalChargeModelMeta!: ModelMeta[];
   isLogin = signal<boolean>(false);
 
   constructor() { }
 
   ngOnInit() {
-    this.modelMeta = getSellModelMeta();
+    this.saleModelMeta = getSaleMeta();
+    this.SaleItemModelMeta = getSaleItemMeta();
+    this.additionalChargeModelMeta = getAdditionalChargeMeta();
         this.form = this.app.meta.toFormGroup(
           { 
             deviceTokenValue: "this.pushNotifications.FCM_Token", 
             platform: "Web"
           }, 
-          this.modelMeta
+          this.saleModelMeta
         );
   }
 
