@@ -4,12 +4,13 @@ import { ToolbarPage } from "@app/layouts/private/toolbar/toolbar.page";
 import { addIcons } from 'ionicons';
 import { add, createOutline, documentTextOutline } from 'ionicons/icons';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SidemenuToolbarPage } from "@app/layouts/private/sidemenu-toolbar/sidemenu-toolbar.page";
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [IonButton, IonIcon, IonHeader, IonContent, ToolbarPage],
+  imports: [IonButton, IonIcon, IonHeader, IonContent, SidemenuToolbarPage],
 })
 export class HomePage {
   private router = inject(Router);

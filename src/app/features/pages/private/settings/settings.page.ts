@@ -4,9 +4,9 @@ import {
   IonContent, IonHeader, IonList, IonListHeader, IonItem, IonLabel, IonRadioGroup, IonRadio
 } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
-import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
 import { ThemeService, ThemeMode } from '@app/core/theme.service';
 import { LanguageService } from '@app/core/language.service';
+import { SidemenuToolbarPage } from "@app/layouts/private/sidemenu-toolbar/sidemenu-toolbar.page";
 
 @Component({
   selector: 'app-settings',
@@ -23,9 +23,9 @@ import { LanguageService } from '@app/core/language.service';
     IonLabel,
     IonRadioGroup,
     IonRadio,
-    ToolbarPage,
-    TranslateModule
-  ]
+    TranslateModule,
+    SidemenuToolbarPage
+]
 })
 export class SettingsPage {
   themeService = inject(ThemeService);

@@ -1,19 +1,6 @@
 <ion-toolbar>
   <ion-buttons slot="start">
-    <ion-button (click)="openMenu()">
-      <ion-icon slot="icon-only" name="apps-outline"></ion-icon>
-    </ion-button>
-    <!-- <ion-menu-button></ion-menu-button> -->
+    <ion-back-button default-href="#"></ion-back-button>
   </ion-buttons>
-
   <ion-title>{{ title() | translate }}</ion-title>
-
-  <ion-buttons slot="end">
-    <ion-button>
-      <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
-    </ion-button>
-    <ion-button>
-      <ion-icon slot="icon-only" name="stats-chart-outline"></ion-icon>
-    </ion-button>
-  </ion-buttons>
 </ion-toolbar>

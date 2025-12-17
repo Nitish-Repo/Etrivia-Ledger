@@ -1,21 +1,22 @@
 import { Component, inject, input } from '@angular/core';
 import {
-  IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonBackButton } from '@ionic/angular/standalone';
+  IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonHeader, IonContent
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { appsOutline, notificationsOutline, statsChartOutline } from 'ionicons/icons';
 import { MenuController } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-toolbar',
-  templateUrl: './toolbar.page.html',
-  styleUrls: ['./toolbar.page.scss'],
+  selector: 'app-sidemenu-toolbar',
+  templateUrl: './sidemenu-toolbar.page.html',
+  styleUrls: ['./sidemenu-toolbar.page.scss'],
   standalone: true,
-  imports: [IonBackButton, 
-    IonToolbar, IonButtons, IonTitle,TranslateModule
+  imports: [
+    IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, TranslateModule
   ]
 })
-export class ToolbarPage {
+export class SidemenuToolbarPage {
   private menuCtrl = inject(MenuController);
   title = input<string>('Etrivia Ledger');
 
@@ -25,6 +26,6 @@ export class ToolbarPage {
   }
 
   openMenu() {
-    // this.menuCtrl.open();
+    this.menuCtrl.open();
   }
 }
