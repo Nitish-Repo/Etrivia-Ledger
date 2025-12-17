@@ -2,21 +2,23 @@
   <app-toolbar [title]="'page.sell.title' | translate"></app-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-  <div class="ion-margin">
+  <div>
     @if(saleForm){
     <div>
       <form id="saleForm" [formGroup]="saleForm" (submit)="onSubmit()">
-        <ion-segment mode="ios" [value]="segment()" (ionChange)="segment.set($any($event).detail.value)">
-          <ion-segment-button value="invoice">
-            <ion-label>{{ 'common.invoice_detail' | translate }}</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="items">
-            <ion-label>{{ 'common.sale_items' | translate }}</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="charges">
-            <ion-label>{{ 'common.additional_charges' | translate }}</ion-label>
-          </ion-segment-button>
-        </ion-segment>
+        <div class="ion-margin">
+          <ion-segment mode="ios" [value]="segment()" (ionChange)="segment.set($any($event).detail.value)">
+            <ion-segment-button value="invoice">
+              <ion-label>{{ 'common.invoice_detail' | translate }}</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="items">
+              <ion-label>{{ 'common.sale_items' | translate }}</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="charges">
+              <ion-label>{{ 'common.additional_charges' | translate }}</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </div>
 
         @if (segment() === 'invoice') {
         <div>
@@ -35,24 +37,122 @@
             </ng-template>
           </ion-modal>
 
-          <ion-item-divider>
-            <ion-label>{{ 'common.customer_details' | translate }}</ion-label>
-          </ion-item-divider>
 
-          <div class="ion-margin-bottom ion-margin-top">
-            <app-select [meta]="customerMeta" />
-          </div>
 
-          <div class="ion-margin-bottom">
-            <app-input [form]="saleForm" name="customerName" label="label.customer_name"
-              [placeholder]="'placeholder.enter_customer_name'" [errorText]="'error.required'" labelPlacement="floating"
-              fill="outline"></app-input>
-          </div>
 
-          <div class="ion-margin-bottom">
-            <app-input [form]="saleForm" name="customerGstin" label="label.customer_gstin"
-              [placeholder]="'placeholder.enter_gstin'" labelPlacement="floating" fill="outline"></app-input>
-          </div>
+
+          <ion-list>
+            <ion-item lines="none" class="ion-margin-top">
+              <ion-label>Customer Detail</ion-label>
+              <ion-button slot="end" fill="outline">
+                <ion-icon name="add" slot="start"></ion-icon>
+                Add Customer </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label>Mega Man X</ion-label>
+            </ion-item>
+          </ion-list>
+
+          <ion-list class="ion-margin-top">
+            <ion-item lines="none">
+              <ion-label>Items Details</ion-label>
+              <ion-button slot="end" fill="outline">
+                <ion-icon name="add" slot="start"></ion-icon>
+                Add Items </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label class="ion-text-wrap">
+                <div class="product-header">
+                  <strong>Dolo 650</strong>
+                  <div class="badges">
+                    <ion-badge color="medium">#1</ion-badge>
+                  </div>
+                </div>
+                <ion-text color="medium" class="description">2 × ₹513 </ion-text>
+                <ion-text color="medium" class="description" slot="end"> </ion-text>
+              </ion-label>
+              <ion-button slot="end" fill="outline" disabled color="medium">
+                ₹1026 </ion-button>
+              <ion-button slot="end" shape="round" size="large" fill="clear">
+                <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label class="ion-text-wrap">
+                <div class="product-header">
+                  <strong>Dolo 650</strong>
+                  <div class="badges">
+                    <ion-badge color="medium">#1</ion-badge>
+                  </div>
+                </div>
+                <ion-text color="medium" class="description">2 × ₹513 </ion-text>
+                <ion-text color="medium" class="description" slot="end"> </ion-text>
+              </ion-label>
+              <ion-button slot="end" fill="outline" disabled color="medium">
+                ₹1026 </ion-button>
+              <ion-button slot="end" shape="round" size="large" fill="clear">
+                <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item>
+              <ion-label class="ion-text-wrap">
+                <div class="product-header">
+                  <strong>Dolo 650</strong>
+                  <div class="badges">
+                    <ion-badge color="medium">#1</ion-badge>
+                  </div>
+                </div>
+                <ion-text color="medium" class="description">2 × {{ 513 | currency:'INR' }} </ion-text>
+              </ion-label>
+              <ion-button slot="end" fill="outline" disabled color="medium">
+                {{ 1026 | currency:'INR' }} </ion-button>
+              <ion-button slot="end" shape="round" size="large" fill="clear">
+                <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item lines="none">
+              <ion-label>Taxable Amount</ion-label>
+              <ion-note slot="end">
+                {{ 1231 | currency:'INR' }}
+              </ion-note>
+            </ion-item>
+            <ion-item lines="none">
+              <ion-label>Item Discount</ion-label>
+              <ion-note slot="end">
+                {{ 12 | currency:'INR' }}
+              </ion-note>
+            </ion-item>
+            <ion-item lines="none">
+              <ion-label>Amount After Discount</ion-label>
+              <ion-note slot="end">
+                {{ 12 | currency:'INR' }}
+              </ion-note>
+            </ion-item>
+            <ion-item lines="none">
+              <ion-label>GST</ion-label>
+              <ion-note slot="end">
+                {{ 12 | currency:'INR' }}
+              </ion-note>
+            </ion-item>
+            <ion-item lines="none">
+              <ion-label>CESS</ion-label>
+              <ion-note slot="end">
+                {{ 12 | currency:'INR' }}
+              </ion-note>
+            </ion-item>
+            <ion-item >
+              <ion-label>Total Amount</ion-label>
+              <ion-note slot="end">
+                {{ 12 | currency:'INR' }}
+              </ion-note>
+            </ion-item>
+            <ion-item >
+              <ion-label slot="end">Final Amount</ion-label>
+              <ion-note slot="end">
+                {{ 12 | currency:'INR' }}
+              </ion-note>
+            </ion-item>
+          </ion-list>
 
           <ion-item-divider>
             <ion-label>{{ 'common.invoice_totals' | translate }}</ion-label>

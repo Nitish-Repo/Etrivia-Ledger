@@ -2,7 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider, IonDatetime, IonModal, IonButtons,
-  IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonItem, IonDatetimeButton } from '@ionic/angular/standalone';
+  IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonItem, IonDatetimeButton, IonList, IonBadge, IonNote, IonText } from '@ionic/angular/standalone';
 import { ToolbarPage } from "@app/layouts/private/toolbar/toolbar.page";
 import { Subject } from 'rxjs';
 import { FormMeta } from '@app/shared-services/models/form-meta';
@@ -15,7 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { InputComponent } from '@app/shared/input/input.component';
 import { SelectComponent } from '@app/shared/select/select.component';
 import { addIcons } from 'ionicons';
-import { add, saveOutline, trash } from 'ionicons/icons';
+import { add, saveOutline, trash, ellipsisVertical, heart } from 'ionicons/icons';
 import { LuxonDateService } from '@app/core/luxon-Date.service';
 
 @Component({
@@ -23,7 +23,7 @@ import { LuxonDateService } from '@app/core/luxon-Date.service';
   templateUrl: './sell.page.html',
   styleUrls: ['./sell.page.scss'],
   standalone: true,
-  imports: [IonDatetimeButton, IonItem, 
+  imports: [IonText, IonNote, IonBadge, IonList, IonDatetimeButton, IonItem, 
     IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider,
     IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonDatetime, IonModal, IonButtons,
     CommonModule, ReactiveFormsModule, ToolbarPage, InputComponent, SelectComponent, TranslateModule
@@ -86,7 +86,7 @@ export class SellPage implements OnInit {
   };
 
   constructor() {
-    addIcons({ add, saveOutline, trash });
+    addIcons({add,heart,ellipsisVertical,trash,saveOutline});
   }
 
   ngOnInit() {
