@@ -13,6 +13,8 @@ import { filter } from 'rxjs/operators';
 import { addIcons } from 'ionicons';
 import {
   home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline,
+  settings,
+  settingsOutline,
 } from 'ionicons/icons';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -49,7 +51,7 @@ export class FooterPage implements OnInit {
   ];
 
   constructor(private router: Router, private gestureCtrl: GestureController) {
-    addIcons({ home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline });
+    addIcons({ home, homeOutline, grid, gridOutline, cube, cubeOutline, cart, cartOutline, settings, settingsOutline });
   }
 
   ngOnInit() {

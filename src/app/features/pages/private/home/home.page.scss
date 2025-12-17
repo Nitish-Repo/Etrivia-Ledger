@@ -25,3 +25,18 @@
 #container a {
   text-decoration: none;
 }
+
+.create-invoice {
+  position: fixed;
+  bottom: 40px;   // above tab bar
+  left: 50%;
+  transform: translateX(-50%);
+
+  // --background: #f1d26a;
+  // --color: #000;
+  // --border-radius: 30px;
+  // width: 120px;
+  // height: 56px;
+  // font-weight: 600;
+}
+
