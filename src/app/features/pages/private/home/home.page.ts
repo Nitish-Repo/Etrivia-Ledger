@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [IonButton, IonLabel, IonIcon, IonFabButton, IonFabList, IonFab, IonHeader, IonContent, ToolbarPage],
+  imports: [IonButton, IonIcon, IonHeader, IonContent, ToolbarPage],
 })
 export class HomePage {
   private router = inject(Router);
