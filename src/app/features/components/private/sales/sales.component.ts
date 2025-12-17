@@ -7,12 +7,12 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sales',
-  templateUrl: './sales.page.html',
-  styleUrls: ['./sales.page.scss'],
+  templateUrl: './sales.component.html',
+  styleUrls: ['./sales.component.scss'],
   standalone: true,
   imports: [IonContent, IonHeader, CommonModule, ReactiveFormsModule, ToolbarPage, TranslateModule]
 })
-export class SalesPage implements OnInit {
+export class SalesComponent implements OnInit {
 
   constructor() { }
 
@@ -20,3 +20,4 @@ export class SalesPage implements OnInit {
   }
 
 }
+

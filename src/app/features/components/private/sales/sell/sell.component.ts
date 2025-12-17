@@ -20,8 +20,8 @@ import { LuxonDateService } from '@app/core/luxon-Date.service';
 
 @Component({
   selector: 'app-sell',
-  templateUrl: './sell.page.html',
-  styleUrls: ['./sell.page.scss'],
+  templateUrl: './sell.component.html',
+  styleUrls: ['./sell.component.scss'],
   standalone: true,
   imports: [IonCard, IonAvatar, IonText, IonNote, IonBadge, IonList, IonDatetimeButton, IonItem, 
     IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider,
@@ -29,7 +29,7 @@ import { LuxonDateService } from '@app/core/luxon-Date.service';
     CommonModule, ReactiveFormsModule, ToolbarPage, InputComponent, SelectComponent, TranslateModule
   ]
 })
-export class SellPage implements OnInit {
+export class SellComponent implements OnInit {
   private app = inject(AppService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -223,3 +223,4 @@ export class SellPage implements OnInit {
     this.destroy$.complete();
   }
 }
+

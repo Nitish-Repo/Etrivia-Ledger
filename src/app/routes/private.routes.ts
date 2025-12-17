@@ -57,15 +57,15 @@ export const PRIVATE_ROUTES: Routes = [
             },
             {
                 path: 'sales',
-                loadComponent: () => import('../features/pages/private/sales/sales.page').then(m => m.SalesPage)
+                loadComponent: () => import('../features/components/private/sales/sales.component').then(m => m.SalesComponent)
             },
             {
                 path: 'sell/new',
-                loadComponent: () => import('../features/pages/private/sell/sell.page').then(m => m.SellPage)
+                loadComponent: () => import('../features/components/private/sales/sell/sell.component').then(m => m.SellComponent)
             },
             {
                 path: 'sell/:id',
-                loadComponent: () => import('../features/pages/private/sell/sell.page').then(m => m.SellPage)
+                loadComponent: () => import('../features//components/private/sales/sell/sell.component').then(m => m.SellComponent)
             },
             {
                 path: '', redirectTo: 'home', pathMatch: 'full'
