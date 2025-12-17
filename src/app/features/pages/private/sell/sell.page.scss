@@ -75,3 +75,107 @@ ion-label strong {
 ion-label ion-note {
   font-size: 0.9rem;
 }
+
+
+
+
+
+
+
+
+
+.bill-card {
+  border-radius: 20px;
+  padding: 8px;
+  box-shadow: none;
+}
+
+.bill-item {
+  --background: transparent;
+  align-items: center;
+
+  h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2a44;
+  }
+
+  p {
+    font-size: 14px;
+    color: #9aa0b4;
+    margin-top: 4px;
+  }
+
+  ion-icon[slot='end'] {
+    font-size: 20px;
+    color: #1f2a44;
+  }
+}
+
+.icon-bg {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 22px;
+  }
+}
+
+.blue {
+  background: #e8edff;
+  color: #4a6cf7;
+}
+
+.orange {
+  background: #fff1e0;
+  color: #f4a261;
+}
+
+.dotted-line {
+  height: 30px;
+  margin-left: 32px;
+  border-left: 2px dashed #d6d9e4;
+}
+
+
+
+
+
+
+
+
+
+
+.bottom-footer {
+  ion-toolbar {
+    --background: #ffffff;
+    padding: 12px;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.preview-btn {
+  flex: 1;
+  height: 48px;
+  --border-radius: 14px;
+  --border-color: #dcdfe8;
+  --color: #1f2a44;
+}
+
+.save-btn {
+  flex: 2;
+  height: 48px;
+  --border-radius: 14px;
+  --border-color: #4a6cf7;
+  --color: #4a6cf7;
+  --border-width: 2px;
+  font-weight: 600;
+}
+

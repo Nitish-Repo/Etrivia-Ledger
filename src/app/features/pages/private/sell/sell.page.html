@@ -37,6 +37,39 @@
             </ng-template>
           </ion-modal>
 
+          <ion-card class="bill-card">
+            <!-- Bill From -->
+            <ion-item lines="none" class="bill-item">
+              <ion-avatar slot="start" class="icon-bg blue">
+                <ion-icon name="person-outline"></ion-icon>
+              </ion-avatar>
+
+              <ion-label>
+                <h2>Bill From</h2>
+                <p>Add Business</p>
+              </ion-label>
+
+              <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+            </ion-item>
+
+            <div class="dotted-line"></div>
+
+            <!-- Bill To -->
+            <ion-item lines="none" class="bill-item">
+              <ion-avatar slot="start" class="icon-bg orange">
+                <ion-icon name="people-outline"></ion-icon>
+              </ion-avatar>
+
+              <ion-label>
+                <h2>Bill To</h2>
+                <p>Add Clients</p>
+              </ion-label>
+
+              <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+            </ion-item>
+          </ion-card>
+
+
 
 
 
@@ -140,13 +173,13 @@
                 {{ 12 | currency:'INR' }}
               </ion-note>
             </ion-item>
-            <ion-item >
+            <ion-item>
               <ion-label>Total Amount</ion-label>
               <ion-note slot="end">
                 {{ 12 | currency:'INR' }}
               </ion-note>
             </ion-item>
-            <ion-item >
+            <ion-item>
               <ion-label slot="end">Final Amount</ion-label>
               <ion-note slot="end">
                 {{ 12 | currency:'INR' }}
@@ -404,7 +437,7 @@
   </div>
 </ion-content>
 
-<ion-footer>
+<!-- <ion-footer>
   <ion-toolbar>
     <ion-button expand="block" type="submit" form="saleForm" [disabled]="isSubmitting()">
       @if (isSubmitting()) {
@@ -414,5 +447,19 @@
       {{ (isEdit() ? 'common.update_sale' : 'common.create_sale') | translate }}
       }
     </ion-button>
+  </ion-toolbar>
+</ion-footer> -->
+
+<ion-footer class="bottom-footer">
+  <ion-toolbar>
+    <div class="action-buttons">
+      <ion-button fill="outline" class="preview-btn">
+        Preview
+      </ion-button>
+
+      <ion-button fill="outline" class="save-btn">
+        Save
+      </ion-button>
+    </div>
   </ion-toolbar>
 </ion-footer>
