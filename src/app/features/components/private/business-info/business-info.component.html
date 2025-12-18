@@ -42,6 +42,18 @@
                 fill="outline" [maxlength]="10"></app-input>
             </div>
 
+            <div class="ion-margin-bottom ion-margin-top">
+              <app-input [form]="form" name="phone" label="label.phone" 
+                [placeholder]="'placeholder.enter_phone'" labelPlacement="floating"
+                type="tel" [errorText]="'error.required'" fill="outline"></app-input>
+            </div>
+
+            <div class="ion-margin-bottom">
+              <app-input [form]="form" name="email" label="label.email" 
+                [placeholder]="'placeholder.enter_email'" labelPlacement="floating"
+                type="email" fill="outline"></app-input>
+            </div>
+
             <div class="ion-margin-bottom">
               <ion-textarea formControlName="address" [label]="'label.address' | translate" 
                 labelPlacement="floating" fill="outline" 
@@ -68,22 +80,6 @@
 
         @if (segment() === 'second') {
         <div>
-            <ion-item-divider>
-              <ion-label>{{ 'common.contact_details' | translate }}</ion-label>
-            </ion-item-divider>
-
-            <div class="ion-margin-bottom ion-margin-top">
-              <app-input [form]="form" name="phone" label="label.phone" 
-                [placeholder]="'placeholder.enter_phone'" labelPlacement="floating"
-                type="tel" [errorText]="'error.required'" fill="outline"></app-input>
-            </div>
-
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="email" label="label.email" 
-                [placeholder]="'placeholder.enter_email'" labelPlacement="floating"
-                type="email" fill="outline"></app-input>
-            </div>
-
             <ion-item-divider>
               <ion-label>{{ 'common.invoice_settings' | translate }}</ion-label>
             </ion-item-divider>

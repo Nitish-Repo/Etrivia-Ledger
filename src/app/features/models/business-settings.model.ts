@@ -37,7 +37,7 @@ export function getBusinessSettingsMeta() {
     { key: 'state', label: 'State', required: false },
     { key: 'pincode', label: 'Pincode', required: false },
     { key: 'phone', label: 'Phone', required: true },
-    { key: 'email', label: 'Email', required: false },
+    { key: 'email', label: 'Email', required: false, email: true },
     { key: 'invoicePrefix', label: 'Invoice Prefix', required: true },
     { key: 'financialYearStart', label: 'Financial Year Start', required: true },
     { key: 'defaultGstRate', label: 'Default GST Rate', required: false, controlType: 'number' },

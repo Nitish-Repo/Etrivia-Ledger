@@ -59,9 +59,8 @@
                 </div>
                 @if (businessSettings()) {
                   <ion-text color="dark" class="description">{{ businessSettings()?.businessName }}</ion-text>
-                  @if (businessSettings()?.city) {
-                    <br>
-                    <ion-text color="medium" class="description" style="font-size: 0.85em;">{{ businessSettings()?.city }}@if (businessSettings()?.state) {, {{ businessSettings()?.state }}}</ion-text>
+                  @if (businessSettings()?.gstin) {
+                    <ion-text color="medium" class="description" style="font-size: 0.85em;">{{ businessSettings()?.gstin }}</ion-text>
                   }
                 } @else {
                   <ion-text color="medium" class="description">Add Business</ion-text>

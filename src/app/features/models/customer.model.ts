@@ -101,7 +101,7 @@ export function getCustomerMeta() {
     { key: 'customerId', label: 'CustomerId', hide: true },
     { key: 'customerName', label: 'Customer Name', required: true },
     { key: 'phone', label: 'Phone Number', required: false },
-    { key: 'email', label: 'Email', required: false },
+    { key: 'email', label: 'Email', required: false, email: true },
     { key: 'gstin', label: 'GSTIN', required: false },
     { key: 'pan', label: 'PAN', required: false },
     { key: 'billingAddress', label: 'Billing Address', required: false },

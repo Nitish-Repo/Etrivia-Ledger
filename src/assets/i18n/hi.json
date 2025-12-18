@@ -63,8 +63,23 @@
     "mrp": "एम.आर.पी.",
     "select": "चुनें",
     "basic_detail": "मूल विवरण",
-    "option_detail": "विकल्प विवरण",
-    "none": "कोई नहीं"
+    "option_detail": "वैकल्पिक विवरण",
+    "none": "कोई नहीं",
+    "invoice_detail": "चालान विवरण",
+    "sale_items": "बिक्री आइटम",
+    "additional_charges": "अतिरिक्त शुल्क",
+    "invoice_information": "चालान जानकारी",
+    "customer_details": "ग्राहक विवरण",
+    "invoice_totals": "चालान कुल",
+    "payment_details": "भुगतान विवरण",
+    "add_item": "आइटम जोड़ें",
+    "remove_item": "आइटम हटाएं",
+    "add_charge": "शुल्क जोड़ें",
+    "remove_charge": "शुल्क हटाएं",
+    "create_sale": "बिक्री बनाएं",
+    "update_sale": "बिक्री अपडेट करें",
+    "contact_details": "संपर्क विवरण",
+    "invoice_settings": "चालान सेटिंग्स"
   },
   "desc": {
     "delete_confirm": "क्या आप वाकई हटाना चाहते हैं?",
@@ -160,7 +175,14 @@
     "gst_rate": "जी.एस.टी. दर",
     "cess_rate": "उपकर दर",
     "due": "बकाया",
-    "payment_details": "भुगतान विवरण"
+    "payment_details": "भुगतान विवरण",
+    "total_discount_amount": "कुल छूट राशि",
+    "charge_name": "शुल्क का नाम",
+    "business_name": "व्यवसाय का नाम",
+    "invoice_prefix": "चालान उपसर्ग",
+    "financial_year_start": "वित्तीय वर्ष प्रारंभ",
+    "default_gst_rate": "डिफ़ॉल्ट जी.एस.टी. दर",
+    "enable_cess": "उपकर सक्षम करें"
   },
   "menu": {
     "dashboard": "डैशबोर्ड",
@@ -257,7 +279,16 @@
     "invoice_date": "चालान तिथि चुनें",
     "customer_gstin": "ग्राहक जी.एस.टी.आई.एन. दर्ज करें",
     "paid_amount": "भुगतान की गई राशि दर्ज करें",
-    "select": "चुनें"
+    "select": "चुनें",
+    "enter_invoice_number": "चालान नंबर दर्ज करें",
+    "select_date": "तिथि चुनें",
+    "calculated": "स्वतः गणना",
+    "enter_notes": "नोट्स दर्ज करें",
+    "enter_hsn": "एच.एस.एन./एस.ए.सी. कोड दर्ज करें",
+    "enter_unit": "इकाई दर्ज करें",
+    "enter_charge_name": "शुल्क का नाम दर्ज करें (जैसे, शिपिंग, पैकेजिंग)",
+    "enter_business_name": "व्यवसाय का नाम दर्ज करें",
+    "enter_invoice_prefix": "चालान उपसर्ग दर्ज करें (जैसे, INV, BILL)"
   },
   "uom": {
     "bags": "बैग",

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AppService } from '@app/core/app.service';
@@ -60,7 +60,6 @@ import { saveOutline, close } from 'ionicons/icons';
     IonToolbar,
     IonButton,
     CommonModule,
-    ToolbarPage,
     ReactiveFormsModule,
     InputComponent,
     IonTabBar,
@@ -73,6 +72,7 @@ export class BusinessInfoComponent implements OnInit {
   private router = inject(Router);
   private service = inject(BusinessSettingsService);
   private modalCtrl = inject(ModalController);
+  private cdr = inject(ChangeDetectorRef)
 
   isBusinessSave = signal<boolean>(false);
   isEdit = signal<boolean>(false);
@@ -96,21 +96,23 @@ export class BusinessInfoComponent implements OnInit {
 
   ngOnInit() {
     this.modelMeta = getBusinessSettingsMeta();
-    this.loadBusinessSettings();
+    this.buildBusinessForm();
   }
 
-  private loadBusinessSettings() {
+  private buildBusinessForm() {
     this.service.getBusinessSettings().subscribe({
       next: (settings) => {
         if (settings) {
           this.isEdit.set(true);
           this.form = this.app.meta.toFormGroup(settings, this.modelMeta);
+          this.cdr.detectChanges();
         } else {
           this.buildNewBusinessForm();
         }
       },
       error: (error) => {
         console.error('Error loading business settings:', error);
+        this.buildNewBusinessForm();
       }
     });
   }

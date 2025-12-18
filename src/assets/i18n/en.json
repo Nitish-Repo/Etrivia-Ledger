@@ -63,7 +63,7 @@
         "mrp": "MRP",
         "select": "Select",
         "basic_detail": "Basic Detail",
-        "option_detail": "Option Detail",
+        "option_detail": "Optional Details",
         "none": "None",
         "invoice_detail": "Invoice Details",
         "sale_items": "Sale Items",
@@ -77,7 +77,9 @@
         "add_charge": "Add Charge",
         "remove_charge": "Remove Charge",
         "create_sale": "Create Sale",
-        "update_sale": "Update Sale"
+        "update_sale": "Update Sale",
+        "contact_details": "Contact Details",
+        "invoice_settings": "Invoice Settings"
     },
     "desc": {
         "delete_confirm": "Are you sure you want to delete?",
@@ -175,7 +177,12 @@
         "due": "Due",
         "payment_details": "Payment Details",
         "total_discount_amount": "Total Discount Amount",
-        "charge_name": "Charge Name"
+        "charge_name": "Charge Name",
+        "business_name": "Business Name",
+        "invoice_prefix": "Invoice Prefix",
+        "financial_year_start": "Financial Year Start",
+        "default_gst_rate": "Default GST Rate",
+        "enable_cess": "Enable CESS"
     },
     "menu": {
         "dashboard": "Dashboard",
@@ -280,7 +287,9 @@
         "enter_product_name": "Enter product name",
         "enter_hsn": "Enter HSN/SAC code",
         "enter_unit": "Enter unit",
-        "enter_charge_name": "Enter charge name (e.g., Shipping, Packaging)"
+        "enter_charge_name": "Enter charge name (e.g., Shipping, Packaging)",
+        "enter_business_name": "Enter business name",
+        "enter_invoice_prefix": "Enter invoice prefix (e.g., INV, BILL)"
     },
     "uom": {
         "bags": "Bags",
