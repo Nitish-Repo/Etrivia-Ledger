@@ -17,6 +17,8 @@ import { SelectComponent } from '@app/shared/select/select.component';
 import { addIcons } from 'ionicons';
 import { add, saveOutline, trash, ellipsisVertical, heart, personOutline, chevronForwardOutline, peopleOutline, listCircle, chevronForward, idCard, idCardOutline, receiptOutline } from 'ionicons/icons';
 import { LuxonDateService } from '@app/core/luxon-Date.service';
+import { BusinessSettingsService } from '@app/features/services/business-settings';
+import { BusinessSettings } from '@app/features/models/business-settings.model';
 
 @Component({
   selector: 'app-sell',
@@ -34,8 +36,12 @@ export class SellComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private luxonDateService = inject (LuxonDateService)
+  private businessSettingsService = inject(BusinessSettingsService);
 
   private destroy$: Subject<void> = new Subject<void>();
+  
+  // Business Settings
+  businessSettings = signal<BusinessSettings | null>(null);
   
   // Forms
   saleForm!: FormGroup;
@@ -90,6 +96,7 @@ export class SellComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadBusinessSettings();
     this.saleModelMeta = getSaleMeta();
     this.saleItemModelMeta = getSaleItemMeta();
     this.additionalChargeModelMeta = getAdditionalChargeMeta();
@@ -216,6 +223,21 @@ export class SellComponent implements OnInit {
         this.isSubmitting.set(false);
       }, 1000);
     }, true);
+  }
+
+  private loadBusinessSettings() {
+    this.businessSettingsService.getBusinessSettings().subscribe({
+      next: (settings) => {
+        this.businessSettings.set(settings);
+      },
+      error: (error) => {
+        console.error('Error loading business settings:', error);
+      }
+    });
+  }
+
+  navigateToBusinessInfo() {
+    this.router.navigate(['/private/business-info']);
   }
 
   ngOnDestroy() {
