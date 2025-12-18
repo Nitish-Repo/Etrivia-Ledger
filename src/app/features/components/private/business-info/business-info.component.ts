@@ -26,11 +26,15 @@ import {
   IonFooter, 
   IonTabBar, 
   IonTabButton, 
-  IonItemDivider 
+  IonItemDivider,
+  ModalController,
+  IonButtons,
+  IonTitle,
+  IonToolbar
 } from "@ionic/angular/standalone";
 import { TranslateModule } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
-import { saveOutline } from 'ionicons/icons';
+import { saveOutline, close } from 'ionicons/icons';
 
 @Component({
   selector: 'app-business-info',
@@ -51,6 +55,10 @@ import { saveOutline } from 'ionicons/icons';
     IonSpinner,
     IonContent,
     IonHeader,
+    IonButtons,
+    IonTitle,
+    IonToolbar,
+    IonButton,
     CommonModule,
     ToolbarPage,
     ReactiveFormsModule,
@@ -64,6 +72,7 @@ export class BusinessInfoComponent implements OnInit {
   private app = inject(AppService);
   private router = inject(Router);
   private service = inject(BusinessSettingsService);
+  private modalCtrl = inject(ModalController);
 
   isBusinessSave = signal<boolean>(false);
   isEdit = signal<boolean>(false);
@@ -82,7 +91,7 @@ export class BusinessInfoComponent implements OnInit {
   };
 
   constructor() {
-    addIcons({ saveOutline });
+    addIcons({ saveOutline, close });
   }
 
   ngOnInit() {
@@ -91,13 +100,17 @@ export class BusinessInfoComponent implements OnInit {
   }
 
   private loadBusinessSettings() {
-    // Check if settings exist, if yes load them, otherwise use defaults
-    this.service.getBusinessSettings().subscribe((settings) => {
-      if (settings) {
-        this.isEdit.set(true);
-        this.form = this.app.meta.toFormGroup(settings, this.modelMeta);
-      } else {
-        this.buildNewBusinessForm();
+    this.service.getBusinessSettings().subscribe({
+      next: (settings) => {
+        if (settings) {
+          this.isEdit.set(true);
+          this.form = this.app.meta.toFormGroup(settings, this.modelMeta);
+        } else {
+          this.buildNewBusinessForm();
+        }
+      },
+      error: (error) => {
+        console.error('Error loading business settings:', error);
       }
     });
   }
@@ -121,7 +134,7 @@ export class BusinessInfoComponent implements OnInit {
             this.isBusinessSave.set(false);
             this.formMeta.submitProcessing = false;
             this.app.noty.presentToast('Business information saved successfully', 3000, 'top', 'success');
-            this.router.navigate(['/private/home']);
+            this.modalCtrl.dismiss({ saved: true, data: savedSettings });
           },
           error: (error) => {
             this.isBusinessSave.set(false);
@@ -132,5 +145,9 @@ export class BusinessInfoComponent implements OnInit {
         });
       }
     );
+  }
+
+  closeModal() {
+    this.modalCtrl.dismiss();
   }
 }

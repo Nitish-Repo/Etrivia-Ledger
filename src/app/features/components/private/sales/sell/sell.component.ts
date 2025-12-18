@@ -2,7 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider, IonDatetime, IonModal, IonButtons,
-  IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonItem, IonDatetimeButton, IonList, IonBadge, IonNote, IonText, IonAvatar, IonCard } from '@ionic/angular/standalone';
+  IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonItem, IonDatetimeButton, IonList, IonBadge, IonNote, IonText, IonAvatar, IonCard, ModalController } from '@ionic/angular/standalone';
 import { ToolbarPage } from "@app/layouts/private/toolbar/toolbar.page";
 import { Subject } from 'rxjs';
 import { FormMeta } from '@app/shared-services/models/form-meta';
@@ -19,6 +19,7 @@ import { add, saveOutline, trash, ellipsisVertical, heart, personOutline, chevro
 import { LuxonDateService } from '@app/core/luxon-Date.service';
 import { BusinessSettingsService } from '@app/features/services/business-settings';
 import { BusinessSettings } from '@app/features/models/business-settings.model';
+import { BusinessInfoComponent } from '@app/features/components/private/business-info/business-info.component';
 
 @Component({
   selector: 'app-sell',
@@ -37,6 +38,7 @@ export class SellComponent implements OnInit {
   private router = inject(Router);
   private luxonDateService = inject (LuxonDateService)
   private businessSettingsService = inject(BusinessSettingsService);
+  private modalCtrl = inject(ModalController);
 
   private destroy$: Subject<void> = new Subject<void>();
   
@@ -236,8 +238,19 @@ export class SellComponent implements OnInit {
     });
   }
 
-  navigateToBusinessInfo() {
-    this.router.navigate(['/private/business-info']);
+  async navigateToBusinessInfo() {
+    const modal = await this.modalCtrl.create({
+      component: BusinessInfoComponent,
+      componentProps: {}
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data?.saved) {
+      // Reload business settings after saving
+      this.loadBusinessSettings();
+    }
   }
 
   ngOnDestroy() {

@@ -1,5 +1,12 @@
 <ion-header [translucent]="true">
-  <app-toolbar title="Business Information"></app-toolbar>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Business Information</ion-title>
+  </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
   <div class="ion-margin">

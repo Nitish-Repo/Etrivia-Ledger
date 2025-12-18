@@ -40,7 +40,7 @@ export function getBusinessSettingsMeta() {
     { key: 'email', label: 'Email', required: false },
     { key: 'invoicePrefix', label: 'Invoice Prefix', required: true },
     { key: 'financialYearStart', label: 'Financial Year Start', required: true },
-    { key: 'defaultGstRate', label: 'Default GST Rate', required: true, controlType: 'number' },
+    { key: 'defaultGstRate', label: 'Default GST Rate', required: false, controlType: 'number' },
     {
       key: 'enableCess',
       label: 'Enable CESS',
