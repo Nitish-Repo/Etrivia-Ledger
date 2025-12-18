@@ -15,7 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { InputComponent } from '@app/shared/input/input.component';
 import { SelectComponent } from '@app/shared/select/select.component';
 import { addIcons } from 'ionicons';
-import { add, saveOutline, trash, ellipsisVertical, heart, personOutline, chevronForwardOutline, peopleOutline } from 'ionicons/icons';
+import { add, saveOutline, trash, ellipsisVertical, heart, personOutline, chevronForwardOutline, peopleOutline, listCircle, chevronForward, idCard, idCardOutline, receiptOutline } from 'ionicons/icons';
 import { LuxonDateService } from '@app/core/luxon-Date.service';
 
 @Component({
@@ -23,7 +23,7 @@ import { LuxonDateService } from '@app/core/luxon-Date.service';
   templateUrl: './sell.component.html',
   styleUrls: ['./sell.component.scss'],
   standalone: true,
-  imports: [IonCard, IonAvatar, IonText, IonNote, IonBadge, IonList, IonDatetimeButton, IonItem, 
+  imports: [ IonText, IonNote, IonBadge, IonList, IonDatetimeButton, IonItem, 
     IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider,
     IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonDatetime, IonModal, IonButtons,
     CommonModule, ReactiveFormsModule, ToolbarPage, InputComponent, SelectComponent, TranslateModule
@@ -86,7 +86,7 @@ export class SellComponent implements OnInit {
   };
 
   constructor() {
-    addIcons({personOutline,chevronForwardOutline,peopleOutline,add,ellipsisVertical,trash,saveOutline,heart});
+    addIcons({listCircle,chevronForward,personOutline,chevronForwardOutline,peopleOutline,add,ellipsisVertical,trash,saveOutline,heart, idCard, idCardOutline, receiptOutline});
   }
 
   ngOnInit() {

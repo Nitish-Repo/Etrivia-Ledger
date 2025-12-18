@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <app-toolbar [title]="'page.sell.title' | translate"></app-toolbar>
 </ion-header>
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" color="light">
   <div>
     @if(saleForm){
     <div>
@@ -37,61 +37,67 @@
             </ng-template>
           </ion-modal>
 
-          <ion-card class="bill-card">
-            <!-- Bill From -->
-            <ion-item lines="none" class="bill-item">
-              <ion-avatar slot="start" class="icon-bg blue">
-                <ion-icon name="person-outline"></ion-icon>
-              </ion-avatar>
 
-              <ion-label>
-                <h2>Bill From</h2>
-                <p>Add Business</p>
+
+          <ion-list [inset]="true" mode="ios">
+            <ion-item lines="none" [button]="true" detail="true">
+              <ion-label class="ion-text-wrap">
+                <div class="product-header">
+                  <strong>INVOICE</strong>
+                </div>
+                <ion-text color="medium" class="description">18 Dec 2025</ion-text>
               </ion-label>
-
-              <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-            </ion-item>
-
-            <div class="dotted-line"></div>
-
-            <!-- Bill To -->
-            <ion-item lines="none" class="bill-item">
-              <ion-avatar slot="start" class="icon-bg orange">
-                <ion-icon name="people-outline"></ion-icon>
-              </ion-avatar>
-
-              <ion-label>
-                <h2>Bill To</h2>
-                <p>Add Clients</p>
-              </ion-label>
-
-              <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-            </ion-item>
-          </ion-card>
-
-
-
-
-
-
-          <ion-list>
-            <ion-item lines="none" class="ion-margin-top">
-              <ion-label>Customer Detail</ion-label>
-              <ion-button slot="end" fill="outline">
-                <ion-icon name="add" slot="start"></ion-icon>
-                Add Customer </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label>Mega Man X</ion-label>
             </ion-item>
           </ion-list>
 
-          <ion-list class="ion-margin-top">
-            <ion-item lines="none">
-              <ion-label>Items Details</ion-label>
-              <ion-button slot="end" fill="outline">
-                <ion-icon name="add" slot="start"></ion-icon>
-                Add Items </ion-button>
+          <ion-list [inset]="true" mode="ios">
+            <ion-item [button]="true" detail="true" lines="none">
+              <ion-icon color="danger" slot="start" name="id-card-outline" size="large" shape="round"></ion-icon>
+              <ion-label class="ion-text-wrap">
+                <div class="product-header">
+                  <strong>Bill From</strong>
+                </div>
+                <ion-text color="medium" class="description">Add Business </ion-text>
+              </ion-label>
+            </ion-item>
+            <div class="dotted-line"></div>
+            <ion-item button detail="true" lines="none">
+              <ion-icon color="danger" slot="start" name="id-card" size="large"></ion-icon>
+              <ion-label class="ion-text-wrap">
+                <div class="product-header">
+                  <strong>Bill To</strong>
+                </div>
+                <ion-text color="medium" class="description">Add Clients</ion-text>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+
+          <ion-list [inset]="true" mode="ios">
+            <ion-item [button]="true" detail="true" lines="none">
+              <ion-icon color="danger" slot="start" name="receipt-outline" size="large" shape="round"></ion-icon>
+              <ion-label class="ion-text-wrap">
+                <div class="product-header">
+                  <strong>Items(2)</strong>
+                </div>
+                <ion-text color="medium" class="description">Add Items </ion-text>
+              </ion-label>
+            </ion-item>
+             <ion-item>
+              <ion-label class="ion-text-wrap">
+                <div class="product-header">
+                  <strong>Dolo 650</strong>
+                  <div class="badges">
+                    <ion-badge color="medium">#1</ion-badge>
+                  </div>
+                </div>
+                <ion-text color="medium" class="description">2 × ₹513 </ion-text>
+                <ion-text color="medium" class="description" slot="end"> </ion-text>
+              </ion-label>
+              <ion-button slot="end" fill="outline" disabled color="medium">
+                ₹1026 </ion-button>
+              <ion-button slot="end" shape="round" size="large" fill="clear">
+                <ion-icon slot="icon-only" name="ellipsis-vertical" size="large"></ion-icon>
+              </ion-button>.
             </ion-item>
             <ion-item>
               <ion-label class="ion-text-wrap">
@@ -107,43 +113,11 @@
               <ion-button slot="end" fill="outline" disabled color="medium">
                 ₹1026 </ion-button>
               <ion-button slot="end" shape="round" size="large" fill="clear">
-                <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+                <ion-icon slot="icon-only" name="ellipsis-vertical" size="large"></ion-icon>
               </ion-button>
             </ion-item>
-            <ion-item>
-              <ion-label class="ion-text-wrap">
-                <div class="product-header">
-                  <strong>Dolo 650</strong>
-                  <div class="badges">
-                    <ion-badge color="medium">#1</ion-badge>
-                  </div>
-                </div>
-                <ion-text color="medium" class="description">2 × ₹513 </ion-text>
-                <ion-text color="medium" class="description" slot="end"> </ion-text>
-              </ion-label>
-              <ion-button slot="end" fill="outline" disabled color="medium">
-                ₹1026 </ion-button>
-              <ion-button slot="end" shape="round" size="large" fill="clear">
-                <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item>
-              <ion-label class="ion-text-wrap">
-                <div class="product-header">
-                  <strong>Dolo 650</strong>
-                  <div class="badges">
-                    <ion-badge color="medium">#1</ion-badge>
-                  </div>
-                </div>
-                <ion-text color="medium" class="description">2 × {{ 513 | currency:'INR' }} </ion-text>
-              </ion-label>
-              <ion-button slot="end" fill="outline" disabled color="medium">
-                {{ 1026 | currency:'INR' }} </ion-button>
-              <ion-button slot="end" shape="round" size="large" fill="clear">
-                <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-item lines="none">
+
+             <ion-item lines="none">
               <ion-label>Taxable Amount</ion-label>
               <ion-note slot="end">
                 {{ 1231 | currency:'INR' }}
