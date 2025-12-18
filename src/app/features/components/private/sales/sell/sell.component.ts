@@ -20,6 +20,7 @@ import { LuxonDateService } from '@app/core/luxon-Date.service';
 import { BusinessSettingsService } from '@app/features/services/business-settings';
 import { BusinessSettings } from '@app/features/models/business-settings.model';
 import { BusinessInfoComponent } from '@app/features/components/private/business-info/business-info.component';
+import { InvoiceNumberService } from '@app/features/services/invoice-number.service';
 
 @Component({
   selector: 'app-sell',
@@ -39,11 +40,13 @@ export class SellComponent implements OnInit {
   private luxonDateService = inject (LuxonDateService)
   private businessSettingsService = inject(BusinessSettingsService);
   private modalCtrl = inject(ModalController);
+  private invoiceNumberService = inject(InvoiceNumberService);
 
   private destroy$: Subject<void> = new Subject<void>();
   
   // Business Settings
   businessSettings = signal<BusinessSettings | null>(null);
+  nextInvoiceNumber = signal<string>('INV-2025-0001');
   
   // Forms
   saleForm!: FormGroup;
@@ -99,6 +102,7 @@ export class SellComponent implements OnInit {
 
   ngOnInit() {
     this.loadBusinessSettings();
+    this.loadNextInvoiceNumber();
     this.saleModelMeta = getSaleMeta();
     this.saleItemModelMeta = getSaleItemMeta();
     this.additionalChargeModelMeta = getAdditionalChargeMeta();
@@ -234,6 +238,17 @@ export class SellComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading business settings:', error);
+      }
+    });
+  }
+
+  private loadNextInvoiceNumber() {
+    this.invoiceNumberService.getNextInvoiceNumberPreview().subscribe({
+      next: (invoiceNumber) => {
+        this.nextInvoiceNumber.set(invoiceNumber);
+      },
+      error: (error) => {
+        console.error('Error loading invoice number:', error);
       }
     });
   }

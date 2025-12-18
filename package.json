@@ -37,6 +37,7 @@
     "@capacitor/haptics": "7.0.2",
     "@capacitor/ios": "^7.4.4",
     "@capacitor/keyboard": "7.0.3",
+    "@capacitor/preferences": "^7.0.3",
     "@capacitor/status-bar": "7.0.3",
     "@capacitor/toast": "^7.0.2",
     "@ionic/angular": "^8.0.0",

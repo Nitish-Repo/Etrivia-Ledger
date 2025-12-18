@@ -429,7 +429,21 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
         ('invoicePrefix', 'INV'),
         ('financialYearStart', '04-01'),
         ('defaultGstRate', '18'),
-        ('enableCess', '0');
+        ('enableCess', '0'),
+        ('devicePrefix', 'D1');
+
+      -- ============================================
+      -- INVOICE COUNTER TABLE
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS invoice_counter (
+        id INTEGER PRIMARY KEY CHECK (id = 1),
+        lastNumber INTEGER NOT NULL DEFAULT 0,
+        financialYear TEXT NOT NULL DEFAULT '2025-26',
+        updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
+      );
+
+      INSERT OR IGNORE INTO invoice_counter (id, lastNumber, financialYear) 
+      VALUES (1, 0, '2025-26');
     `
   }
 ];
