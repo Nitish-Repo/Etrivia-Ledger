@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Platform } from '@ionic/angular/standalone';
+import { Platform, ModalController, AlertController, PopoverController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { App } from '@capacitor/app';
 import { StatusBar, Style } from '@capacitor/status-bar';
@@ -11,6 +11,11 @@ import { Capacitor } from '@capacitor/core';
 export class NativeService {
   private platform = inject(Platform);
   private router = inject(Router);
+  private modalCtrl = inject(ModalController);
+  private alertCtrl = inject(AlertController);
+  private popoverCtrl = inject(PopoverController);
+
+  private readonly EXIT_ROUTES = ['/home', '/dashboard', '/settings'];
 
   /**
    * Initialize all native features
@@ -18,7 +23,7 @@ export class NativeService {
   async init() {
     await this.platform.ready();
     
-    this.setupBackButton();
+    this.setBackButton();
     // this.setupStatusBar();
     // Add more native feature initializations here
     // this.setupPushNotifications();
@@ -26,28 +31,61 @@ export class NativeService {
   }
 
   /**
-   * Setup Android back button handler
+   * Configure hardware back button behavior
+   * Priority: Dismiss overlays > Handle navigation > Exit app
    */
-  private setupBackButton() {
+  private setBackButton() {
     if (!Capacitor.isNativePlatform()) return;
 
-    App.addListener('backButton', ({ canGoBack }) => {
-      const currentUrl = this.router.url;
-      
-      // Define routes where back button should exit the app
-      const exitRoutes = ['/home', '/dashboard', '/sell'];
-      
-      // Check if current route is an exit route
-      const isExitRoute = exitRoutes.some(route => currentUrl.startsWith(route));
-      
-      if (!canGoBack || isExitRoute) {
-        // Exit the app
-        App.exitApp();
-      } else {
-        // Navigate back
-        window.history.back();
+    App.addListener('backButton', async ({ canGoBack }) => {
+      // Check and dismiss any open overlays
+      if (await this.dismissOpenOverlay()) {
+        return;
       }
+
+      // Handle page navigation or app exit
+      this.handleNavigation(canGoBack);
     });
+  }
+
+  /**
+   * Dismiss any open overlay (modal, alert, popover)
+   * @returns true if an overlay was dismissed
+   */
+  private async dismissOpenOverlay(): Promise<boolean> {
+    const modal = await this.modalCtrl.getTop();
+    if (modal) {
+      await modal.dismiss();
+      return true;
+    }
+
+    const alert = await this.alertCtrl.getTop();
+    if (alert) {
+      await alert.dismiss();
+      return true;
+    }
+
+    const popover = await this.popoverCtrl.getTop();
+    if (popover) {
+      await popover.dismiss();
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Handle page navigation or app exit
+   */
+  private handleNavigation(canGoBack: boolean) {
+    const currentUrl = this.router.url;
+    const isExitRoute = this.EXIT_ROUTES.some(route => currentUrl.startsWith(route));
+    
+    if (!canGoBack || isExitRoute) {
+      App.exitApp();
+    } else {
+      window.history.back();
+    }
   }
 
   /**
