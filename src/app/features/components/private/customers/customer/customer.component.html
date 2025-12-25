@@ -1,11 +1,11 @@
 <!-- Header for Page Mode -->
-@if (!openedAsModal()) {
+@if (!openedAsModal) {
 <ion-header [translucent]="true">
   <app-toolbar [title]="'page.customers.title_singular' | translate"></app-toolbar>
 </ion-header>
 }
 <!-- Header for Modal Mode -->
-@if (openedAsModal()) {
+@if (openedAsModal) {
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
@@ -147,7 +147,7 @@
 <ion-footer class="ion-no-border" [translucent]="true" mode="ios">
   @if(!isCustomerSave()){
   <ion-tab-bar>
-    @if(!openedAsModal()){
+    @if(!openedAsModal){
     <ion-tab-button (click)="onSubmit(true)" [disabled]="formMeta.submitProcessing">
       <ion-icon name="add-circle-outline"></ion-icon>
       <ion-label>{{ 'button.add_more' | translate }}</ion-label>
