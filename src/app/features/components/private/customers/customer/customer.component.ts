@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from '@app/core/app.service';
@@ -30,8 +30,7 @@ export class CustomerComponent implements OnInit {
   private service = inject(CustomerService);
   private modalCtrl = inject(ModalController);
 
-  // Input to explicitly set modal mode
-  @Input() openedAsModal = false;
+  openedAsModal = input<boolean>(false);
 
   isCustomerSave = signal<boolean>(false);
   segment = signal<string>('first');
@@ -112,7 +111,7 @@ export class CustomerComponent implements OnInit {
               this.form.markAsUntouched();
               this.form.updateValueAndValidity();
             } else {
-              if (this.openedAsModal) {
+              if (this.openedAsModal()) {
                 this.modalCtrl.dismiss(x)
               } else {
                 this.form.reset();

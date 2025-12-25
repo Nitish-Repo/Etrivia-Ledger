@@ -1,5 +1,5 @@
 <!-- Header for Page Mode -->
-@if (!openedAsModal) {
+@if (!openedAsModal()) {
 <ion-header [translucent]="true">
   <app-toolbar [title]="'page.customers.title' | translate"></app-toolbar>
   <ion-toolbar color="primary" mode="ios">
@@ -10,7 +10,7 @@
 }
 
 <!-- Header for Modal Mode -->
-@if (openedAsModal) {
+@if (openedAsModal()) {
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
@@ -56,7 +56,7 @@
           }}: ₹{{result.openingBalance}}
         </ion-note>
       </ion-label>
-      @if(!openedAsModal){
+      @if(!openedAsModal()){
       <ion-button slot="end" shape="round" size="large" fill="clear" (click)="presentActionSheet($event, result)">
         <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
       </ion-button>

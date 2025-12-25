@@ -60,12 +60,13 @@
                   <strong>Bill From</strong>
                 </div>
                 @if (businessSettings()) {
-                  <ion-text color="dark" class="description">{{ businessSettings()?.businessName }}</ion-text>
-                  @if (businessSettings()?.gstin) {
-                    <ion-text color="medium" class="description" style="font-size: 0.85em;">{{ businessSettings()?.gstin }}</ion-text>
-                  }
+                <ion-text color="dark" class="description">{{ businessSettings()?.businessName }}</ion-text>
+                @if (businessSettings()?.gstin) {
+                <ion-text color="medium" class="description" style="font-size: 0.85em;">{{ businessSettings()?.gstin
+                  }}</ion-text>
+                }
                 } @else {
-                  <ion-text color="medium" class="description">Add Business</ion-text>
+                <ion-text color="medium" class="description">Add Business</ion-text>
                 }
               </ion-label>
             </ion-item>
@@ -76,7 +77,11 @@
                 <div class="product-header">
                   <strong>Bill To</strong>
                 </div>
+                @if (selectedCustomer()) {
+                <ion-text color="dark" class="description">{{ selectedCustomer()?.customerName }}</ion-text>
+                } @else {
                 <ion-text color="medium" class="description">Add Clients</ion-text>
+                }
               </ion-label>
             </ion-item>
           </ion-list>
@@ -91,7 +96,7 @@
                 <ion-text color="medium" class="description">Add Items </ion-text>
               </ion-label>
             </ion-item>
-             <ion-item>
+            <ion-item>
               <ion-label class="ion-text-wrap">
                 <div class="product-header">
                   <strong>Dolo 650</strong>
@@ -126,7 +131,7 @@
               </ion-button>
             </ion-item>
 
-             <ion-item lines="none">
+            <ion-item lines="none">
               <ion-label>Taxable Amount</ion-label>
               <ion-note slot="end">
                 {{ 1231 | currency:'INR' }}

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AppService } from '@app/core/app.service';
 import { Customer } from '@app/features/models';
@@ -32,8 +32,7 @@ export class CustomersComponent implements OnInit {
   private translate = inject(TranslateService);
   private modalCtrl = inject(ModalController);
 
-  // Input to explicitly set modal mode
-  @Input() openedAsModal = false;
+  openedAsModal = input<boolean>(false);
 
   customers = signal<Customer[]>([]);
   searchQuery = signal<string>('');
@@ -120,7 +119,7 @@ export class CustomersComponent implements OnInit {
   // }
 
   updateCustomer(customer: Customer) {
-    if (this.openedAsModal) {
+    if (this.openedAsModal()) {
       this.modalCtrl.dismiss(customer);
     } else {
       this.router.navigate([`./${customer.customerId}`], { relativeTo: this.route, });
@@ -132,7 +131,7 @@ export class CustomersComponent implements OnInit {
   }
 
   addNewCustomer(){
-    if (this.openedAsModal) {
+    if (this.openedAsModal()) {
       this.navigateToAddCustomer();
     } else {
       this.router.navigate(['./new'], { relativeTo: this.route });

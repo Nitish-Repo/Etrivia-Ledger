@@ -10,7 +10,7 @@ import { ModelMeta } from '@app/shared-services';
 import { AppService } from '@app/core/app.service';
 import { FormHelper } from '@app/shared-services/helpers/form.helper';
 import { TranslateModule } from '@ngx-translate/core';
-import { getAdditionalChargeMeta, getSaleItemMeta, getSaleMeta, Sale, SaleItem, AdditionalCharge } from '@app/features/models';
+import { getAdditionalChargeMeta, getSaleItemMeta, getSaleMeta, Sale, SaleItem, AdditionalCharge, Customer } from '@app/features/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InputComponent } from '@app/shared/input/input.component';
 import { SelectComponent } from '@app/shared/select/select.component';
@@ -48,6 +48,7 @@ export class SellComponent implements OnInit {
   // Business Settings
   businessSettings = signal<BusinessSettings | null>(null);
   nextInvoiceNumber = signal<string>('INV-2025-0001');
+  selectedCustomer = signal<Customer | null>(null);
   
   // Forms
   saleForm!: FormGroup;
@@ -281,7 +282,9 @@ export class SellComponent implements OnInit {
 
     const { data } = await modal.onWillDismiss();
     if (data) {
-      console.log("Selected customer", data)
+      this.selectedCustomer.set(data);
+      this.saleForm.get('customerId')?.setValue(data.customerId);
+      this.saleForm.get('customerId')?.markAsTouched();
     }
   }
 
