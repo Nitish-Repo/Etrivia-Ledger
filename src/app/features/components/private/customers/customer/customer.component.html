@@ -1,6 +1,22 @@
+<!-- Header for Page Mode -->
+@if (!openedAsModal) {
 <ion-header [translucent]="true">
   <app-toolbar [title]="'page.customers.title_singular' | translate"></app-toolbar>
 </ion-header>
+}
+<!-- Header for Modal Mode -->
+@if (openedAsModal) {
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'page.customers.title_singular' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+}
 <ion-content [fullscreen]="true">
   <div class="ion-margin">
     @if(form){
@@ -14,66 +30,69 @@
             <ion-label>{{ 'common.option_detail' | translate }}</ion-label>
           </ion-segment-button>
         </ion-segment>
-        
+
         @if (segment() === 'first') {
         <div>
-            <div class="ion-margin-bottom ion-margin-top">
-              <app-input [form]="form" name="customerName" label="label.customer_name" [placeholder]="'placeholder.enter_customer_name'"
-                [errorText]="'error.required'" labelPlacement="floating" fill="outline" [maxlength]="50" [counter]="true"></app-input>
-            </div>
+          <div class="ion-margin-bottom ion-margin-top">
+            <app-input [form]="form" name="customerName" label="label.customer_name"
+              [placeholder]="'placeholder.enter_customer_name'" [errorText]="'error.required'" labelPlacement="floating"
+              fill="outline" [maxlength]="50" [counter]="true"></app-input>
+          </div>
 
-            <!-- <div class="ion-margin-bottom">
+          <!-- <div class="ion-margin-bottom">
               <ion-textarea formControlName="description" label="Product Description" labelPlacement="floating"
                 fill="outline" placeholder="Enter description" autoGrow="true" [counter]="true"
                 maxlength="200"></ion-textarea>
             </div> -->
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="gstin" label="label.gstin" [placeholder]="'placeholder.enter_gstin'"
-                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="gstin" label="label.gstin" [placeholder]="'placeholder.enter_gstin'"
+              [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
+          </div>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="phone" label="label.phone" [placeholder]="'placeholder.enter_phone'"
-                [errorText]="'error.required'" labelPlacement="floating" type="number" fill="outline"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="phone" label="label.phone" [placeholder]="'placeholder.enter_phone'"
+              [errorText]="'error.required'" labelPlacement="floating" type="number" fill="outline"></app-input>
+          </div>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="pan" label="label.pan" [placeholder]="'placeholder.enter_pan'"
-                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="pan" label="label.pan" [placeholder]="'placeholder.enter_pan'"
+              [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
+          </div>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="billingAddress" label="label.billing_address" [placeholder]="'placeholder.enter_billing_address'"
-                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="billingAddress" label="label.billing_address"
+              [placeholder]="'placeholder.enter_billing_address'" [errorText]="'error.required'"
+              labelPlacement="floating" fill="outline"></app-input>
+          </div>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="shippingAddress" label="label.shipping_address" [placeholder]="'placeholder.enter_shipping_address'"
-                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="shippingAddress" label="label.shipping_address"
+              [placeholder]="'placeholder.enter_shipping_address'" [errorText]="'error.required'"
+              labelPlacement="floating" fill="outline"></app-input>
+          </div>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="city" label="label.city" [placeholder]="'placeholder.enter_city'"
-                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="city" label="label.city" [placeholder]="'placeholder.enter_city'"
+              [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
+          </div>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="state" label="label.state" [placeholder]="'placeholder.enter_state'"
-                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="state" label="label.state" [placeholder]="'placeholder.enter_state'"
+              [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
+          </div>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="pincode" label="label.pincode" [placeholder]="'placeholder.enter_pincode'"
-                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="pincode" label="label.pincode" [placeholder]="'placeholder.enter_pincode'"
+              [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
+          </div>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="country" label="label.country" [placeholder]="'placeholder.enter_country'"
-                [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="country" label="label.country" [placeholder]="'placeholder.enter_country'"
+              [errorText]="'error.required'" labelPlacement="floating" fill="outline"></app-input>
+          </div>
 
-            <!-- <div class="ion-display-flex ion-margin-bottom">
+          <!-- <div class="ion-display-flex ion-margin-bottom">
               <app-input class="ion-flex-1" [form]="form" name="discountValue" placeholder="Enter Discount"
                 labelPlacement="floating" type="number" errorText="Please enter Discount" fill="outline"></app-input>
               <app-select class="ion-flex-1 ion-margin-start" [meta]="discountTypeMeta"
@@ -84,37 +103,40 @@
 
         @if (segment() === 'second') {
         <div>
-            <ion-item-divider>
-              <ion-label>{{ 'page.customers.credit_management' | translate }}</ion-label>
-            </ion-item-divider>
-            <div class="ion-margin-bottom ion-margin-top">
-              <app-input [form]="form" name="creditLimit" label="label.credit_limit" [placeholder]="'placeholder.enter_value'"
-                [errorText]="'error.required'" labelPlacement="floating" type="number" fill="outline"></app-input>
-            </div>
+          <ion-item-divider>
+            <ion-label>{{ 'page.customers.credit_management' | translate }}</ion-label>
+          </ion-item-divider>
+          <div class="ion-margin-bottom ion-margin-top">
+            <app-input [form]="form" name="creditLimit" label="label.credit_limit"
+              [placeholder]="'placeholder.enter_value'" [errorText]="'error.required'" labelPlacement="floating"
+              type="number" fill="outline"></app-input>
+          </div>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="openingBalance" label="label.opening_balance" [placeholder]="'placeholder.enter_value'"
-                [errorText]="'error.required'" labelPlacement="floating" type="number" fill="outline"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="openingBalance" label="label.opening_balance"
+              [placeholder]="'placeholder.enter_value'" [errorText]="'error.required'" labelPlacement="floating"
+              type="number" fill="outline"></app-input>
+          </div>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="currentBalance" label="label.current_balance" [placeholder]="'placeholder.enter_value'"
-                [errorText]="'error.required'" labelPlacement="floating" type="number" fill="outline"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="currentBalance" label="label.current_balance"
+              [placeholder]="'placeholder.enter_value'" [errorText]="'error.required'" labelPlacement="floating"
+              type="number" fill="outline"></app-input>
+          </div>
 
-            <ion-item-divider>
-              <ion-label>{{ 'page.customers.classification' | translate }}</ion-label>
-            </ion-item-divider>
+          <ion-item-divider>
+            <ion-label>{{ 'page.customers.classification' | translate }}</ion-label>
+          </ion-item-divider>
 
-            <div class="ion-display-flex ion-margin-bottom ion-margin-top">
-              <app-select class="ion-flex-1 ion-margin-start" [meta]="customerTypeMeta"
-                (onSelectionChange)="handleDiscountTypeChange($event)" />
-              <app-select class="ion-flex-1 ion-margin-start" [meta]="priceListMeta"
-                (onSelectionChange)="handleDiscountTypeChange($event)" />
-            </div>
+          <div class="ion-display-flex ion-margin-bottom ion-margin-top">
+            <app-select class="ion-flex-1 ion-margin-start" [meta]="customerTypeMeta"
+              (onSelectionChange)="handleDiscountTypeChange($event)" />
+            <app-select class="ion-flex-1 ion-margin-start" [meta]="priceListMeta"
+              (onSelectionChange)="handleDiscountTypeChange($event)" />
+          </div>
         </div>
         }
-        
+
         <button type="submit" style="display: none;" [disabled]="formMeta.submitProcessing"></button>
       </form>
     </div>
@@ -125,10 +147,12 @@
 <ion-footer class="ion-no-border" [translucent]="true" mode="ios">
   @if(!isCustomerSave()){
   <ion-tab-bar>
+    @if(!openedAsModal){
     <ion-tab-button (click)="onSubmit(true)" [disabled]="formMeta.submitProcessing">
       <ion-icon name="add-circle-outline"></ion-icon>
       <ion-label>{{ 'button.add_more' | translate }}</ion-label>
     </ion-tab-button>
+    }
     <ion-tab-button (click)="onSubmit(false)" [disabled]="formMeta.submitProcessing">
       <ion-icon name="save-outline"></ion-icon>
       <ion-label>{{ 'button.save' | translate }}</ion-label>

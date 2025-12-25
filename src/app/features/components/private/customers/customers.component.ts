@@ -132,7 +132,11 @@ export class CustomersComponent implements OnInit {
   }
 
   addNewCustomer(){
-    this.router.navigate(['./new'], { relativeTo: this.route });
+    if (this.openedAsModal) {
+      this.navigateToAddCustomer();
+    } else {
+      this.router.navigate(['./new'], { relativeTo: this.route });
+    }
   }
 
   async navigateToAddCustomer() {
@@ -147,8 +151,7 @@ export class CustomersComponent implements OnInit {
 
     const { data } = await modal.onWillDismiss();
     if (data) {
-      console.log("Selected customer", data);
-      // this.loadCustomers(true);
+      this.loadCustomers(true);
     }
   }
 

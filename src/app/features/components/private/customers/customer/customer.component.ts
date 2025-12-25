@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from '@app/core/app.service';
@@ -8,8 +8,8 @@ import { ModelMeta } from '@app/shared-services';
 import { FormHelper } from '@app/shared-services/helpers/form.helper';
 import { FormMeta } from '@app/shared-services/models/form-meta';
 import { addIcons } from 'ionicons';
-import { addCircleOutline, pricetagOutline, saveOutline } from 'ionicons/icons';
-import { IonHeader, IonContent, IonButton, IonSpinner, IonTextarea, IonIcon, IonToggle, IonItem, IonList, IonSegment, IonSegmentButton, IonLabel, IonSegmentView, IonSegmentContent, IonFooter, IonToolbar, IonTabBar, IonTabButton, IonItemDivider } from "@ionic/angular/standalone";
+import { addCircleOutline, pricetagOutline, saveOutline, close } from 'ionicons/icons';
+import { ModalController, IonHeader, IonContent, IonButton, IonSpinner, IonTextarea, IonIcon, IonToggle, IonItem, IonList, IonSegment, IonSegmentButton, IonLabel, IonSegmentView, IonSegmentContent, IonFooter, IonToolbar, IonTabBar, IonTabButton, IonItemDivider, IonSearchbar, IonButtons, IonTitle } from "@ionic/angular/standalone";
 import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
 import { CommonModule } from '@angular/common';
 import { InputComponent } from '@app/shared/input/input.component';
@@ -21,18 +21,21 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './customer.component.html',
   styleUrls: ['./customer.component.scss'],
   standalone: true,
-  imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonIcon, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonSegment, IonTabBar, IonTabButton, TranslateModule]
+  imports: [IonTitle, IonButtons, IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonIcon, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonSegment, IonTabBar, IonTabButton, TranslateModule, IonButton, IonToolbar]
 })
 export class CustomerComponent implements OnInit {
   private app = inject(AppService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private service = inject(CustomerService);
+  private modalCtrl = inject(ModalController);
 
+  // Input to explicitly set modal mode
+  @Input() openedAsModal = false;
 
   isCustomerSave = signal<boolean>(false);
   segment = signal<string>('first');
-      
+
   form!: FormGroup;
   isEdit = signal<boolean>(false);
   formMeta = new FormMeta();
@@ -43,14 +46,12 @@ export class CustomerComponent implements OnInit {
   // Default values for new customer
   private readonly defaultCustomer: Partial<Customer> = {
     isActive: true,
-    
+
   };
 
 
   constructor() {
-    addIcons({
-      pricetagOutline, addCircleOutline, saveOutline
-    });
+    addIcons({ close, addCircleOutline, saveOutline, pricetagOutline });
   }
 
   ngOnInit() {
@@ -111,12 +112,16 @@ export class CustomerComponent implements OnInit {
               this.form.markAsUntouched();
               this.form.updateValueAndValidity();
             } else {
-              this.form.reset();
-              this.isCustomerSave.set(false);
-              this.formMeta.submitProcessing = false;
-              this.router.navigate(['../'], {
-                relativeTo: this.route,
-              });
+              if (this.openedAsModal) {
+                this.modalCtrl.dismiss(x)
+              } else {
+                this.form.reset();
+                this.isCustomerSave.set(false);
+                this.formMeta.submitProcessing = false;
+                this.router.navigate(['../'], {
+                  relativeTo: this.route,
+                });
+              }
             }
           });
         }
@@ -131,6 +136,10 @@ export class CustomerComponent implements OnInit {
 
   handleDiscountTypeChange(event: any) {
     console.log('Discount Type changed:', event);
+  }
+
+  closeModal() {
+    this.modalCtrl.dismiss();
   }
 
 }
