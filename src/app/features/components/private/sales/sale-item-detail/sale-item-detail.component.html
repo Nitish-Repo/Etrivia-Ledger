@@ -1,0 +1,79 @@
+<ion-header [translucent]="true">
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-button (click)="closeModal()">
+                <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>{{ 'common.add_item_details' | translate }}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <div class="ion-padding">
+        @if(form) {
+        <form id="itemDetailForm" [formGroup]="form" (submit)="onSubmit()">
+
+            <div class="ion-margin-bottom">
+                <app-input [form]="form" name="productName" label="label.product_name"
+                    [placeholder]="'placeholder.enter_product_name'" [errorText]="'error.required'"
+                    labelPlacement="floating" fill="outline"></app-input>
+            </div>
+
+            <div class="ion-margin-bottom">
+                <app-input [form]="form" name="hsnCode" label="label.hsn_code" [placeholder]="'placeholder.enter_hsn'"
+                    labelPlacement="floating" fill="outline"></app-input>
+            </div>
+
+            <div class="ion-margin-bottom">
+                <app-select [meta]="unitMeta" />
+            </div>
+
+            <div class="ion-display-flex ion-margin-bottom">
+                <app-input class="ion-flex-1" [form]="form" name="quantity" label="label.quantity"
+                    [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
+                    [errorText]="'error.required'" fill="outline"></app-input>
+                <!-- <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="unit" label="label.unit"
+                    [placeholder]="'placeholder.enter_unit'" labelPlacement="floating" fill="outline"></app-input> -->
+            </div>
+
+            <div class="ion-display-flex ion-margin-bottom">
+                <app-input class="ion-flex-1" [form]="form" name="pricePerUnit" label="label.price_per_unit"
+                    [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
+                    [errorText]="'error.required'" fill="outline"></app-input>
+                <app-select class="ion-flex-1 ion-margin-start" [meta]="taxTypeMeta" />
+            </div>
+
+            <div class="ion-display-flex ion-margin-bottom">
+                <app-select class="ion-flex-1" [meta]="discountTypeMeta" />
+                <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="discountValue"
+                    label="label.discount_value" [placeholder]="'placeholder.enter_value'" labelPlacement="floating"
+                    type="number" fill="outline"></app-input>
+            </div>
+
+            <div class="ion-display-flex ion-margin-bottom">
+                <app-input class="ion-flex-1" [form]="form" name="gstRate" label="label.gst_rate"
+                    [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
+                    [errorText]="'error.required'" fill="outline"></app-input>
+                <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="cessRate" label="label.cess_rate"
+                    [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
+                    fill="outline"></app-input>
+            </div>
+
+        </form>
+        }
+    </div>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-button expand="block" type="submit" form="itemDetailForm" [disabled]="isSubmitting()" (click)="onSubmit()">
+            @if (isSubmitting()) {
+            <ion-spinner name="crescent"></ion-spinner>
+            } @else {
+            <ion-icon name="add" slot="start"></ion-icon>
+            {{ 'common.add_to_sale' | translate }}
+            }
+        </ion-button>
+    </ion-toolbar>
+</ion-footer>

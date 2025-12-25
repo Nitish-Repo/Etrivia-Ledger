@@ -23,6 +23,7 @@ import { BusinessInfoComponent } from '@app/features/components/private/business
 import { InvoiceNumberService } from '@app/features/services/invoice-number.service';
 import { CustomersComponent } from '../../customers/customers.component';
 import { ProductsComponent } from '../../products/products.component';
+import { SaleItemDetailComponent } from '../sale-item-detail/sale-item-detail.component';
 
 @Component({
   selector: 'app-sell',
@@ -288,39 +289,42 @@ export class SellComponent implements OnInit {
   }
 
   async navigateToAddProduct() {
-    const modal = await this.modalCtrl.create({
+    // Step 1: Open products list modal to select product
+    const productsModal = await this.modalCtrl.create({
       component: ProductsComponent,
       componentProps: {
         openedAsModal: true
       }
     });
 
-    await modal.present();
+    await productsModal.present();
+    const { data: selectedProduct } = await productsModal.onWillDismiss();
+    
+    if (selectedProduct) {
+      console.log("Selected Product", selectedProduct);
+      
+      // Step 2: Open item detail modal to edit quantity, price, etc.
+      const itemDetailModal = await this.modalCtrl.create({
+        component: SaleItemDetailComponent,
+        componentProps: {
+          productData: selectedProduct
+        }
+      });
 
-    const { data } = await modal.onWillDismiss();
-    if (data) {
-      console.log("Selected Product", data);
-      // Add product to sale items
-      this.addSaleItemFromProduct(data);
+      await itemDetailModal.present();
+      const { data: itemData } = await itemDetailModal.onWillDismiss();
+      
+      if (itemData) {
+        console.log("Item Data to Add", itemData);
+        // Add the customized item to sale
+        this.addSaleItemFromData(itemData);
+      }
     }
   }
 
-  private addSaleItemFromProduct(product: any) {
+  private addSaleItemFromData(itemData: SaleItem) {
     const currentForms = this.saleItemFormsArray();
-    const newItemData = {
-      productId: product.productId,
-      productName: product.productName,
-      hsnCode: product.hsnCode,
-      quantity: 1,
-      unit: product.unit,
-      pricePerUnit: product.sellingPrice,
-      taxType: product.taxType,
-      gstRate: product.gstRate,
-      cessRate: product.cessRate || 0,
-      discountType: 'PERCENTAGE',
-      discountValue: 0
-    };
-    const newForm = this.app.meta.toFormGroup(newItemData, this.saleItemModelMeta);
+    const newForm = this.app.meta.toFormGroup(itemData, this.saleItemModelMeta);
     this.saleItemFormsArray.set([...currentForms, newForm]);
   }
 

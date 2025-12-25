@@ -4,6 +4,7 @@
 
 import { ModelMeta } from '@app/shared-services';
 import { TaxType, DiscountType } from './product.model';
+import { UnitOfMeasure, UOM_LABELS } from './unit-of-measure.model';
 
 /**
  * Payment Status Enum
@@ -45,7 +46,7 @@ export interface AdditionalCharge {
   taxType: TaxType;            // Inclusive or Exclusive
   gstRate: number;             // GST percentage (0, 5, 12, 18, 28)
   cessRate: number;            // CESS percentage
-  
+
   // Calculated values
   taxableAmount: number;       // Amount after tax adjustment
   cgst: number;
@@ -61,46 +62,46 @@ export interface Sale {
   saleId?: string;
   invoiceNumber: string;
   invoiceDate: string;
-  
+
   // Customer Info (denormalized for historical snapshot - GST compliance requirement)
   customerId: string;
   customerName: string;        // Snapshot: name at time of sale
   customerGstin?: string;      // Snapshot: GSTIN at time of sale
-  
+
   // Amounts
   subtotal: number;
-  
+
   // Invoice-Level Discount (additional discount applied on entire invoice after item discounts)
   invoiceDiscountType: DiscountType;
   invoiceDiscountValue: number;    // Input value: % or ₹ amount
   TotalDiscountAmount: number;   // Calculated discount in ₹
-  
+
   // Tax Breakdown
   taxableAmount: number;
   cgst: number;
   sgst: number;
   igst: number;
   cess: number;
-  
+
   // Final
   totalAmount: number;
   roundOff: number;
   grandTotal: number;
-  
+
   // Payment
   paidAmount: number;
   dueAmount: number;
   paymentStatus: PaymentStatus;
-  
+
   // Meta
   notes?: string;
   saleType: SaleType;
   status: SaleStatus;
-  
+
   createdBy?: string;
   createdAt?: string | Date;
   updatedAt?: string | Date;
-  
+
   // Items (not stored in sale table, separate table)
   items?: SaleItem[];
 }
@@ -108,23 +109,23 @@ export interface Sale {
 export interface SaleItem {
   saleItemId?: string;
   saleId: string;
-  
+
   productId: string;
   productName: string;
   hsnCode?: string;
-  
+
   quantity: number;
-  unit: string;
-  
+  unit?: string;
+
   // Pricing
   pricePerUnit: number;
   taxType: TaxType;
-  
+
   // Discount at item level
   discountType: DiscountType;
   discountValue: number;
   discountAmount: number;
-  
+
   // Tax (Rates are percentages, amounts are in ₹)
   taxableAmount: number;
   gstRate: number;           // GST percentage (e.g., 18%)
@@ -133,9 +134,9 @@ export interface SaleItem {
   sgst: number;              // Calculated SGST amount in ₹ (for intra-state)
   igst: number;              // Calculated IGST amount in ₹ (for inter-state)
   cess: number;              // Calculated CESS amount in ₹
-  
+
   totalAmount: number;
-  
+
   createdAt?: string | Date;
 }
 
@@ -147,15 +148,15 @@ export function getSaleMeta() {
     { key: 'saleId', label: 'Sale ID', hide: true },
     { key: 'invoiceNumber', label: 'Invoice Number', required: true },
     { key: 'invoiceDate', label: 'Invoice Date', required: true, controlType: 'date' },
-    
+
     // Customer Details
     { key: 'customerId', label: 'Customer ID', required: true },
     { key: 'customerName', label: 'Customer Name', required: true },
     { key: 'customerGstin', label: 'Customer GSTIN', required: false },
-    
+
     // Amounts
     { key: 'subtotal', label: 'Subtotal', required: true, controlType: 'number' },
-    
+
     // Invoice-Level Discount
     {
       key: 'invoiceDiscountType',
@@ -169,19 +170,19 @@ export function getSaleMeta() {
     },
     { key: 'invoiceDiscountValue', label: 'Discount Value', required: false, controlType: 'number' },
     { key: 'TotalDiscountAmount', label: 'Total Discount Amount (₹)', required: false, controlType: 'number' },
-    
+
     // Tax Breakdown
     { key: 'taxableAmount', label: 'Taxable Amount', required: true, controlType: 'number' },
     { key: 'cgst', label: 'CGST', required: false, controlType: 'number' },
     { key: 'sgst', label: 'SGST', required: false, controlType: 'number' },
     { key: 'igst', label: 'IGST', required: false, controlType: 'number' },
     { key: 'cess', label: 'CESS', required: false, controlType: 'number' },
-    
+
     // Final
     { key: 'totalAmount', label: 'Total Amount', required: true, controlType: 'number' },
     { key: 'roundOff', label: 'Round Off', required: false, controlType: 'number' },
     { key: 'grandTotal', label: 'Grand Total', required: true, controlType: 'number' },
-    
+
     // Payment
     { key: 'paidAmount', label: 'Paid Amount', required: true, controlType: 'number' },
     { key: 'dueAmount', label: 'Due Amount', required: false, controlType: 'number' },
@@ -195,7 +196,7 @@ export function getSaleMeta() {
         { key: PaymentStatus.UNPAID, value: 'Unpaid' },
       ],
     },
-    
+
     // Meta
     { key: 'notes', label: 'Notes', required: false },
     {
@@ -259,16 +260,24 @@ export function getSaleItemMeta() {
   return [
     { key: 'saleItemId', label: 'Sale Item ID', hide: true },
     { key: 'saleId', label: 'Sale ID', hide: true },
-    
+
     // Product Details
     { key: 'productId', label: 'Product ID', required: true },
     { key: 'productName', label: 'Product Name', required: true },
     { key: 'hsnCode', label: 'HSN Code', required: false },
-    
+
     // Quantity
     { key: 'quantity', label: 'Quantity', required: true, controlType: 'number' },
-    { key: 'unit', label: 'Unit', required: true },
-    
+    {
+      key: 'unit',
+      label: 'Unit',
+      controlType: 'select',
+      options: Object.entries(UOM_LABELS).map(([key, value]) => ({
+        key: key as UnitOfMeasure,
+        value
+      })),
+    },
+
     // Pricing
     { key: 'pricePerUnit', label: 'Price Per Unit', required: true, controlType: 'number' },
     {
@@ -280,7 +289,7 @@ export function getSaleItemMeta() {
         { key: TaxType.EXCLUSIVE, value: 'Tax Exclusive' },
       ],
     },
-    
+
     // Discount
     {
       key: 'discountType',
@@ -294,7 +303,7 @@ export function getSaleItemMeta() {
     },
     { key: 'discountValue', label: 'Discount Value', required: false, controlType: 'number' },
     { key: 'discountAmount', label: 'Discount Amount', required: false, controlType: 'number' },
-    
+
     // Tax
     { key: 'taxableAmount', label: 'Taxable Amount', required: true, controlType: 'number' },
     { key: 'gstRate', label: 'GST Rate %', required: true, controlType: 'number' },
@@ -303,7 +312,7 @@ export function getSaleItemMeta() {
     { key: 'sgst', label: 'SGST Amount', required: false, controlType: 'number' },
     { key: 'igst', label: 'IGST Amount', required: false, controlType: 'number' },
     { key: 'cess', label: 'CESS Amount', required: false, controlType: 'number' },
-    
+
     // Total
     { key: 'totalAmount', label: 'Total Amount', required: true, controlType: 'number' },
   ] as Array<ModelMeta>;
@@ -314,7 +323,7 @@ export function getSaleItemMeta() {
  */
 export function calculateSaleTotals(items: SaleItem[], invoiceDiscountType: DiscountType = DiscountType.NONE, invoiceDiscountValue: number = 0): Partial<Sale> {
   const subtotal = items.reduce((sum, item) => sum + (item.pricePerUnit * item.quantity), 0);
-  
+
   // Calculate invoice-level discount
   let invoiceDiscountAmount = 0;
   if (invoiceDiscountType === DiscountType.PERCENTAGE) {
@@ -322,17 +331,17 @@ export function calculateSaleTotals(items: SaleItem[], invoiceDiscountType: Disc
   } else if (invoiceDiscountType === DiscountType.AMOUNT) {
     invoiceDiscountAmount = invoiceDiscountValue;
   }
-  
+
   const taxableAmount = items.reduce((sum, item) => sum + item.taxableAmount, 0);
   const cgst = items.reduce((sum, item) => sum + item.cgst, 0);
   const sgst = items.reduce((sum, item) => sum + item.sgst, 0);
   const igst = items.reduce((sum, item) => sum + item.igst, 0);
   const cess = items.reduce((sum, item) => sum + item.cess, 0);
-  
+
   const totalAmount = taxableAmount + cgst + sgst + igst + cess;
   const roundOff = Math.round(totalAmount) - totalAmount;
   const grandTotal = Math.round(totalAmount);
-  
+
   return {
     subtotal,
     invoiceDiscountType,
