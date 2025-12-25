@@ -1,10 +1,31 @@
-
+<!-- Header for Page Mode -->
+@if (!openedAsModal) {
 <ion-header [translucent]="true">
   <app-toolbar [title]="'page.customers.title' | translate"></app-toolbar>
   <ion-toolbar color="primary" mode="ios">
-    <ion-searchbar color="light" show-clear-button="always" [placeholder]="'placeholder.search' | translate" (ionInput)="handleInput($event)"></ion-searchbar>
+    <ion-searchbar color="light" show-clear-button="always" [placeholder]="'placeholder.search' | translate"
+      (ionInput)="handleInput($event)"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
+}
+
+<!-- Header for Modal Mode -->
+@if (openedAsModal) {
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'page.customers.title' | translate }}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-searchbar color="light" show-clear-button="always" [placeholder]="'placeholder.search' | translate"
+      (ionInput)="handleInput($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+}
 <ion-content [fullscreen]="true">
 
   <ion-list>
@@ -21,9 +42,9 @@
               </ion-badge>
             } -->
             @if (result.isActive) {
-              <ion-badge color="success">{{ 'badge.active' | translate }}</ion-badge>
+            <ion-badge color="success">{{ 'badge.active' | translate }}</ion-badge>
             } @else {
-              <ion-badge color="medium">{{ 'badge.inactive' | translate }}</ion-badge>
+            <ion-badge color="medium">{{ 'badge.inactive' | translate }}</ion-badge>
             }
           </div>
         </div>
@@ -31,18 +52,21 @@
           <ion-text color="medium" class="description">{{result.description}}</ion-text>
         } -->
         <ion-note color="medium" class="ion-text-wrap">
-          {{ 'label.current_balance' | translate }}: {{result?.currentBalance}} | {{ 'label.opening_balance' | translate }}: ₹{{result.openingBalance}}
+          {{ 'label.current_balance' | translate }}: {{result?.currentBalance}} | {{ 'label.opening_balance' | translate
+          }}: ₹{{result.openingBalance}}
         </ion-note>
       </ion-label>
+      @if(!openedAsModal){
       <ion-button slot="end" shape="round" size="large" fill="clear" (click)="presentActionSheet($event, result)">
         <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
       </ion-button>
+      }
     </ion-item>
     }
   </ion-list>
 
   <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-    <ion-fab-button [routerLink]="'./new'">
+    <ion-fab-button (click)="addNewCustomer()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

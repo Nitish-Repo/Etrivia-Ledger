@@ -21,6 +21,7 @@ import { BusinessSettingsService } from '@app/features/services/business-setting
 import { BusinessSettings } from '@app/features/models/business-settings.model';
 import { BusinessInfoComponent } from '@app/features/components/private/business-info/business-info.component';
 import { InvoiceNumberService } from '@app/features/services/invoice-number.service';
+import { CustomersComponent } from '../../customers/customers.component';
 
 @Component({
   selector: 'app-sell',
@@ -265,6 +266,22 @@ export class SellComponent implements OnInit {
     if (data?.saved) {
       // Reload business settings after saving
       this.loadBusinessSettings();
+    }
+  }
+
+  async navigateToAddCustomer() {
+    const modal = await this.modalCtrl.create({
+      component: CustomersComponent,
+      componentProps: {
+        openedAsModal: true
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data) {
+      console.log("Selected customer", data)
     }
   }
 

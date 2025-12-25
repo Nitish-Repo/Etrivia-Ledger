@@ -1,25 +1,25 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AppService } from '@app/core/app.service';
 import { Customer } from '@app/features/models';
 import { CustomerService } from '@app/features/services/customer.service';
 import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
 import {
-  InfiniteScrollCustomEvent,
+  InfiniteScrollCustomEvent, ModalController,
   IonHeader, IonContent, IonButton, IonToolbar, IonSearchbar, IonFab, IonFabButton, ActionSheetController,
-  IonIcon, IonList, IonLabel, IonItem, IonText, IonNote, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent
-} from "@ionic/angular/standalone";
+  IonIcon, IonList, IonLabel, IonItem, IonText, IonNote, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent, IonButtons, IonTitle } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { add, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, close, cube, heartDislike, eye, personOutline } from 'ionicons/icons';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CustomerComponent } from './customer/customer.component';
 
 @Component({
   selector: 'app-customers',
   templateUrl: './customers.component.html',
   styleUrls: ['./customers.component.scss'],
   standalone: true,
-  imports: [IonInfiniteScrollContent, IonInfiniteScroll, IonNote, IonItem, IonLabel, IonList, IonIcon, IonFabButton,
+  imports: [IonTitle, IonButtons, IonInfiniteScrollContent, IonInfiniteScroll, IonNote, IonItem, IonLabel, IonList, IonIcon, IonFabButton,
     IonFab, IonSearchbar, IonToolbar, IonButton, IonContent, IonHeader, IonBadge, CommonModule,
     ToolbarPage, RouterModule, TranslateModule]
 })
@@ -30,6 +30,10 @@ export class CustomersComponent implements OnInit {
   private service = inject(CustomerService);
   private actionSheetCtrl = inject(ActionSheetController);
   private translate = inject(TranslateService);
+  private modalCtrl = inject(ModalController);
+
+  // Input to explicitly set modal mode
+  @Input() openedAsModal = false;
 
   customers = signal<Customer[]>([]);
   searchQuery = signal<string>('');
@@ -116,7 +120,36 @@ export class CustomersComponent implements OnInit {
   // }
 
   updateCustomer(customer: Customer) {
-    this.router.navigate([`./${customer.customerId}`], { relativeTo: this.route, })
+    if (this.openedAsModal) {
+      this.modalCtrl.dismiss(customer);
+    } else {
+      this.router.navigate([`./${customer.customerId}`], { relativeTo: this.route, });
+    }
+  }
+
+  closeModal() {
+    this.modalCtrl.dismiss();
+  }
+
+  addNewCustomer(){
+    this.router.navigate(['./new'], { relativeTo: this.route });
+  }
+
+  async navigateToAddCustomer() {
+    const modal = await this.modalCtrl.create({
+      component: CustomerComponent,
+      componentProps: {
+        openedAsModal: true
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data) {
+      console.log("Selected customer", data);
+      // this.loadCustomers(true);
+    }
   }
 
   async presentActionSheet(event: Event, customer: Customer) {
