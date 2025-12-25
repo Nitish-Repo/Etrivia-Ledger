@@ -1,9 +1,29 @@
+<!-- Header for Page Mode -->
+@if (!openedAsModal) {
 <ion-header [translucent]="true">
   <app-toolbar title="page.products.title"></app-toolbar>
   <ion-toolbar color="primary" mode="ios">
     <ion-searchbar color="light" show-clear-button="always" (ionInput)="handleInput($event)"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
+}
+
+<!-- Header for Modal Mode -->
+@if (openedAsModal) {
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Select Product</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-searchbar color="light" show-clear-button="always" (ionInput)="handleInput($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+}
 <ion-content [fullscreen]="true">
 
   <ion-list>
@@ -50,7 +70,7 @@
   </ion-list>
 
   <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-    <ion-fab-button [routerLink]="'./new'">
+    <ion-fab-button (click)="addNewProduct()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

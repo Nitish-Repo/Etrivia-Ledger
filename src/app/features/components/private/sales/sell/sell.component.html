@@ -86,6 +86,41 @@
             </ion-item>
           </ion-list>
 
+           <ion-list [inset]="true" mode="ios">
+            <ion-item [button]="true" detail="true" lines="none" (click)="navigateToAddProduct()">
+              <ion-icon color="danger" slot="start" name="receipt-outline" size="large" shape="round"></ion-icon>
+              <ion-label class="ion-text-wrap">
+                <div class="product-header">
+                  <strong>Items ({{ saleItemForms().length }})</strong>
+                </div>
+                <ion-text color="medium" class="description">Add Items</ion-text>
+              </ion-label>
+            </ion-item>
+            
+            @for (itemForm of saleItemForms(); track $index) {
+            <ion-item>
+              <ion-label class="ion-text-wrap">
+                <div class="product-header">
+                  <strong>{{ itemForm.get('productName')?.value || 'Product ' + ($index + 1) }}</strong>
+                  <div class="badges">
+                    <ion-badge color="medium">#{{ $index + 1 }}</ion-badge>
+                  </div>
+                </div>
+                <ion-text color="medium" class="description">
+                  {{ itemForm.get('quantity')?.value }} × ₹{{ itemForm.get('pricePerUnit')?.value }}
+                </ion-text>
+              </ion-label>
+              <ion-button slot="end" fill="outline" disabled color="medium">
+                ₹{{ (itemForm.get('quantity')?.value || 0) * (itemForm.get('pricePerUnit')?.value || 0) }}
+              </ion-button>
+              <ion-button slot="end" shape="round" size="large" fill="clear" (click)="removeSaleItem($index)">
+                <ion-icon slot="icon-only" name="trash" size="large"></ion-icon>
+              </ion-button>
+            </ion-item>
+            }
+            </ion-list>
+
+
           <ion-list [inset]="true" mode="ios">
             <ion-item [button]="true" detail="true" lines="none">
               <ion-icon color="danger" slot="start" name="receipt-outline" size="large" shape="round"></ion-icon>

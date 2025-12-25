@@ -22,6 +22,7 @@ import { BusinessSettings } from '@app/features/models/business-settings.model';
 import { BusinessInfoComponent } from '@app/features/components/private/business-info/business-info.component';
 import { InvoiceNumberService } from '@app/features/services/invoice-number.service';
 import { CustomersComponent } from '../../customers/customers.component';
+import { ProductsComponent } from '../../products/products.component';
 
 @Component({
   selector: 'app-sell',
@@ -135,10 +136,8 @@ export class SellComponent implements OnInit {
   private buildNewSellForm() {
     this.saleForm = this.app.meta.toFormGroup(this.defaultSale, this.saleModelMeta);
 
-    // Initialize with one sale item
-    const itemForms: FormGroup[] = [];
-    itemForms.push(this.app.meta.toFormGroup({}, this.saleItemModelMeta));
-    this.saleItemFormsArray.set(itemForms);
+    // Initialize with empty sale items array - user will add via modal
+    this.saleItemFormsArray.set([]);
 
     // Initialize with one additional charge (can be empty)
     const chargeForms: FormGroup[] = [];
@@ -286,6 +285,43 @@ export class SellComponent implements OnInit {
       this.saleForm.get('customerId')?.setValue(data.customerId);
       this.saleForm.get('customerId')?.markAsTouched();
     }
+  }
+
+  async navigateToAddProduct() {
+    const modal = await this.modalCtrl.create({
+      component: ProductsComponent,
+      componentProps: {
+        openedAsModal: true
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data) {
+      console.log("Selected Product", data);
+      // Add product to sale items
+      this.addSaleItemFromProduct(data);
+    }
+  }
+
+  private addSaleItemFromProduct(product: any) {
+    const currentForms = this.saleItemFormsArray();
+    const newItemData = {
+      productId: product.productId,
+      productName: product.productName,
+      hsnCode: product.hsnCode,
+      quantity: 1,
+      unit: product.unit,
+      pricePerUnit: product.sellingPrice,
+      taxType: product.taxType,
+      gstRate: product.gstRate,
+      cessRate: product.cessRate || 0,
+      discountType: 'PERCENTAGE',
+      discountValue: 0
+    };
+    const newForm = this.app.meta.toFormGroup(newItemData, this.saleItemModelMeta);
+    this.saleItemFormsArray.set([...currentForms, newForm]);
   }
 
   ngOnDestroy() {

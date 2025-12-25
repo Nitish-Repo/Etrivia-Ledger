@@ -1,27 +1,28 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, Input, OnInit, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Product } from '@app/features/models/product.model';
 import { ProductService } from '@app/features/services/product.service';
 import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
 import {
-  InfiniteScrollCustomEvent,
+  InfiniteScrollCustomEvent, ModalController,
   IonHeader, IonContent, IonButton, IonToolbar, IonSearchbar, IonFab, IonFabButton, ActionSheetController,
-  IonIcon, IonList, IonLabel, IonItem, IonText, IonNote, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent
+  IonIcon, IonList, IonLabel, IonItem, IonText, IonNote, IonBadge, IonInfiniteScroll, IonInfiniteScrollContent, IonButtons, IonTitle
 } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { add, cubeOutline, ellipsisVertical, chevronForward, pencil, heart, eyeOff, trash, close, cube, heartDislike, eye } from 'ionicons/icons';
 import { ViewWillEnter } from '@ionic/angular';
 import { AppService } from '@app/core/app.service';
 import { LanguageService } from '@app/core/language.service';
+import { ProductComponent } from './product/product.component';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
   standalone: true,
-  imports: [IonInfiniteScrollContent, IonInfiniteScroll, IonNote, IonText, IonItem, IonLabel, IonList, IonIcon, IonFabButton,
+  imports: [IonTitle, IonButtons, IonInfiniteScrollContent, IonInfiniteScroll, IonNote, IonText, IonItem, IonLabel, IonList, IonIcon, IonFabButton,
     IonFab, IonSearchbar, IonToolbar, IonButton, IonContent, IonHeader, IonBadge, CommonModule,
     ToolbarPage, RouterModule, TranslateModule]
 })
@@ -32,6 +33,9 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
   private productService = inject(ProductService);
   private actionSheetCtrl = inject(ActionSheetController);
   private translateService = inject(LanguageService);
+  private modalCtrl = inject(ModalController);
+
+  @Input() openedAsModal = false;
 
   products = signal<Product[]>([]);
   searchQuery = signal<string>('');
@@ -123,7 +127,41 @@ export class ProductsComponent implements OnInit, ViewWillEnter {
   }
 
   updateProduct(product: Product) {
-    this.router.navigate([`./${product.productId}`], { relativeTo: this.route, })
+    if (this.openedAsModal) {
+      // If modal, close and pass selected product back
+      this.modalCtrl.dismiss(product);
+    } else {
+      // If page, navigate normally
+      this.router.navigate([`./${product.productId}`], { relativeTo: this.route, });
+    }
+  }
+
+  closeModal() {
+    this.modalCtrl.dismiss();
+  }
+
+  addNewProduct() {
+    if (this.openedAsModal) {
+      this.navigateToAddCustomer();
+    } else {
+      this.router.navigate(['./new'], { relativeTo: this.route });
+    }
+  }
+
+  async navigateToAddCustomer() {
+    const modal = await this.modalCtrl.create({
+      component: ProductComponent,
+      componentProps: {
+        openedAsModal: true
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data) {
+      this.loadProducts(true);
+    }
   }
 
   async presentActionSheet(event: Event, product: Product) {
