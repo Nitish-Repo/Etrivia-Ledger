@@ -48,7 +48,7 @@ export class SaleItemService {
   }
 
   getSaleItemsBySaleId(saleId: string) {
-    return this.db.getById$<SaleItem>(DB_TABLES.SALE_ITEMS, saleId, 'saleId');
+    return this.db.getByCondition$<SaleItem>(DB_TABLES.SALE_ITEMS, 'saleId = ?', [saleId]);
   }
 
   getSaleItemById(saleItemId: string) {

@@ -28,6 +28,7 @@ import { SaleItemDetailComponent } from '../sale-item-detail/sale-item-detail.co
 import { SaleService } from '@app/features/services/sale.service';
 import { SaleItemService } from '@app/features/services/sale-item.service';
 import { SaleAdditionalChargeService } from '@app/features/services/sale-additional-charge.service';
+import { InvoiceGenerateComponent } from '../invoice-generate/invoice-generate.component';
 
 @Component({
   selector: 'app-sell',
@@ -327,6 +328,7 @@ export class SellComponent implements OnInit {
           this.saleItemService.addSaleItemsAndReturn(saleItems, sale!).subscribe();
           // Add additional charges
           this.saleAdditionalChargeService.addAdditionalChargesAndReturn(additionalCharges, sale!).subscribe();
+          this.navigateToInvoiceGenerate(sale?.saleId!);
         });
 
       setTimeout(() => {
@@ -358,6 +360,25 @@ export class SellComponent implements OnInit {
         console.error('Error loading invoice number:', error);
       }
     });
+  }
+
+  async navigateToInvoiceGenerate(saleId : string) {
+    const modal = await this.modalCtrl.create({
+      component: InvoiceGenerateComponent,
+      cssClass: 'full-screen-modal',
+      componentProps: {
+        openedAsModal: true,
+        saleId: saleId
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data?.saved) {
+      // Reload business settings after saving
+      this.loadBusinessSettings();
+    }
   }
 
   async navigateToBusinessInfo() {

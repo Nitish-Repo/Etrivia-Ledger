@@ -160,6 +160,14 @@ export class DatabaseService {
   }
 
   /**
+   * Observable wrapper for getByCondition - returns an array of records
+   */
+  getByCondition$<T>(table: string, where: string, params: any[] = []): Observable<T[]> {
+    return from(this.getByCondition<T>(table, where, params));
+  }
+  
+
+  /**
    * Insert a new record
    * @param table Table name
    * @param data Object with column names as keys

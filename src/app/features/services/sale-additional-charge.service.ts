@@ -48,7 +48,7 @@ export class SaleAdditionalChargeService {
   }
 
   getAdditionalChargeBySaleId(saleId: string) {
-    return this.db.getById$<AdditionalCharge>(DB_TABLES.ADDITIONAL_CHARGES, saleId, 'saleId');
+    return this.db.getByCondition$<AdditionalCharge>(DB_TABLES.ADDITIONAL_CHARGES, 'saleId = ?', [saleId]);
   }
 
   getAdditionalChargesById(chargeId: string) {

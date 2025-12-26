@@ -1,0 +1,15 @@
+@if (openedAsModal) {
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'page.customers.title' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+}
+<ion-content [fullscreen]="true">
+
+</ion-content>
