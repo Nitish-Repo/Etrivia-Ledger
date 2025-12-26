@@ -1,6 +1,23 @@
+<!-- Header for Page Mode -->
+@if (!openedAsModal) {
 <ion-header [translucent]="true">
-  <app-toolbar title="page.products.title_singular"></app-toolbar>
+  <app-toolbar [title]="'page.products.title_singular' | translate"></app-toolbar>
 </ion-header>
+}
+<!-- Header for Modal Mode -->
+@if (openedAsModal) {
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'page.products.title_singular' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+}
+
 <ion-content [fullscreen]="true">
   <div class="ion-margin">
     @if(form){
@@ -17,7 +34,7 @@
         
         @if (segment() === 'first') {
         <div>
-            <div class="ion-margin-bottom cess">
+            <div class="ion-margin-bottom ion-margin-top">
               <app-input [form]="form" name="productName" label="label.product_name" [placeholder]="'placeholder.enter_product_name'" labelPlacement="floating"
                 [errorText]="'error.required'" fill="outline" [maxlength]="50" [counter]="true"></app-input>
             </div>
@@ -146,10 +163,12 @@
 <ion-footer class="ion-no-border" [translucent]="true" mode="ios">
   @if(!isProductSave()){
   <ion-tab-bar>
-    <ion-tab-button (click)="onSubmit(true)" [disabled]="formMeta.submitProcessing">
-      <ion-icon name="add-circle-outline"></ion-icon>
-      <ion-label>{{ 'button.add_more' | translate }}</ion-label>
-    </ion-tab-button>
+    @if(!openedAsModal){
+      <ion-tab-button (click)="onSubmit(true)" [disabled]="formMeta.submitProcessing">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        <ion-label>{{ 'button.add_more' | translate }}</ion-label>
+      </ion-tab-button>
+    }
     <ion-tab-button (click)="onSubmit(false)" [disabled]="formMeta.submitProcessing">
       <ion-icon name="save-outline"></ion-icon>
       <ion-label>{{ 'button.save' | translate }}</ion-label>

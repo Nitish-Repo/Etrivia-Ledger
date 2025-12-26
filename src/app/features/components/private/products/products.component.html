@@ -62,9 +62,13 @@
         </ion-note>
 
       </ion-label>
+
+      @if(!openedAsModal){
       <ion-button slot="end" shape="round" size="large" fill="clear" (click)="presentActionSheet($event, result)">
         <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
       </ion-button>
+      }
+      
     </ion-item>
     }
   </ion-list>

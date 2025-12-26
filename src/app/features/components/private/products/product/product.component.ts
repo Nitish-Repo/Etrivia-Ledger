@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, OnInit, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AppService } from '@app/core/app.service';
 import { getProductMeta, Product, DiscountType } from '@app/features/models/product.model';
 import { ToolbarPage } from '@app/layouts/private/toolbar/toolbar.page';
 import { ModelMeta } from '@app/shared-services';
 import { FormMeta } from '@app/shared-services/models/form-meta';
-import { IonHeader, IonContent, IonButton, IonSpinner, IonTextarea, IonIcon, IonToggle, IonItem, IonList, IonSegment, IonSegmentButton, IonLabel, IonSegmentView, IonSegmentContent, IonFooter, IonToolbar, IonTabBar, IonTabButton, IonItemDivider } from "@ionic/angular/standalone";
+import { ModalController, IonHeader, IonContent, IonButton, IonSpinner, IonTextarea, IonIcon, IonToggle, IonItem, IonList, IonSegment, IonSegmentButton, IonLabel, IonSegmentView, IonSegmentContent, IonFooter, IonToolbar, IonTabBar, IonTabButton, IonItemDivider, IonButtons, IonTitle } from "@ionic/angular/standalone";
 import { of, Subject, switchMap } from 'rxjs';
 import { InputComponent } from "@app/shared/input/input.component";
 import { addIcons } from 'ionicons';
-import { addCircleOutline, pricetagOutline, saveOutline } from 'ionicons/icons';
+import { addCircleOutline, pricetagOutline, saveOutline, close } from 'ionicons/icons';
 import { ActivatedRoute, Router } from '@angular/router';
 import { getProductInventoryMeta, ProductInventory } from '@app/features/models/product-inventory.model';
 import { ProductService } from '@app/features/services/product.service';
@@ -23,15 +23,17 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss'],
   standalone: true,
-  imports: [IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonList, IonItem, IonToggle, IonIcon, IonTextarea, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonTabBar, IonTabButton, TranslateModule]
+  imports: [IonTitle, IonButtons, IonItemDivider, IonFooter, IonLabel, IonSegmentButton, IonSegment, IonList, IonItem, IonToggle, IonIcon, IonTextarea, IonSpinner, IonContent, IonHeader, CommonModule, ToolbarPage, ReactiveFormsModule, InputComponent, SelectComponent, IonTabBar, IonTabButton, TranslateModule, IonButton, IonToolbar]
 })
 export class ProductComponent implements OnInit {
   private app = inject(AppService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private service = inject(ProductService);
-  private cdr = inject(ChangeDetectorRef)
+  private cdr = inject(ChangeDetectorRef);
+  private modalCtrl = inject(ModalController);
 
+  @Input() openedAsModal = false;
   private destroy$: Subject<void> = new Subject<void>();
 
   isProductSave = signal<boolean>(false);
@@ -56,9 +58,7 @@ export class ProductComponent implements OnInit {
 
 
   constructor() {
-    addIcons({
-      pricetagOutline, addCircleOutline, saveOutline
-    });
+    addIcons({close,addCircleOutline,saveOutline,pricetagOutline});
   }
 
   ngOnInit() {
@@ -121,12 +121,16 @@ export class ProductComponent implements OnInit {
               this.form.markAsUntouched();
               this.form.updateValueAndValidity();
             } else {
-              this.form.reset();
-              this.isProductSave.set(false);
-              this.formMeta.submitProcessing = false;
-              this.router.navigate(['../'], {
-                relativeTo: this.route,
-              });
+              if (this.openedAsModal) {
+                this.modalCtrl.dismiss(x)
+              } else {
+                this.form.reset();
+                this.isProductSave.set(false);
+                this.formMeta.submitProcessing = false;
+                this.router.navigate(['../'], {
+                  relativeTo: this.route,
+                });
+              }
             }
           });
         }
@@ -141,6 +145,10 @@ export class ProductComponent implements OnInit {
 
   handleDiscountTypeChange(event: any) {
     console.log('Discount Type changed:', event);
+  }
+
+  closeModal() {
+    this.modalCtrl.dismiss();
   }
 
 }
