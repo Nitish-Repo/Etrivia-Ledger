@@ -1,9 +1,68 @@
+<!-- Header for Page Mode -->
+@if (!openedAsModal) {
 <ion-header [translucent]="true">
   <app-toolbar [title]="'page.sales.title' | translate"></app-toolbar>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-searchbar color="light" show-clear-button="always" [placeholder]="'placeholder.search' | translate"
+      (ionInput)="handleInput($event)"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
+}
+
+<!-- Header for Modal Mode -->
+@if (openedAsModal) {
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'page.sales.title' | translate }}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-searchbar color="light" show-clear-button="always" [placeholder]="'placeholder.search' | translate"
+      (ionInput)="handleInput($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+}
 <ion-content [fullscreen]="true">
-  <div class="ion-padding">
-    <h1>Sales</h1>
-    <p>Sales interface goes here</p>
-  </div>
+
+  <ion-list>
+    @for (result of results(); track result) {
+    <ion-item [button]="true" detail="false" lines="full" (click)="updateSale(result)">
+      <ion-icon slot="start" name="receipt-outline" class="ion-margin-end"></ion-icon>
+      <ion-label class="ion-text-wrap">
+        <div class="sale-header">
+          <strong>{{result.invoiceNumber}}</strong>
+          <div class="badges">
+            @if (result.status === 'COMPLETED') {
+              <ion-badge color="success">{{ 'badge.completed' | translate }}</ion-badge>
+            } @else {
+              <ion-badge color="medium">{{ result.status }}</ion-badge>
+            }
+          </div>
+        </div>
+        <ion-note color="medium" class="ion-text-wrap">
+          {{ result.customerName }} • {{ result.invoiceDate | date }} • ₹{{ result.grandTotal }}
+        </ion-note>
+      </ion-label>
+      @if(!openedAsModal){
+      <ion-button slot="end" shape="round" size="large" fill="clear" (click)="presentActionSheet($event, result)">
+        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+      </ion-button>
+      }
+    </ion-item>
+    }
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+    <ion-fab-button (click)="addNewSale()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

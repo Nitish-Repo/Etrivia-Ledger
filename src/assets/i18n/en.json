@@ -50,7 +50,10 @@
         "mark_as_inactive": "Mark as Inactive",
         "update": "Update",
         "duplicate": "Duplicate",
-        "view_all": "View All"
+        "view_all": "View All",
+        "print": "Print",
+        "mark_as_completed": "Mark as Completed",
+        "mark_as_draft": "Mark as Draft"
     },
     "common": {
         "yes": "Yes",
@@ -288,7 +291,6 @@
         "select_date": "Select date",
         "calculated": "Auto calculated",
         "enter_notes": "Enter notes",
-        "enter_product_name": "Enter product name",
         "enter_hsn": "Enter HSN/SAC code",
         "enter_unit": "Enter unit",
         "enter_charge_name": "Enter charge name (e.g., Shipping, Packaging)",

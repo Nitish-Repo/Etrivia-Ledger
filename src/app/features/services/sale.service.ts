@@ -33,7 +33,7 @@ export class SaleService {
   }
 
   getSalePaginated(page: number, limit: number, search: string) {
-    const searchObj = this.dbUtil.buildSearch(['SaleName'], search);
+    const searchObj = this.dbUtil.buildSearch(['invoiceNumber'], search);
 
     const whereParts = [];
     if (searchObj.clause) whereParts.push(searchObj.clause);
@@ -46,7 +46,7 @@ export class SaleService {
       where: whereParts.join(' AND '),
       params: [...searchObj.params],
 
-      orderBy: 'SaleName',
+      orderBy: 'invoiceNumber',
       limit,
       offset: page * limit,
     };
