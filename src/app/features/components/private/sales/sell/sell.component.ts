@@ -1,8 +1,10 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider, IonDatetime, IonModal, IonButtons, ActionSheetController, AlertController,
-  IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonItem, IonDatetimeButton, IonList, IonBadge, IonNote, IonText, IonAvatar, IonCard, ModalController } from '@ionic/angular/standalone';
+import {
+  IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider, IonDatetime, IonModal, IonButtons, ActionSheetController, AlertController,
+  IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonItem, IonDatetimeButton, IonList, IonBadge, IonNote, IonText, IonAvatar, IonCard, ModalController
+} from '@ionic/angular/standalone';
 import { ToolbarPage } from "@app/layouts/private/toolbar/toolbar.page";
 import { Subject } from 'rxjs';
 import { FormMeta } from '@app/shared-services/models/form-meta';
@@ -30,7 +32,7 @@ import { SaleItemDetailComponent } from '../sale-item-detail/sale-item-detail.co
   templateUrl: './sell.component.html',
   styleUrls: ['./sell.component.scss'],
   standalone: true,
-  imports: [ IonText, IonNote, IonBadge, IonList, IonDatetimeButton, IonItem, 
+  imports: [IonText, IonNote, IonBadge, IonList, IonDatetimeButton, IonItem,
     IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider,
     IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonDatetime, IonModal, IonButtons,
     CommonModule, ReactiveFormsModule, ToolbarPage, InputComponent, SelectComponent, TranslateModule
@@ -40,7 +42,7 @@ export class SellComponent implements OnInit {
   private app = inject(AppService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private luxonDateService = inject (LuxonDateService)
+  private luxonDateService = inject(LuxonDateService)
   private businessSettingsService = inject(BusinessSettingsService);
   private modalCtrl = inject(ModalController);
   private invoiceNumberService = inject(InvoiceNumberService);
@@ -49,47 +51,47 @@ export class SellComponent implements OnInit {
   private translate = inject(TranslateService);
 
   private destroy$: Subject<void> = new Subject<void>();
-  
+
   // Business Settings
   businessSettings = signal<BusinessSettings | null>(null);
   nextInvoiceNumber = signal<string>('INV-2025-0001');
   selectedCustomer = signal<Customer | null>(null);
-  
+
   // Forms
   saleForm!: FormGroup;
   private saleItemFormsArray = signal<FormGroup[]>([]);
   private additionalChargeFormsArray = signal<FormGroup[]>([]);
-  
+
   saleItemForms = computed(() => this.saleItemFormsArray());
   additionalChargeForms = computed(() => this.additionalChargeFormsArray());
-  
+
   // UI State
   segment = signal<string>('invoice');
   isEdit = signal<boolean>(false);
   isSubmitting = signal<boolean>(false);
-  
+
   // Metadata
   formMeta = new FormMeta();
   saleModelMeta!: ModelMeta[];
   saleItemModelMeta!: ModelMeta[];
   additionalChargeModelMeta!: ModelMeta[];
-  
+
   // Select metadata for dropdowns
   customerMeta!: ModelMeta;
   invoiceDiscountTypeMeta!: ModelMeta;
   paymentStatusMeta!: ModelMeta;
   saleTypeMeta!: ModelMeta;
   statusMeta!: ModelMeta;
-  
+
   productMeta!: ModelMeta;
   itemTaxTypeMeta!: ModelMeta;
   itemDiscountTypeMeta!: ModelMeta;
-  
+
   chargeTaxTypeMeta!: ModelMeta;
 
   // Default values
   private readonly defaultSale: Partial<Sale> = {
-    invoiceDate : this.luxonDateService.now().toUTC().startOf('day').toISO() || new Date().toISOString().split('T')[0],
+    invoiceDate: this.luxonDateService.now().toUTC().startOf('day').toISO() || new Date().toISOString().split('T')[0],
     subtotal: 0,
     taxableAmount: 0,
     cgst: 0,
@@ -104,7 +106,7 @@ export class SellComponent implements OnInit {
   };
 
   constructor() {
-    addIcons({listCircle,chevronForward,personOutline,chevronForwardOutline,peopleOutline,add,ellipsisVertical,trash,saveOutline,heart, idCard, idCardOutline, receiptOutline});
+    addIcons({ listCircle, chevronForward, personOutline, chevronForwardOutline, peopleOutline, add, ellipsisVertical, trash, saveOutline, heart, idCard, idCardOutline, receiptOutline });
   }
 
   ngOnInit() {
@@ -120,11 +122,11 @@ export class SellComponent implements OnInit {
     this.paymentStatusMeta = this.saleModelMeta.find(m => m.key === 'paymentStatus')!;
     this.saleTypeMeta = this.saleModelMeta.find(m => m.key === 'saleType')!;
     this.statusMeta = this.saleModelMeta.find(m => m.key === 'status')!;
-    
+
     this.productMeta = this.saleItemModelMeta.find(m => m.key === 'productId')!;
     this.itemTaxTypeMeta = this.saleItemModelMeta.find(m => m.key === 'taxType')!;
     this.itemDiscountTypeMeta = this.saleItemModelMeta.find(m => m.key === 'discountType')!;
-    
+
     this.chargeTaxTypeMeta = this.additionalChargeModelMeta.find(m => m.key === 'taxType')!;
 
     this.route.params.subscribe((x) => {
@@ -203,7 +205,7 @@ export class SellComponent implements OnInit {
     }
   }
 
-  
+
 
   private duplicateSaleItem(index: number) {
     const itemForms = this.saleItemFormsArray();
@@ -241,7 +243,7 @@ export class SellComponent implements OnInit {
   onSubmit() {
     FormHelper.submit(this.saleForm, this.formMeta, () => {
       this.isSubmitting.set(true);
-      
+
       const saleData: Sale = this.saleForm.value;
       const saleItems: SaleItem[] = this.saleItemFormsArray().map(f => f.value);
       const additionalCharges: AdditionalCharge[] = this.additionalChargeFormsArray()
@@ -339,10 +341,10 @@ export class SellComponent implements OnInit {
 
     await productsModal.present();
     const { data: selectedProduct } = await productsModal.onWillDismiss();
-    
+
     if (selectedProduct) {
       console.log("Selected Product", selectedProduct);
-      
+
       // Step 2: Open item detail modal to edit quantity, price, etc.
       const itemDetailModal = await this.modalCtrl.create({
         component: SaleItemDetailComponent,
@@ -353,11 +355,13 @@ export class SellComponent implements OnInit {
 
       await itemDetailModal.present();
       const { data: itemData } = await itemDetailModal.onWillDismiss();
-      
+
       if (itemData) {
         console.log("Item Data to Add", itemData);
         // Add the customized item to sale
         this.addSaleItemFromData(itemData);
+      } else {
+        this.navigateToAddProduct();
       }
     }
   }
@@ -368,7 +372,7 @@ export class SellComponent implements OnInit {
     this.saleItemFormsArray.set([...currentForms, newForm]);
   }
 
-   async presentItemActionSheet(event: Event, itemForm: FormGroup) {
+  async presentItemActionSheet(event: Event, itemForm: FormGroup) {
     event.stopPropagation();
     const index = this.saleItemForms().indexOf(itemForm as any);
     if (index === -1) return;
