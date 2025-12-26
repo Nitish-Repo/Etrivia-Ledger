@@ -168,78 +168,40 @@
 
           </ion-list>
 
-
-
-          <div class="ion-margin-bottom ion-margin-top">
-            <app-input [form]="saleForm" name="subtotal" label="label.subtotal"
-              [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
-              [errorText]="'error.required'" fill="outline"></app-input>
-          </div>
-
-
-
-          <div class="ion-margin-bottom">
-            <app-input [form]="saleForm" name="TotalDiscountAmount" label="label.total_discount_amount"
-              [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
-              fill="outline"></app-input>
-          </div>
-
-          <div class="ion-margin-bottom">
-            <app-input [form]="saleForm" name="taxableAmount" label="label.taxable_amount"
-              [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
-              fill="outline"></app-input>
-          </div>
-
-
-
-          <div class="ion-margin-bottom">
-            <app-input [form]="saleForm" name="totalAmount" label="label.total_amount"
-              [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
-              [errorText]="'error.required'" fill="outline"></app-input>
-          </div>
-
-          <div class="ion-display-flex ion-margin-bottom">
-            <app-input class="ion-flex-1" [form]="saleForm" name="roundOff" label="label.round_off"
-              [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
-              fill="outline"></app-input>
-            <app-input class="ion-flex-1 ion-margin-start" [form]="saleForm" name="grandTotal" label="label.grand_total"
-              [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
-              fill="outline"></app-input>
-          </div>
-
           <ion-item-divider>
             <ion-label>{{ 'common.payment_details' | translate }}</ion-label>
           </ion-item-divider>
 
-          <div class="ion-margin-bottom ion-margin-top">
-            <app-input [form]="saleForm" name="paidAmount" label="label.paid_amount"
-              [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
-              [errorText]="'error.required'" fill="outline"></app-input>
+          <div class="ion-margin">
+            <div class="ion-margin-bottom">
+              <app-select [meta]="paymentStatusMeta" />
+            </div>
+
+            <div class="ion-display-flex ion-margin-bottom">
+              <app-input class="ion-flex-1" [form]="saleForm" name="dueAmount" label="label.due_amount"
+                [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
+                fill="outline"></app-input>
+
+              <app-input class="ion-flex-1 ion-margin-start" [form]="saleForm" name="paidAmount" label="label.paid_amount"
+                [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
+                [errorText]="'error.required'" fill="outline"></app-input>
+            </div>
+
+            <div class="ion-display-flex ion-margin-bottom ion-margin-top">
+              <app-select class="ion-flex-1" [meta]="saleTypeMeta" />
+              <app-select class="ion-flex-1 ion-margin-start" [meta]="statusMeta" />
+            </div>
+
+            <div class="ion-margin-bottom">
+              <ion-textarea formControlName="notes" label="{{ 'label.notes' | translate }}" labelPlacement="floating"
+                fill="outline" [placeholder]="'placeholder.enter_notes' | translate" autoGrow="true" [counter]="true"
+                maxlength="500"></ion-textarea>
+            </div>
           </div>
 
-          <div class="ion-margin-bottom">
-            <app-input [form]="saleForm" name="dueAmount" label="label.due_amount"
-              [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
-              fill="outline"></app-input>
-          </div>
 
-          <div class="ion-margin-bottom">
-            <app-select [meta]="paymentStatusMeta" />
-          </div>
 
-          <div class="ion-margin-bottom">
-            <app-select [meta]="saleTypeMeta" />
-          </div>
 
-          <div class="ion-margin-bottom">
-            <app-select [meta]="statusMeta" />
-          </div>
-
-          <div class="ion-margin-bottom">
-            <ion-textarea formControlName="notes" label="{{ 'label.notes' | translate }}" labelPlacement="floating"
-              fill="outline" [placeholder]="'placeholder.enter_notes' | translate" autoGrow="true" [counter]="true"
-              maxlength="500"></ion-textarea>
-          </div>
         </div>
         }
 
