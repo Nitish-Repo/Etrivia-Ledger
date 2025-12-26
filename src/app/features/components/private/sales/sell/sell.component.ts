@@ -363,6 +363,7 @@ export class SellComponent implements OnInit {
   async navigateToBusinessInfo() {
     const modal = await this.modalCtrl.create({
       component: BusinessInfoComponent,
+      cssClass: 'full-screen-modal',
       componentProps: {}
     });
 
@@ -378,6 +379,7 @@ export class SellComponent implements OnInit {
   async navigateToAddCustomer() {
     const modal = await this.modalCtrl.create({
       component: CustomersComponent,
+      cssClass: 'full-screen-modal',
       componentProps: {
         openedAsModal: true
       }
@@ -402,6 +404,7 @@ export class SellComponent implements OnInit {
     // Step 1: Open products list modal to select product
     const productsModal = await this.modalCtrl.create({
       component: ProductsComponent,
+      cssClass: 'full-screen-modal',
       componentProps: {
         openedAsModal: true
       }
@@ -416,6 +419,7 @@ export class SellComponent implements OnInit {
       // Step 2: Open item detail modal to edit quantity, price, etc.
       const itemDetailModal = await this.modalCtrl.create({
         component: SaleItemDetailComponent,
+        cssClass: 'full-screen-modal',
         componentProps: {
           product: selectedProduct
         }
