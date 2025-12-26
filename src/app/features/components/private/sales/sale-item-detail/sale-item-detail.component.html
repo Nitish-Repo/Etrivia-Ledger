@@ -73,15 +73,15 @@
             @if (segment() === 'second') {
             <div>
                 <div class="ion-display-flex ion-margin-bottom ion-margin-top">
-                    <app-input class="ion-flex-1" [form]="form" name="cgst" label="label.min_stock"
+                    <app-input class="ion-flex-1" [form]="form" name="cgst" label="label.cgst"
                         [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
                         [errorText]="'error.required'" fill="outline"></app-input>
                     <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="sgst"
-                        label="label.max_stock" [placeholder]="'placeholder.enter_value'" labelPlacement="floating"
+                        label="label.sgst" [placeholder]="'placeholder.enter_value'" labelPlacement="floating"
                         type="number" [errorText]="'error.required'" fill="outline"></app-input>
                 </div>
                 <div class="ion-display-flex ion-margin-bottom">
-                    <app-input class="ion-flex-1" [form]="form" name="igst" label="label.min_stock"
+                    <app-input class="ion-flex-1" [form]="form" name="igst" label="label.igst"
                         [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
                         [errorText]="'error.required'" fill="outline"></app-input>
                     <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="cess"
@@ -91,26 +91,33 @@
             </div>
             }
 
-            <!-- Summary Card for Calculated Fields -->
-            <ion-card class="ion-margin-bottom ion-padding">
-                <ion-card-header>
-                    <ion-card-title>{{ 'common.summary' | translate }}</ion-card-title>
-                </ion-card-header>
-                <ion-card-content>
-                    <div class="ion-margin-bottom">
-                        <strong>{{ 'label.taxable_amount' | translate }}:</strong>
-                        <span>{{ form.get('taxableAmount')?.value | number:'1.2-2' }}</span>
-                    </div>
-                    <div class="ion-margin-bottom">
-                        <strong>{{ 'label.gst_rate' | translate }}:</strong>
-                        <span>{{ form.get('gstRate')?.value | number:'1.2-2' }}%</span>
-                    </div>
-                    <div class="ion-margin-bottom">
-                        <strong>{{ 'label.total_amount' | translate }}:</strong>
-                        <span>{{ form.get('totalAmount')?.value | number:'1.2-2' }}</span>
-                    </div>
-                </ion-card-content>
-            </ion-card>
+            <!-- Summary for Calculated Fields (minimal layout) -->
+            <ion-list inset="true" mode="ios">
+                <ion-item lines="none">
+                    <ion-label>{{ 'label.taxable_amount' | translate }}</ion-label>
+                    <ion-note slot="end">{{ (form.get('taxableAmount')?.value || 0) | currency:'INR':'symbol':'1.2-2' }}</ion-note>
+                </ion-item>
+
+                <ion-item lines="none">
+                    <ion-label>{{ 'label.discount_amount' | translate }}</ion-label>
+                    <ion-note slot="end">{{ (form.get('discountAmount')?.value || 0) | currency:'INR':'symbol':'1.2-2' }}</ion-note>
+                </ion-item>
+
+                <ion-item lines="none">
+                    <ion-label>{{ 'label.gst' | translate }}</ion-label>
+                    <ion-note slot="end">{{ (((form.get('cgst')?.value || 0) + (form.get('sgst')?.value || 0) + (form.get('igst')?.value || 0))) | currency:'INR':'symbol':'1.2-2' }}</ion-note>
+                </ion-item>
+
+                <ion-item lines="none">
+                    <ion-label>{{ 'label.cess' | translate }}</ion-label>
+                    <ion-note slot="end">{{ (form.get('cess')?.value || 0) | currency:'INR':'symbol':'1.2-2' }}</ion-note>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label>{{ 'label.total_amount' | translate }}</ion-label>
+                    <ion-note slot="end">{{ (form.get('totalAmount')?.value || 0) | currency:'INR':'symbol':'1.2-2' }}</ion-note>
+                </ion-item>
+            </ion-list>
 
         </form>
         }

@@ -1,7 +1,7 @@
 import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ModalController, IonHeader, IonContent, IonButton, IonToolbar, IonButtons, IonTitle, IonFooter, IonIcon, IonSpinner, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonTabBar, IonTabButton, IonLabel, IonSegment, IonSegmentButton } from "@ionic/angular/standalone";
+import { ModalController, IonHeader, IonContent, IonButton, IonToolbar, IonButtons, IonTitle, IonFooter, IonIcon, IonSpinner, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonTabBar, IonTabButton, IonLabel, IonSegment, IonSegmentButton, IonItem, IonNote, IonList } from "@ionic/angular/standalone";
 import { AppService } from '@app/core/app.service';
 import { ModelMeta } from '@app/shared-services';
 import { FormHelper } from '@app/shared-services/helpers/form.helper';
@@ -11,14 +11,14 @@ import { SelectComponent } from '@app/shared/select/select.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { getSaleItemMeta, Product, SaleItem } from '@app/features/models';
 import { addIcons } from 'ionicons';
-import { add, close, addCircleOutline, saveOutline } from 'ionicons/icons';
+import { add, close, addCircleOutline, saveOutline, walletOutline, pricetagOutline, statsChartOutline, cashOutline } from 'ionicons/icons';
 
 @Component({
     selector: 'app-sale-item-detail',
     templateUrl: './sale-item-detail.component.html',
     styleUrls: ['./sale-item-detail.component.scss'],
     standalone: true,
-    imports: [IonSegmentButton, IonSegment, IonLabel, IonTabButton, IonTabBar, IonCardContent, IonCardTitle, IonCardHeader, IonCard, 
+    imports: [IonList, IonNote, IonItem, IonSegmentButton, IonSegment, IonLabel, IonTabButton, IonTabBar,
         IonSpinner, IonIcon, IonTitle, IonButtons, IonFooter, IonContent, IonHeader, IonButton, IonToolbar,
         CommonModule, ReactiveFormsModule, InputComponent, SelectComponent, TranslateModule
     ]
@@ -41,7 +41,7 @@ export class SaleItemDetailComponent implements OnInit {
 
 
     constructor() {
-        addIcons({close,add,addCircleOutline,saveOutline});
+        addIcons({close,walletOutline,pricetagOutline,statsChartOutline,cashOutline,saveOutline,add,addCircleOutline});
     }
 
     ngOnInit() {

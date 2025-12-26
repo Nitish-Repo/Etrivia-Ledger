@@ -74,6 +74,8 @@
         "payment_details": "Payment Details",
         "add_item": "Add Item",
         "remove_item": "Remove Item",
+        "add_item_details": "Add Item Details",
+        "summary": "Summary",
         "add_charge": "Add Charge",
         "remove_charge": "Remove Charge",
         "create_sale": "Create Sale",

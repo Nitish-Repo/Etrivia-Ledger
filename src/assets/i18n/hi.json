@@ -74,6 +74,8 @@
     "payment_details": "भुगतान विवरण",
     "add_item": "आइटम जोड़ें",
     "remove_item": "आइटम हटाएं",
+    "add_item_details": "आइटम विवरण जोड़ें",
+    "summary": "सारांश",
     "add_charge": "शुल्क जोड़ें",
     "remove_charge": "शुल्क हटाएं",
     "create_sale": "बिक्री बनाएं",
