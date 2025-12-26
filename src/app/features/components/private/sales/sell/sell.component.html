@@ -86,7 +86,7 @@
             </ion-item>
           </ion-list>
 
-           <ion-list [inset]="true" mode="ios">
+          <ion-list [inset]="true" mode="ios">
             <ion-item [button]="true" detail="true" lines="none" (click)="navigateToAddProduct()">
               <ion-icon color="danger" slot="start" name="receipt-outline" size="large" shape="round"></ion-icon>
               <ion-label class="ion-text-wrap">
@@ -96,7 +96,7 @@
                 <ion-text color="medium" class="description">Add Items</ion-text>
               </ion-label>
             </ion-item>
-            
+
             @for (itemForm of saleItemForms(); track $index) {
             <ion-item [button]="true" detail="false" (click)="editSaleItem1($index)">
               <ion-label class="ion-text-wrap">
@@ -116,58 +116,12 @@
               <!-- <ion-button slot="end" shape="round" size="large" fill="clear" (click)="removeSaleItem($index)" >
                 <ion-icon slot="icon-only" name="trash" size="large"></ion-icon>
               </ion-button> -->
-              <ion-button slot="end" shape="round" size="large" fill="clear" (click)="presentItemActionSheet($event, itemForm)">
+              <ion-button slot="end" shape="round" size="large" fill="clear"
+                (click)="presentItemActionSheet($event, itemForm)">
                 <ion-icon slot="icon-only" name="ellipsis-vertical" size="large"></ion-icon>
               </ion-button>
             </ion-item>
             }
-            </ion-list>
-
-
-          <ion-list [inset]="true" mode="ios">
-            <ion-item [button]="true" detail="true" lines="none">
-              <ion-icon color="danger" slot="start" name="receipt-outline" size="large" shape="round"></ion-icon>
-              <ion-label class="ion-text-wrap">
-                <div class="product-header">
-                  <strong>Items(2)</strong>
-                </div>
-                <ion-text color="medium" class="description">Add Items </ion-text>
-              </ion-label>
-            </ion-item>
-            <ion-item>
-              <ion-label class="ion-text-wrap">
-                <div class="product-header">
-                  <strong>Dolo 650</strong>
-                  <div class="badges">
-                    <ion-badge color="medium">#1</ion-badge>
-                  </div>
-                </div>
-                <ion-text color="medium" class="description">2 × ₹513 </ion-text>
-                <ion-text color="medium" class="description" slot="end"> </ion-text>
-              </ion-label>
-              <ion-button slot="end" fill="outline" disabled color="medium">
-                ₹1026 </ion-button>
-              <ion-button slot="end" shape="round" size="large" fill="clear">
-                <ion-icon slot="icon-only" name="ellipsis-vertical" size="large"></ion-icon>
-              </ion-button>.
-            </ion-item>
-            <ion-item >
-              <ion-label class="ion-text-wrap">
-                <div class="product-header">
-                  <strong>Dolo 650</strong>
-                  <div class="badges">
-                    <ion-badge color="medium">#1</ion-badge>
-                  </div>
-                </div>
-                <ion-text color="medium" class="description">2 × ₹513 </ion-text>
-                <ion-text color="medium" class="description" slot="end"> </ion-text>
-              </ion-label>
-              <ion-button slot="end" fill="outline" disabled color="medium">
-                ₹1026 </ion-button>
-              <ion-button slot="end" shape="round" size="large" fill="clear">
-                <ion-icon slot="icon-only" name="ellipsis-vertical" size="large"></ion-icon>
-              </ion-button>
-            </ion-item>
 
             <ion-item lines="none">
               <ion-label>Taxable Amount</ion-label>
@@ -211,11 +165,10 @@
                 {{ 12 | currency:'INR' }}
               </ion-note>
             </ion-item>
+
           </ion-list>
 
-          <ion-item-divider>
-            <ion-label>{{ 'common.invoice_totals' | translate }}</ion-label>
-          </ion-item-divider>
+
 
           <div class="ion-margin-bottom ion-margin-top">
             <app-input [form]="saleForm" name="subtotal" label="label.subtotal"
