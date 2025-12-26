@@ -10,50 +10,86 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-    <div class="ion-padding">
+    <div class="ion-margin">
         @if(form) {
         <form id="itemDetailForm" [formGroup]="form" (submit)="onSubmit()">
 
-            <div class="ion-margin-bottom">
-                <app-input [form]="form" name="productName" label="label.product_name"
-                    [placeholder]="'placeholder.enter_product_name'" [errorText]="'error.required'"
-                    labelPlacement="floating" fill="outline"></app-input>
-            </div>
+            <ion-segment mode="ios" [value]="segment()" (ionChange)="segment.set($any($event).detail.value)">
+                <ion-segment-button value="first">
+                    <ion-label>{{ 'common.basic_detail' | translate }}</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="second">
+                    <ion-label>{{ 'common.option_detail' | translate }}</ion-label>
+                </ion-segment-button>
+            </ion-segment>
 
-            <div class="ion-margin-bottom">
-                <app-input [form]="form" name="hsnCode" label="label.hsn_code" [placeholder]="'placeholder.enter_hsn'"
-                    labelPlacement="floating" fill="outline"></app-input>
-            </div>
+            @if (segment() === 'first') {
+            <div>
 
-            <div class="ion-display-flex ion-margin-bottom">
-                <app-input class="ion-flex-1" [form]="form" name="quantity" label="label.quantity"
-                    [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
-                    [errorText]="'error.required'" fill="outline"></app-input>
+                <div class="ion-margin-bottom ion-margin-top">
+                    <app-input [form]="form" name="productName" label="label.product_name"
+                        [placeholder]="'placeholder.enter_product_name'" [errorText]="'error.required'"
+                        labelPlacement="floating" fill="outline"></app-input>
+                </div>
+
+                <div class="ion-margin-bottom">
+                    <app-input [form]="form" name="hsnCode" label="label.hsn_code"
+                        [placeholder]="'placeholder.enter_hsn'" labelPlacement="floating" fill="outline"></app-input>
+                </div>
+
+                <div class="ion-display-flex ion-margin-bottom">
+                    <app-input class="ion-flex-1" [form]="form" name="quantity" label="label.quantity"
+                        [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
+                        [errorText]="'error.required'" fill="outline"></app-input>
                     <app-select class="ion-flex-1 ion-margin-start" [meta]="unitMeta" />
-            </div>
+                </div>
 
-            <div class="ion-display-flex ion-margin-bottom">
-                <app-input class="ion-flex-1" [form]="form" name="pricePerUnit" label="label.price_per_unit"
-                    [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
-                    [errorText]="'error.required'" fill="outline"></app-input>
-                <app-select class="ion-flex-1 ion-margin-start" [meta]="taxTypeMeta" />
-            </div>
+                <div class="ion-display-flex ion-margin-bottom">
+                    <app-input class="ion-flex-1" [form]="form" name="pricePerUnit" label="label.price_per_unit"
+                        [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
+                        [errorText]="'error.required'" fill="outline"></app-input>
+                    <app-select class="ion-flex-1 ion-margin-start" [meta]="taxTypeMeta" />
+                </div>
 
-            <div class="ion-display-flex ion-margin-bottom">
-                <app-select class="ion-flex-1" [meta]="discountTypeMeta" />
-                <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="discountValue"
-                    label="label.discount_value" [placeholder]="'placeholder.enter_value'" labelPlacement="floating"
-                    type="number" fill="outline"></app-input>
-            </div>
+                <div class="ion-display-flex ion-margin-bottom">
+                    <app-select class="ion-flex-1" [meta]="discountTypeMeta" />
+                    <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="discountValue"
+                        label="label.discount_value" [placeholder]="'placeholder.enter_value'" labelPlacement="floating"
+                        type="number" fill="outline"></app-input>
+                </div>
 
-            <div class="ion-display-flex ion-margin-bottom">
-                <app-input class="ion-flex-1" [form]="form" name="gstRate" label="label.gst_rate"
-                    [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
-                    [errorText]="'error.required'" fill="outline"></app-input>
-                <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="cessRate" label="label.cess_rate"
-                    [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
-                    fill="outline"></app-input>
+                <div class="ion-display-flex ion-margin-bottom">
+                    <app-input class="ion-flex-1" [form]="form" name="gstRate" label="label.gst_rate"
+                        [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
+                        [errorText]="'error.required'" fill="outline"></app-input>
+                    <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="cessRate" label="label.cess_rate"
+                        [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
+                        fill="outline"></app-input>
+                </div>
+
             </div>
+            }
+
+            @if (segment() === 'second') {
+            <div>
+                <div class="ion-display-flex ion-margin-bottom ion-margin-top">
+                    <app-input class="ion-flex-1" [form]="form" name="cgst" label="label.min_stock"
+                        [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
+                        [errorText]="'error.required'" fill="outline"></app-input>
+                    <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="sgst"
+                        label="label.max_stock" [placeholder]="'placeholder.enter_value'" labelPlacement="floating"
+                        type="number" [errorText]="'error.required'" fill="outline"></app-input>
+                </div>
+                <div class="ion-display-flex ion-margin-bottom">
+                    <app-input class="ion-flex-1" [form]="form" name="igst" label="label.min_stock"
+                        [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
+                        [errorText]="'error.required'" fill="outline"></app-input>
+                    <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="cess"
+                        label="label.cess" [placeholder]="'placeholder.enter_value'" labelPlacement="floating"
+                        type="number" [errorText]="'error.required'" fill="outline"></app-input>
+                </div>
+            </div>
+            }
 
             <!-- Summary Card for Calculated Fields -->
             <ion-card class="ion-margin-bottom ion-padding">
@@ -81,15 +117,20 @@
     </div>
 </ion-content>
 
-<ion-footer>
-    <ion-toolbar>
-        <ion-button expand="block" type="submit" form="itemDetailForm" [disabled]="isSubmitting()" (click)="onSubmit()">
-            @if (isSubmitting()) {
+<ion-footer class="ion-no-border" [translucent]="true" mode="ios">
+    @if(!isSubmitting()){
+    <ion-tab-bar>
+        <ion-tab-button (click)="onSubmit()" [disabled]="formMeta.submitProcessing">
+            <ion-icon name="save-outline"></ion-icon>
+            <ion-label>{{ 'button.save' | translate }}</ion-label>
+        </ion-tab-button>
+    </ion-tab-bar>
+    } @else {
+    <ion-tab-bar>
+        <ion-tab-button [disabled]="formMeta.submitProcessing">
             <ion-spinner name="crescent"></ion-spinner>
-            } @else {
-            <ion-icon name="add" slot="start"></ion-icon>
-            {{ 'common.add_to_sale' | translate }}
-            }
-        </ion-button>
-    </ion-toolbar>
+            <ion-label>{{ 'common.saving' | translate }}</ion-label>
+        </ion-tab-button>
+    </ion-tab-bar>
+    }
 </ion-footer>
