@@ -176,12 +176,7 @@
               [errorText]="'error.required'" fill="outline"></app-input>
           </div>
 
-          <div class="ion-display-flex ion-margin-bottom">
-            <app-select class="ion-flex-1" [meta]="invoiceDiscountTypeMeta" />
-            <app-input class="ion-flex-1 ion-margin-start" [form]="saleForm" name="invoiceDiscountValue"
-              label="label.discount_value" [placeholder]="'placeholder.enter_value'" labelPlacement="floating"
-              type="number" fill="outline"></app-input>
-          </div>
+
 
           <div class="ion-margin-bottom">
             <app-input [form]="saleForm" name="TotalDiscountAmount" label="label.total_discount_amount"
@@ -195,23 +190,7 @@
               fill="outline"></app-input>
           </div>
 
-          <div class="ion-display-flex ion-margin-bottom">
-            <app-input class="ion-flex-1" [form]="saleForm" name="cgst" label="label.cgst"
-              [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
-              fill="outline"></app-input>
-            <app-input class="ion-flex-1 ion-margin-start" [form]="saleForm" name="sgst" label="label.sgst"
-              [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
-              fill="outline"></app-input>
-          </div>
 
-          <div class="ion-display-flex ion-margin-bottom">
-            <app-input class="ion-flex-1" [form]="saleForm" name="igst" label="label.igst"
-              [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
-              fill="outline"></app-input>
-            <app-input class="ion-flex-1 ion-margin-start" [form]="saleForm" name="cess" label="label.cess"
-              [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
-              fill="outline"></app-input>
-          </div>
 
           <div class="ion-margin-bottom">
             <app-input [form]="saleForm" name="totalAmount" label="label.total_amount"
@@ -265,81 +244,33 @@
         }
 
         @if (segment() === 'items') {
-        <div>
-          <ion-item-divider>
-            <ion-label>{{ 'common.sale_items' | translate }}</ion-label>
-            <ion-button slot="end" size="small" (click)="addSaleItem()">
-              <ion-icon name="add" slot="start"></ion-icon>
-              {{ 'common.add_item' | translate }}
-            </ion-button>
-          </ion-item-divider>
-
-          @for (itemForm of saleItemForms(); track $index) {
-          <div class="item-card">
-            <form [formGroup]="itemForm">
-              <div class="ion-margin-bottom ion-margin-top">
-                <app-select [meta]="productMeta" />
-              </div>
-
-              <div class="ion-margin-bottom">
-                <app-input [form]="itemForm" name="productName" label="label.product_name"
-                  [placeholder]="'placeholder.enter_product_name'" [errorText]="'error.required'"
-                  labelPlacement="floating" fill="outline"></app-input>
-              </div>
-
-              <div class="ion-margin-bottom">
-                <app-input [form]="itemForm" name="hsnCode" label="label.hsn_code"
-                  [placeholder]="'placeholder.enter_hsn'" labelPlacement="floating" fill="outline"></app-input>
-              </div>
-
-              <div class="ion-display-flex ion-margin-bottom">
-                <app-input class="ion-flex-1" [form]="itemForm" name="quantity" label="label.quantity"
-                  [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
-                  [errorText]="'error.required'" fill="outline"></app-input>
-                <app-input class="ion-flex-1 ion-margin-start" [form]="itemForm" name="unit" label="label.unit"
-                  [placeholder]="'placeholder.enter_unit'" labelPlacement="floating" fill="outline"></app-input>
-              </div>
-
-              <div class="ion-display-flex ion-margin-bottom">
-                <app-input class="ion-flex-1" [form]="itemForm" name="pricePerUnit" label="label.price_per_unit"
-                  [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
-                  [errorText]="'error.required'" fill="outline"></app-input>
-                <app-select class="ion-flex-1 ion-margin-start" [meta]="itemTaxTypeMeta" />
-              </div>
-
-              <div class="ion-display-flex ion-margin-bottom">
-                <app-select class="ion-flex-1" [meta]="itemDiscountTypeMeta" />
-                <app-input class="ion-flex-1 ion-margin-start" [form]="itemForm" name="discountValue"
-                  label="label.discount_value" [placeholder]="'placeholder.enter_value'" labelPlacement="floating"
-                  type="number" fill="outline"></app-input>
-              </div>
-
-              <div class="ion-display-flex ion-margin-bottom">
-                <app-input class="ion-flex-1" [form]="itemForm" name="gstRate" label="label.gst_rate"
-                  [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
-                  [errorText]="'error.required'" fill="outline"></app-input>
-                <app-input class="ion-flex-1 ion-margin-start" [form]="itemForm" name="cessRate" label="label.cess_rate"
-                  [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
-                  fill="outline"></app-input>
-              </div>
-
-              <div class="ion-margin-bottom">
-                <app-input [form]="itemForm" name="totalAmount" label="label.total_amount"
-                  [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
-                  fill="outline"></app-input>
-              </div>
-
-              @if (saleItemForms().length > 1) {
-              <div class="ion-margin-bottom">
-                <ion-button expand="block" color="danger" (click)="removeSaleItem($index)">
-                  <ion-icon name="trash" slot="start"></ion-icon>
-                  {{ 'common.remove_item' | translate }}
-                </ion-button>
-              </div>
-              }
-            </form>
+        <div class="ion-margin">
+          <div class="ion-display-flex ion-margin-bottom ion-margin-top">
+            <app-select class="ion-flex-1" [meta]="invoiceDiscountTypeMeta" />
+            <app-input class="ion-flex-1 ion-margin-start" [form]="saleForm" name="invoiceDiscountValue"
+              label="label.discount_value" [placeholder]="'placeholder.enter_value'" labelPlacement="floating"
+              type="number" fill="outline"></app-input>
           </div>
-          }
+
+          <div class="ion-display-flex ion-margin-bottom">
+            <app-input class="ion-flex-1" [form]="saleForm" name="cgst" label="label.cgst"
+              [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
+              fill="outline"></app-input>
+            <app-input class="ion-flex-1 ion-margin-start" [form]="saleForm" name="sgst" label="label.sgst"
+              [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
+              fill="outline"></app-input>
+          </div>
+
+          <div class="ion-display-flex ion-margin-bottom">
+            <app-input class="ion-flex-1" [form]="saleForm" name="igst" label="label.igst"
+              [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
+              fill="outline"></app-input>
+            <app-input class="ion-flex-1 ion-margin-start" [form]="saleForm" name="cess" label="label.cess"
+              [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
+              fill="outline"></app-input>
+          </div>
+
+
         </div>
         }
 

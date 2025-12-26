@@ -322,6 +322,8 @@ export class SellComponent implements OnInit {
     if (data) {
       this.selectedCustomer.set(data);
       this.saleForm.get('customerId')?.setValue(data.customerId);
+      this.saleForm.get('customerName')?.setValue(data.customerNameS);
+      this.saleForm.get('customerGstin')?.setValue(data.customerGstin);
       this.saleForm.get('customerId')?.markAsTouched();
     }
   }
