@@ -185,10 +185,11 @@ export class SellComponent implements OnInit {
 
   removeSaleItem(index: number) {
     const currentForms = this.saleItemFormsArray();
-    if (currentForms.length > 1) {
-      currentForms.splice(index, 1);
-      this.saleItemFormsArray.set([...currentForms]);
-    }
+    if (index < 0 || index >= currentForms.length) return; // guard invalid index
+
+    currentForms.splice(index, 1);
+    // allow empty list (remove last item as well)
+    this.saleItemFormsArray.set([...currentForms]);
   }
 
   addAdditionalCharge() {
