@@ -49,6 +49,7 @@
         "mark_as_active": "Mark as Active",
         "mark_as_inactive": "Mark as Inactive",
         "update": "Update",
+        "duplicate": "Duplicate",
         "view_all": "View All"
     },
     "common": {

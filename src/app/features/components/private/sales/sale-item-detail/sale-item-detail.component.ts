@@ -27,7 +27,8 @@ export class SaleItemDetailComponent implements OnInit {
     private app = inject(AppService);
     private modalCtrl = inject(ModalController);
 
-    @Input() productData!: Product; // Product selected from the list
+    @Input() product!: Product;
+    @Input() saleItem?: SaleItem;
 
     segment = signal<string>('first');
 
@@ -41,7 +42,7 @@ export class SaleItemDetailComponent implements OnInit {
 
 
     constructor() {
-        addIcons({close,walletOutline,pricetagOutline,statsChartOutline,cashOutline,saveOutline,add,addCircleOutline});
+        addIcons({ close, walletOutline, pricetagOutline, statsChartOutline, cashOutline, saveOutline, add, addCircleOutline });
     }
 
     ngOnInit() {
@@ -52,26 +53,44 @@ export class SaleItemDetailComponent implements OnInit {
         this.taxTypeMeta = this.modelMeta.find(m => m.key === 'taxType')!;
         this.discountTypeMeta = this.modelMeta.find(m => m.key === 'discountType')!;
 
-        // Pre-fill form with product data
+       
+        if (this.saleItem) {
+            this.buildSaleItemForm(this.saleItem);
+        } else {
+            this.buildNewSaleItemForm(this.product);
+        }
+    }
+
+    private buildSaleItemForm(saleItem: SaleItem) {
+        // this.isEdit.set(true);
+        this.form = this.app.meta.toFormGroup(saleItem, this.modelMeta);
+         // Subscribe to form changes for live calculation
+        this.form.valueChanges.subscribe(() => this.updateCalculatedFields());
+
+    }
+
+    private buildNewSaleItemForm(product: Product) {
         const itemData = {
-            productId: this.productData?.productId,
-            productName: this.productData?.productName,
-            hsnCode: this.productData?.hsnCode,
+            productId: product?.productId,
+            productName: product?.productName,
+            hsnCode: product?.hsnCode,
             quantity: 1, // Default quantity
-            unit: this.productData?.unitMeasure,
-            pricePerUnit: this.productData?.mrp,
-            taxType: this.productData?.saleTaxType || 'INCLUSIVE',
-            gstRate: this.productData?.saleGstRate || 0,
-            cessRate: this.productData?.saleCessRate || 0,
+            unit: product?.unitMeasure,
+            pricePerUnit: product?.mrp,
+            taxType: product?.saleTaxType || 'INCLUSIVE',
+            gstRate: product?.saleGstRate || 0,
+            cessRate: product?.saleCessRate || 0,
             discountType: 'PERCENTAGE',
             discountValue: 0
         };
         this.form = this.app.meta.toFormGroup(itemData, this.modelMeta);
+         // Subscribe to form changes for live calculation
+        this.form.valueChanges.subscribe(() => this.updateCalculatedFields());
+
 
         // Initial calculation
         this.updateCalculatedFields();
-        // Subscribe to form changes for live calculation
-        this.form.valueChanges.subscribe(() => this.updateCalculatedFields());
+
     }
 
     updateCalculatedFields() {

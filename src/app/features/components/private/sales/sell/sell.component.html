@@ -98,7 +98,7 @@
             </ion-item>
             
             @for (itemForm of saleItemForms(); track $index) {
-            <ion-item>
+            <ion-item [button]="true" detail="false" (click)="editSaleItem1($index)">
               <ion-label class="ion-text-wrap">
                 <div class="product-header">
                   <strong>{{ itemForm.get('productName')?.value || 'Product ' + ($index + 1) }}</strong>
@@ -113,8 +113,11 @@
               <ion-button slot="end" fill="outline" disabled color="medium">
                 ₹{{ (itemForm.get('quantity')?.value || 0) * (itemForm.get('pricePerUnit')?.value || 0) }}
               </ion-button>
-              <ion-button slot="end" shape="round" size="large" fill="clear" (click)="removeSaleItem($index)">
+              <!-- <ion-button slot="end" shape="round" size="large" fill="clear" (click)="removeSaleItem($index)" >
                 <ion-icon slot="icon-only" name="trash" size="large"></ion-icon>
+              </ion-button> -->
+              <ion-button slot="end" shape="round" size="large" fill="clear" (click)="presentItemActionSheet($event, itemForm)">
+                <ion-icon slot="icon-only" name="ellipsis-vertical" size="large"></ion-icon>
               </ion-button>
             </ion-item>
             }
@@ -148,7 +151,7 @@
                 <ion-icon slot="icon-only" name="ellipsis-vertical" size="large"></ion-icon>
               </ion-button>.
             </ion-item>
-            <ion-item>
+            <ion-item >
               <ion-label class="ion-text-wrap">
                 <div class="product-header">
                   <strong>Dolo 650</strong>

@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider, IonDatetime, IonModal, IonButtons,
+import { IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider, IonDatetime, IonModal, IonButtons, ActionSheetController, AlertController,
   IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonItem, IonDatetimeButton, IonList, IonBadge, IonNote, IonText, IonAvatar, IonCard, ModalController } from '@ionic/angular/standalone';
 import { ToolbarPage } from "@app/layouts/private/toolbar/toolbar.page";
 import { Subject } from 'rxjs';
@@ -9,7 +9,7 @@ import { FormMeta } from '@app/shared-services/models/form-meta';
 import { ModelMeta } from '@app/shared-services';
 import { AppService } from '@app/core/app.service';
 import { FormHelper } from '@app/shared-services/helpers/form.helper';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { getAdditionalChargeMeta, getSaleItemMeta, getSaleMeta, Sale, SaleItem, AdditionalCharge, Customer } from '@app/features/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InputComponent } from '@app/shared/input/input.component';
@@ -44,6 +44,9 @@ export class SellComponent implements OnInit {
   private businessSettingsService = inject(BusinessSettingsService);
   private modalCtrl = inject(ModalController);
   private invoiceNumberService = inject(InvoiceNumberService);
+  private actionSheetCtrl = inject(ActionSheetController);
+  private alertCtrl = inject(AlertController);
+  private translate = inject(TranslateService);
 
   private destroy$: Subject<void> = new Subject<void>();
   
@@ -200,6 +203,41 @@ export class SellComponent implements OnInit {
     }
   }
 
+  
+
+  private duplicateSaleItem(index: number) {
+    const itemForms = this.saleItemFormsArray();
+    const current = itemForms[index];
+    if (!current) return;
+
+    const copyVal = { ...current.value };
+    const newForm = this.app.meta.toFormGroup(copyVal, this.saleItemModelMeta);
+    itemForms.splice(index + 1, 0, newForm);
+    this.saleItemFormsArray.set([...itemForms]);
+  }
+
+  private async confirmDelete() {
+    const alert = await this.alertCtrl.create({
+      header: this.translate.instant('alert.confirm'),
+      message: this.translate.instant('alert.are_you_sure_delete'),
+      buttons: [
+        {
+          text: this.translate.instant('button.cancel'),
+          role: 'cancel'
+        },
+        {
+          text: this.translate.instant('button.delete'),
+          role: 'destructive',
+          handler: () => true
+        }
+      ]
+    });
+
+    await alert.present();
+    const { role } = await alert.onDidDismiss();
+    return role !== 'cancel';
+  }
+
   onSubmit() {
     FormHelper.submit(this.saleForm, this.formMeta, () => {
       this.isSubmitting.set(true);
@@ -307,7 +345,7 @@ export class SellComponent implements OnInit {
       const itemDetailModal = await this.modalCtrl.create({
         component: SaleItemDetailComponent,
         componentProps: {
-          productData: selectedProduct
+          product: selectedProduct
         }
       });
 
@@ -326,6 +364,63 @@ export class SellComponent implements OnInit {
     const currentForms = this.saleItemFormsArray();
     const newForm = this.app.meta.toFormGroup(itemData, this.saleItemModelMeta);
     this.saleItemFormsArray.set([...currentForms, newForm]);
+  }
+
+   async presentItemActionSheet(event: Event, itemForm: FormGroup) {
+    event.stopPropagation();
+    const index = this.saleItemForms().indexOf(itemForm as any);
+    if (index === -1) return;
+
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: this.translate.instant('button.actions'),
+      buttons: [
+        {
+          text: this.translate.instant('button.edit'),
+          icon: 'pencil',
+          handler: async () => {
+            await this.editSaleItem1(index);
+          }
+        },
+        {
+          text: this.translate.instant('button.delete'),
+          role: 'destructive',
+          icon: 'trash',
+          handler: async () => {
+            const confirmed = await this.confirmDelete();
+            if (confirmed) this.removeSaleItem(index);
+          }
+        },
+        {
+          text: this.translate.instant('button.cancel'),
+          role: 'cancel',
+          icon: 'close'
+        }
+      ]
+    });
+
+    await actionSheet.present();
+
+  }
+
+  async editSaleItem1(index: number) {
+    const itemForms = this.saleItemFormsArray();
+    const current = itemForms[index];
+    if (!current) return;
+
+    const itemData = current.value;
+    const modal = await this.modalCtrl.create({
+      component: SaleItemDetailComponent,
+      componentProps: { saleItem: itemData }
+    });
+
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    if (data) {
+      // Patch updated values into existing form
+      current.patchValue(data);
+      // re-set the array to trigger reactive updates if needed
+      this.saleItemFormsArray.set([...itemForms]);
+    }
   }
 
   ngOnDestroy() {
