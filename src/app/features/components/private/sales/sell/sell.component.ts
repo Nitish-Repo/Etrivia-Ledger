@@ -25,6 +25,9 @@ import { InvoiceNumberService } from '@app/features/services/invoice-number.serv
 import { CustomersComponent } from '../../customers/customers.component';
 import { ProductsComponent } from '../../products/products.component';
 import { SaleItemDetailComponent } from '../sale-item-detail/sale-item-detail.component';
+import { SaleService } from '@app/features/services/sale.service';
+import { SaleItemService } from '@app/features/services/sale-item.service';
+import { SaleAdditionalChargeService } from '@app/features/services/sale-additional-charge.service';
 
 @Component({
   selector: 'app-sell',
@@ -48,6 +51,9 @@ export class SellComponent implements OnInit {
   private actionSheetCtrl = inject(ActionSheetController);
   private alertCtrl = inject(AlertController);
   private translate = inject(TranslateService);
+  private saleService = inject(SaleService);
+  private saleItemService = inject(SaleItemService);
+  private saleAdditionalChargeService = inject(SaleAdditionalChargeService);
 
   private destroy$: Subject<void> = new Subject<void>();
 
@@ -316,6 +322,12 @@ export class SellComponent implements OnInit {
       //     this.saleService.addAdditionalChargesAndReturn(additionalCharges).subscribe();
       //   });
       // }
+        this.saleService.addSaleAndReturn(saleData).subscribe(sale => {
+          // Add sale items
+          this.saleItemService.addSaleItemsAndReturn(saleItems, sale!).subscribe();
+          // Add additional charges
+          this.saleAdditionalChargeService.addAdditionalChargesAndReturn(additionalCharges, sale!).subscribe();
+        });
 
       setTimeout(() => {
         this.isSubmitting.set(false);

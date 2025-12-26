@@ -1,13 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { DatabaseService, DatabaseUtilityService, DB_TABLES } from '@app/core/database-services';
-import { AdditionalCharge } from '../models';
+import { AdditionalCharge, Sale } from '../models';
 import { Observable } from 'rxjs';
 import { v7 as uuidv7 } from 'uuid';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SaleAdditionalChargeServiceTs {
+export class SaleAdditionalChargeService {
   private db = inject(DatabaseService);
   private dbUtil = inject(DatabaseUtilityService);
 
@@ -23,7 +23,7 @@ export class SaleAdditionalChargeServiceTs {
    * @param additionalCharges Array of additional charges
    * @returns Observable of inserted records
    */
-  addAdditionalChargesAndReturn(additionalCharges: AdditionalCharge[]): Observable<AdditionalCharge[]> {
+  addAdditionalChargesAndReturn(additionalCharges: AdditionalCharge[], sale: Sale): Observable<AdditionalCharge[]> {
     if (!additionalCharges || !additionalCharges.length) {
       return new Observable(observer => {
         observer.next([]);
@@ -35,7 +35,8 @@ export class SaleAdditionalChargeServiceTs {
     const charges = additionalCharges.map(charge => ({
       ...charge,
       createdAt: timestamp,
-      chargeId: charge.chargeId || uuidv7()
+      chargeId: charge.chargeId || uuidv7(),
+      saleId: sale.saleId
     }));
 
     return this.db.insertManyAndReturn$<AdditionalCharge>(DB_TABLES.ADDITIONAL_CHARGES, charges);

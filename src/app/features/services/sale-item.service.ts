@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class SaleItemServiceTs {
+export class SaleItemService {
   private db = inject(DatabaseService);
   private dbUtil = inject(DatabaseUtilityService);
 
