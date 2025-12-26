@@ -31,7 +31,7 @@ import { SaleItemDetailComponent } from '../sale-item-detail/sale-item-detail.co
   templateUrl: './sell.component.html',
   styleUrls: ['./sell.component.scss'],
   standalone: true,
-  imports: [IonTabBar, IonTabButton, IonText, IonNote, IonBadge, IonList, IonDatetimeButton, IonItem,
+  imports: [IonText, IonNote, IonBadge, IonList, IonDatetimeButton, IonItem,
     IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider,
     IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonDatetime, IonModal, IonButtons,
     CommonModule, ReactiveFormsModule, ToolbarPage, InputComponent, SelectComponent, TranslateModule
@@ -53,7 +53,7 @@ export class SellComponent implements OnInit {
 
   // Business Settings
   businessSettings = signal<BusinessSettings | null>(null);
-  nextInvoiceNumber = signal<string>('INV-2025-0001');
+
   selectedCustomer = signal<Customer | null>(null);
 
   // Forms
@@ -139,6 +139,7 @@ export class SellComponent implements OnInit {
   }
 
   private buildNewSellForm() {
+    // Initialize form
     this.saleForm = this.app.meta.toFormGroup(this.defaultSale, this.saleModelMeta);
 
     // Listen for invoice discount changes
@@ -336,7 +337,10 @@ export class SellComponent implements OnInit {
   private loadNextInvoiceNumber() {
     this.invoiceNumberService.getNextInvoiceNumberPreview().subscribe({
       next: (invoiceNumber) => {
-        this.nextInvoiceNumber.set(invoiceNumber);
+        // If form already exists, set the invoice number into the form so UI shows it
+        if (this.saleForm) {
+          this.saleForm.get('invoiceNumber')?.setValue(invoiceNumber);
+        }
       },
       error: (error) => {
         console.error('Error loading invoice number:', error);
@@ -369,12 +373,15 @@ export class SellComponent implements OnInit {
 
     await modal.present();
 
-    const { data } = await modal.onWillDismiss();
+    const { data } = await modal.onWillDismiss<Customer>();
     if (data) {
-      this.selectedCustomer.set(data);
-      this.saleForm.get('customerId')?.setValue(data.customerId);
-      this.saleForm.get('customerName')?.setValue(data.customerNameS);
-      this.saleForm.get('customerGstin')?.setValue(data.customerGstin);
+      const customer = data as Customer;
+      this.selectedCustomer.set(customer);
+      this.saleForm.patchValue({
+        customerId: customer.customerId,
+        customerName: customer.customerName,
+        customerGstin: customer.gstin
+      });
       this.saleForm.get('customerId')?.markAsTouched();
     }
   }

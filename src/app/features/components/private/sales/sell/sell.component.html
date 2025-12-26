@@ -43,7 +43,7 @@
                   <strong>INVOICE</strong>
                 </div>
                 <ion-text color="primary" class="description">
-                  <strong>{{ nextInvoiceNumber() }}</strong>
+                  <strong>{{ saleForm.get('invoiceNumber')?.value || ('-' ) }}</strong>
                 </ion-text>
               </ion-label>
             </ion-item>
