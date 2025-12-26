@@ -99,7 +99,7 @@
             </ion-item>
 
             @for (itemForm of saleItemForms(); track $index) {
-            <ion-item [button]="true" detail="false" (click)="editSaleItem1($index)">
+            <ion-item [button]="true" detail="false" (click)="editSaleItem($index)">
               <ion-label class="ion-text-wrap">
                 <div class="product-header">
                   <strong>{{ itemForm.get('productName')?.value || 'Product ' + ($index + 1) }}</strong>

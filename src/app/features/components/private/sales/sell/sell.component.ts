@@ -205,19 +205,6 @@ export class SellComponent implements OnInit {
     }
   }
 
-
-
-  private duplicateSaleItem(index: number) {
-    const itemForms = this.saleItemFormsArray();
-    const current = itemForms[index];
-    if (!current) return;
-
-    const copyVal = { ...current.value };
-    const newForm = this.app.meta.toFormGroup(copyVal, this.saleItemModelMeta);
-    itemForms.splice(index + 1, 0, newForm);
-    this.saleItemFormsArray.set([...itemForms]);
-  }
-
   private async confirmDelete() {
     const alert = await this.alertCtrl.create({
       header: this.translate.instant('alert.confirm'),
@@ -384,7 +371,7 @@ export class SellComponent implements OnInit {
           text: this.translate.instant('button.edit'),
           icon: 'pencil',
           handler: async () => {
-            await this.editSaleItem1(index);
+            await this.editSaleItem(index);
           }
         },
         {
@@ -408,7 +395,7 @@ export class SellComponent implements OnInit {
 
   }
 
-  async editSaleItem1(index: number) {
+  async editSaleItem(index: number) {
     const itemForms = this.saleItemFormsArray();
     const current = itemForms[index];
     if (!current) return;
