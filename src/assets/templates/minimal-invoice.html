@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Invoice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            color: #000;
+            line-height: 1.6;
+            background: #ffffff;
+            padding: 20mm;
+            width: 210mm;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 50px;
+        }
+        
+        .header h1 {
+            font-size: 40px;
+            font-weight: 300;
+            color: #000;
+        }
+        
+        .invoice-info {
+            text-align: right;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .invoice-info p {
+            margin: 3px 0;
+        }
+        
+        .parties {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+            gap: 40px;
+        }
+        
+        .party {
+            flex: 1;
+        }
+        
+        .party-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .party-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 5px;
+        }
+        
+        .party-details {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .items {
+            margin: 50px 0;
+        }
+        
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .items-table thead tr {
+            border-bottom: 1px solid #000;
+        }
+        
+        .items-table th {
+            padding: 10px 0;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+        
+        .items-table th:nth-child(2),
+        .items-table th:nth-child(3),
+        .items-table th:nth-child(4) {
+            text-align: right;
+        }
+        
+        .items-table tbody tr {
+            border-bottom: 1px solid #eee;
+        }
+        
+        .items-table td {
+            padding: 15px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .items-table td:nth-child(2),
+        .items-table td:nth-child(3),
+        .items-table td:nth-child(4) {
+            text-align: right;
+        }
+        
+        .summary {
+            margin-top: 30px;
+            margin-left: auto;
+            width: 300px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+        
+        .summary-row.subtotal,
+        .summary-row.tax {
+            color: #666;
+        }
+        
+        .summary-row.total {
+            border-top: 2px solid #000;
+            padding-top: 15px;
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+        }
+        
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .footer-section {
+            margin-bottom: 20px;
+        }
+        
+        .footer-section h3 {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .footer-section p {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Invoice</h1>
+        <div class="invoice-info">
+            <p><strong>{{invoiceNumber}}</strong></p>
+            <p>{{invoiceDate}}</p>
+            <p>Due: {{dueDate}}</p>
+        </div>
+    </div>
+    
+    <div class="parties">
+        <div class="party">
+            <div class="party-label">From</div>
+            <div class="party-name">{{company.name}}</div>
+            <div class="party-details">
+                <p>{{company.address.street}}</p>
+                <p>{{company.address.city}}, {{company.address.state}} {{company.address.zipCode}}</p>
+                <p>{{company.phone}}</p>
+                <p>{{company.email}}</p>
+                {{#if company.taxId}}
+                <p>{{company.taxId}}</p>
+                {{/if}}
+            </div>
+        </div>
+        
+        <div class="party">
+            <div class="party-label">To</div>
+            <div class="party-name">{{customer.name}}</div>
+            <div class="party-details">
+                <p>{{customer.address.street}}</p>
+                <p>{{customer.address.city}}, {{customer.address.state}} {{customer.address.zipCode}}</p>
+                <p>{{customer.phone}}</p>
+                <p>{{customer.email}}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="items">
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th style="width: 50%;">Item</th>
+                    <th style="width: 15%;">Qty</th>
+                    <th style="width: 17.5%;">Rate</th>
+                    <th style="width: 17.5%;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each items}}
+                <tr>
+                    <td>{{description}}</td>
+                    <td>{{quantity}}</td>
+                    <td>${{unitPrice}}</td>
+                    <td>${{total}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="summary">
+        <div class="summary-row subtotal">
+            <span>Subtotal</span>
+            <span>{{subtotal}}</span>
+        </div>
+        <div class="summary-row tax">
+            <span>Tax {{taxRate}}</span>
+            <span>{{tax}}</span>
+        </div>
+        <div class="summary-row total">
+            <span>Total</span>
+            <span>{{total}}</span>
+        </div>
+    </div>
+    
+    <div class="footer">
+        {{#if notes}}
+        <div class="footer-section">
+            <h3>Notes</h3>
+            <p>{{notes}}</p>
+        </div>
+        {{/if}}
+        
+        {{#if terms}}
+        <div class="footer-section">
+            <h3>Terms</h3>
+            <p>{{terms}}</p>
+        </div>
+        {{/if}}
+    </div>
+</body>
+</html>
