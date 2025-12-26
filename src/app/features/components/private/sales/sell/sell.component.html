@@ -105,11 +105,11 @@
                   </div>
                 </div>
                 <ion-text color="medium" class="description">
-                  {{ itemForm.get('quantity')?.value }} × ₹{{ itemForm.get('pricePerUnit')?.value }}
+                  {{ itemForm.get('quantity')?.value }} × {{ itemForm.get('pricePerUnit')?.value | currency:'INR':'symbol':'1.2-2' }}
                 </ion-text>
               </ion-label>
               <ion-button slot="end" fill="outline" disabled color="medium">
-                ₹{{ (itemForm.get('quantity')?.value || 0) * (itemForm.get('pricePerUnit')?.value || 0) }}
+                {{ ((itemForm.get('quantity')?.value || 0) * (itemForm.get('pricePerUnit')?.value || 0)) | currency:'INR':'symbol':'1.2-2' }}
               </ion-button>
               <!-- <ion-button slot="end" shape="round" size="large" fill="clear" (click)="removeSaleItem($index)" >
                 <ion-icon slot="icon-only" name="trash" size="large"></ion-icon>
@@ -122,45 +122,45 @@
             }
 
             <ion-item lines="none">
-              <ion-label>Taxable Amount</ion-label>
+              <ion-label>{{ 'label.taxable_amount' | translate }}</ion-label>
               <ion-note slot="end">
-                {{ 1231 | currency:'INR' }}
+                {{ (saleForm.get('taxableAmount')?.value || 0) | currency:'INR':'symbol':'1.2-2' }}
               </ion-note>
             </ion-item>
             <ion-item lines="none">
-              <ion-label>Item Discount</ion-label>
+              <ion-label>{{ 'label.total_discount_amount' | translate }}</ion-label>
               <ion-note slot="end">
-                {{ 12 | currency:'INR' }}
+                {{ (saleForm.get('TotalDiscountAmount')?.value || 0) | currency:'INR':'symbol':'1.2-2' }}
               </ion-note>
             </ion-item>
             <ion-item lines="none">
-              <ion-label>Amount After Discount</ion-label>
+              <ion-label>{{ 'label.amount_after_discount' | translate }}</ion-label>
               <ion-note slot="end">
-                {{ 12 | currency:'INR' }}
+                {{ ((saleForm.get('taxableAmount')?.value || 0) - (saleForm.get('TotalDiscountAmount')?.value || 0)) | currency:'INR':'symbol':'1.2-2' }}
               </ion-note>
             </ion-item>
             <ion-item lines="none">
-              <ion-label>GST</ion-label>
+              <ion-label>{{ 'label.gst' | translate }}</ion-label>
               <ion-note slot="end">
-                {{ 12 | currency:'INR' }}
+                {{ (((saleForm.get('cgst')?.value || 0) + (saleForm.get('sgst')?.value || 0) + (saleForm.get('igst')?.value || 0))) | currency:'INR':'symbol':'1.2-2' }}
               </ion-note>
             </ion-item>
             <ion-item lines="none">
-              <ion-label>CESS</ion-label>
+              <ion-label>{{ 'label.cess' | translate }}</ion-label>
               <ion-note slot="end">
-                {{ 12 | currency:'INR' }}
+                {{ (saleForm.get('cess')?.value || 0) | currency:'INR':'symbol':'1.2-2' }}
               </ion-note>
             </ion-item>
             <ion-item>
-              <ion-label>Total Amount</ion-label>
+              <ion-label>{{ 'label.total_amount' | translate }}</ion-label>
               <ion-note slot="end">
-                {{ 12 | currency:'INR' }}
+                {{ (saleForm.get('totalAmount')?.value || 0) | currency:'INR':'symbol':'1.2-2' }}
               </ion-note>
             </ion-item>
             <ion-item>
-              <ion-label slot="end">Final Amount</ion-label>
+              <ion-label slot="end">{{ 'label.grand_total' | translate }}</ion-label>
               <ion-note slot="end">
-                {{ 12 | currency:'INR' }}
+                {{ (saleForm.get('grandTotal')?.value || 0) | currency:'INR':'symbol':'1.2-2' }}
               </ion-note>
             </ion-item>
 
@@ -294,6 +294,8 @@
         </div>
         }
 
+         <button type="submit" style="display: none;" [disabled]="formMeta.submitProcessing"></button>
+
       </form>
     </div>
     } @else {
@@ -324,9 +326,33 @@
         Preview
       </ion-button>
 
-      <ion-button fill="outline" class="save-btn">
+      <ion-button fill="outline" class="save-btn" (click)="onSubmit()"> 
         Save
       </ion-button>
     </div>
   </ion-toolbar>
 </ion-footer>
+
+<!-- <ion-footer class="ion-no-border" [translucent]="true" mode="ios">
+  @if(!isCustomerSave()){
+  <ion-tab-bar>
+    @if(!openedAsModal){
+    <ion-tab-button (click)="onSubmit(true)" [disabled]="formMeta.submitProcessing">
+      <ion-icon name="add-circle-outline"></ion-icon>
+      <ion-label>{{ 'button.add_more' | translate }}</ion-label>
+    </ion-tab-button>
+    }
+    <ion-tab-button (click)="onSubmit(false)" [disabled]="formMeta.submitProcessing">
+      <ion-icon name="save-outline"></ion-icon>
+      <ion-label>{{ 'button.save' | translate }}</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+  } @else {
+  <ion-tab-bar>
+    <ion-tab-button [disabled]="formMeta.submitProcessing">
+      <ion-spinner name="crescent"></ion-spinner>
+      <ion-label>{{ 'common.saving' | translate }}</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+  }
+</ion-footer> -->

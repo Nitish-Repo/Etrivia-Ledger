@@ -180,6 +180,7 @@
     "due": "बकाया",
     "payment_details": "भुगतान विवरण",
     "total_discount_amount": "कुल छूट राशि",
+    "amount_after_discount": "छूट के बाद राशि",
     "charge_name": "शुल्क का नाम",
     "business_name": "व्यवसाय का नाम",
     "invoice_prefix": "चालान उपसर्ग",

@@ -180,6 +180,7 @@
         "due": "Due",
         "payment_details": "Payment Details",
         "total_discount_amount": "Total Discount Amount",
+        "amount_after_discount": "Amount After Discount",
         "charge_name": "Charge Name",
         "business_name": "Business Name",
         "invoice_prefix": "Invoice Prefix",

@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider, IonDatetime, IonModal, IonButtons, ActionSheetController, AlertController,
-  IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonItem, IonDatetimeButton, IonList, IonBadge, IonNote, IonText, IonAvatar, IonCard, ModalController
-} from '@ionic/angular/standalone';
+  IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonItem, IonDatetimeButton, IonList, IonBadge, IonNote, IonText, IonAvatar, IonCard, ModalController, IonTabButton, IonTabBar } from '@ionic/angular/standalone';
 import { ToolbarPage } from "@app/layouts/private/toolbar/toolbar.page";
 import { Subject } from 'rxjs';
 import { FormMeta } from '@app/shared-services/models/form-meta';
@@ -12,12 +11,12 @@ import { ModelMeta } from '@app/shared-services';
 import { AppService } from '@app/core/app.service';
 import { FormHelper } from '@app/shared-services/helpers/form.helper';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { getAdditionalChargeMeta, getSaleItemMeta, getSaleMeta, Sale, SaleItem, AdditionalCharge, Customer } from '@app/features/models';
+import { getAdditionalChargeMeta, getSaleItemMeta, getSaleMeta, calculateSaleTotals, Sale, SaleItem, AdditionalCharge, Customer } from '@app/features/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InputComponent } from '@app/shared/input/input.component';
 import { SelectComponent } from '@app/shared/select/select.component';
 import { addIcons } from 'ionicons';
-import { add, saveOutline, trash, ellipsisVertical, heart, personOutline, chevronForwardOutline, peopleOutline, listCircle, chevronForward, idCard, idCardOutline, receiptOutline } from 'ionicons/icons';
+import { add, saveOutline, trash, ellipsisVertical, heart, personOutline, chevronForwardOutline, peopleOutline, listCircle, chevronForward, idCard, idCardOutline, receiptOutline, addCircleOutline } from 'ionicons/icons';
 import { LuxonDateService } from '@app/core/luxon-Date.service';
 import { BusinessSettingsService } from '@app/features/services/business-settings';
 import { BusinessSettings } from '@app/features/models/business-settings.model';
@@ -32,7 +31,7 @@ import { SaleItemDetailComponent } from '../sale-item-detail/sale-item-detail.co
   templateUrl: './sell.component.html',
   styleUrls: ['./sell.component.scss'],
   standalone: true,
-  imports: [IonText, IonNote, IonBadge, IonList, IonDatetimeButton, IonItem,
+  imports: [IonTabBar, IonTabButton, IonText, IonNote, IonBadge, IonList, IonDatetimeButton, IonItem,
     IonContent, IonHeader, IonSegment, IonSegmentButton, IonLabel, IonItemDivider,
     IonButton, IonIcon, IonTextarea, IonSpinner, IonFooter, IonToolbar, IonDatetime, IonModal, IonButtons,
     CommonModule, ReactiveFormsModule, ToolbarPage, InputComponent, SelectComponent, TranslateModule
@@ -106,7 +105,7 @@ export class SellComponent implements OnInit {
   };
 
   constructor() {
-    addIcons({ listCircle, chevronForward, personOutline, chevronForwardOutline, peopleOutline, add, ellipsisVertical, trash, saveOutline, heart, idCard, idCardOutline, receiptOutline });
+    addIcons({idCardOutline,idCard,receiptOutline,ellipsisVertical,add,trash,addCircleOutline,saveOutline,listCircle,chevronForward,personOutline,chevronForwardOutline,peopleOutline,heart});
   }
 
   ngOnInit() {
@@ -142,13 +141,22 @@ export class SellComponent implements OnInit {
   private buildNewSellForm() {
     this.saleForm = this.app.meta.toFormGroup(this.defaultSale, this.saleModelMeta);
 
+    // Listen for invoice discount changes
+    this.saleForm.get('invoiceDiscountType')?.valueChanges.subscribe(() => this.updateInvoiceTotals());
+    this.saleForm.get('invoiceDiscountValue')?.valueChanges.subscribe(() => this.updateInvoiceTotals());
+
     // Initialize with empty sale items array - user will add via modal
     this.saleItemFormsArray.set([]);
 
     // Initialize with one additional charge (can be empty)
     const chargeForms: FormGroup[] = [];
-    chargeForms.push(this.app.meta.toFormGroup({}, this.additionalChargeModelMeta));
+    const initialChargeForm = this.app.meta.toFormGroup({}, this.additionalChargeModelMeta);
+    initialChargeForm.valueChanges.subscribe(() => this.updateInvoiceTotals());
+    chargeForms.push(initialChargeForm);
     this.additionalChargeFormsArray.set(chargeForms);
+
+    // update totals for the initial empty state
+    this.updateInvoiceTotals();
   }
 
   private buildSellForm(saleId: string) {
@@ -180,7 +188,9 @@ export class SellComponent implements OnInit {
   addSaleItem() {
     const currentForms = this.saleItemFormsArray();
     const newForm = this.app.meta.toFormGroup({}, this.saleItemModelMeta);
+    newForm.valueChanges.subscribe(() => this.updateInvoiceTotals());
     this.saleItemFormsArray.set([...currentForms, newForm]);
+    this.updateInvoiceTotals();
   }
 
   removeSaleItem(index: number) {
@@ -190,12 +200,15 @@ export class SellComponent implements OnInit {
     currentForms.splice(index, 1);
     // allow empty list (remove last item as well)
     this.saleItemFormsArray.set([...currentForms]);
+    this.updateInvoiceTotals();
   }
 
   addAdditionalCharge() {
     const currentForms = this.additionalChargeFormsArray();
     const newForm = this.app.meta.toFormGroup({}, this.additionalChargeModelMeta);
+    newForm.valueChanges.subscribe(() => this.updateInvoiceTotals());
     this.additionalChargeFormsArray.set([...currentForms, newForm]);
+    this.updateInvoiceTotals();
   }
 
   removeAdditionalCharge(index: number) {
@@ -203,6 +216,7 @@ export class SellComponent implements OnInit {
     if (currentForms.length > 1) {
       currentForms.splice(index, 1);
       this.additionalChargeFormsArray.set([...currentForms]);
+      this.updateInvoiceTotals();
     }
   }
 
@@ -228,7 +242,54 @@ export class SellComponent implements OnInit {
     return role !== 'cancel';
   }
 
+  private updateInvoiceTotals() {
+    // Gather sale items from forms
+    const items: SaleItem[] = this.saleItemFormsArray().map(f => f.value);
+
+    const invoiceDiscountType = this.saleForm.get('invoiceDiscountType')?.value;
+    const invoiceDiscountValue = this.saleForm.get('invoiceDiscountValue')?.value || 0;
+
+    const totals = calculateSaleTotals(items, invoiceDiscountType, invoiceDiscountValue);
+
+    // Include additional charges (if any) in totals
+    const charges = this.additionalChargeFormsArray().map(f => f.value);
+    const additionalTaxable = charges.reduce((s, c) => s + (c.taxableAmount || c.amount || 0), 0);
+    const additionalCgst = charges.reduce((s, c) => s + (c.cgst || 0), 0);
+    const additionalSgst = charges.reduce((s, c) => s + (c.sgst || 0), 0);
+    const additionalIgst = charges.reduce((s, c) => s + (c.igst || 0), 0);
+    const additionalCess = charges.reduce((s, c) => s + (c.cess || 0), 0);
+    const additionalTotal = charges.reduce((s, c) => s + (c.totalAmount || c.amount || 0), 0);
+
+    // Adjust totalAmount by subtracting invoice discount amount and adding charges
+    const discount = totals.TotalDiscountAmount || 0;
+    const totalAmountBefore = (totals.totalAmount || 0) + additionalTotal;
+    const totalAmountAfterDiscount = totalAmountBefore - discount;
+
+    const taxableAmount = (totals.taxableAmount || 0) + additionalTaxable;
+    const cgst = (totals.cgst || 0) + additionalCgst;
+    const sgst = (totals.sgst || 0) + additionalSgst;
+    const igst = (totals.igst || 0) + additionalIgst;
+    const cess = (totals.cess || 0) + additionalCess;
+
+    const roundOff = Math.round(totalAmountAfterDiscount) - totalAmountAfterDiscount;
+    const grandTotal = Math.round(totalAmountAfterDiscount);
+
+    this.saleForm.patchValue({
+      subtotal: totals.subtotal || 0,
+      TotalDiscountAmount: discount,
+      taxableAmount: parseFloat(taxableAmount.toFixed(2)) || 0,
+      cgst: parseFloat(cgst.toFixed(2)) || 0,
+      sgst: parseFloat(sgst.toFixed(2)) || 0,
+      igst: parseFloat(igst.toFixed(2)) || 0,
+      cess: parseFloat(cess.toFixed(2)) || 0,
+      totalAmount: parseFloat(totalAmountAfterDiscount.toFixed(2)),
+      roundOff: parseFloat(roundOff.toFixed(2)),
+      grandTotal: parseFloat(grandTotal.toFixed(2))
+    }, { emitEvent: false });
+  }
+
   onSubmit() {
+    console.log('Sale Data:', this.saleForm.value);
     FormHelper.submit(this.saleForm, this.formMeta, () => {
       this.isSubmitting.set(true);
 
@@ -357,7 +418,10 @@ export class SellComponent implements OnInit {
   private addSaleItemFromData(itemData: SaleItem) {
     const currentForms = this.saleItemFormsArray();
     const newForm = this.app.meta.toFormGroup(itemData, this.saleItemModelMeta);
+    // listen to individual item changes so totals update live
+    newForm.valueChanges.subscribe(() => this.updateInvoiceTotals());
     this.saleItemFormsArray.set([...currentForms, newForm]);
+    this.updateInvoiceTotals();
   }
 
   async presentItemActionSheet(event: Event, itemForm: FormGroup) {
@@ -414,6 +478,7 @@ export class SellComponent implements OnInit {
       current.patchValue(data);
       // re-set the array to trigger reactive updates if needed
       this.saleItemFormsArray.set([...itemForms]);
+      this.updateInvoiceTotals();
     }
   }
 
