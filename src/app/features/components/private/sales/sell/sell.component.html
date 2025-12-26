@@ -59,12 +59,13 @@
                 <div class="product-header">
                   <strong>Bill From</strong>
                 </div>
-                @if (businessSettings()) {
+                @if (businessSettings()?.businessName) {
                 <ion-text color="dark" class="description">{{ businessSettings()?.businessName }}</ion-text>
                 @if (businessSettings()?.gstin) {
                 <ion-text color="medium" class="description" style="font-size: 0.85em;">{{ businessSettings()?.gstin
                   }}</ion-text>
                 }
+
                 } @else {
                 <ion-text color="medium" class="description">Add Business</ion-text>
                 }
@@ -182,9 +183,9 @@
                 [placeholder]="'placeholder.calculated'" labelPlacement="floating" type="number"
                 fill="outline"></app-input>
 
-              <app-input class="ion-flex-1 ion-margin-start" [form]="saleForm" name="paidAmount" label="label.paid_amount"
-                [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
-                [errorText]="'error.required'" fill="outline"></app-input>
+              <app-input class="ion-flex-1 ion-margin-start" [form]="saleForm" name="paidAmount"
+                label="label.paid_amount" [placeholder]="'placeholder.enter_value'" labelPlacement="floating"
+                type="number" [errorText]="'error.required'" fill="outline"></app-input>
             </div>
 
             <div class="ion-display-flex ion-margin-bottom ion-margin-top">

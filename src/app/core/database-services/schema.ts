@@ -417,7 +417,7 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
       );
 
       INSERT OR IGNORE INTO business_settings (settingKey, settingValue) VALUES
-        ('businessName', 'Your Business Name'),
+        ('businessName', ''),
         ('gstin', ''),
         ('pan', ''),
         ('address', ''),
