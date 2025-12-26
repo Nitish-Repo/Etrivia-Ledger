@@ -11,11 +11,8 @@
             <ion-segment-button value="invoice">
               <ion-label>{{ 'common.invoice_detail' | translate }}</ion-label>
             </ion-segment-button>
-            <ion-segment-button value="items">
-              <ion-label>{{ 'common.sale_items' | translate }}</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="charges">
-              <ion-label>{{ 'common.additional_charges' | translate }}</ion-label>
+            <ion-segment-button value="option">
+              <ion-label>{{ 'common.option_detail' | translate }}</ion-label>
             </ion-segment-button>
           </ion-segment>
         </div>
@@ -206,7 +203,7 @@
         </div>
         }
 
-        @if (segment() === 'items') {
+        @if (segment() === 'option') {
         <div class="ion-margin">
           <div class="ion-display-flex ion-margin-bottom ion-margin-top">
             <app-select class="ion-flex-1" [meta]="invoiceDiscountTypeMeta" />
@@ -233,11 +230,8 @@
               fill="outline"></app-input>
           </div>
 
-
         </div>
-        }
 
-        @if (segment() === 'charges') {
         <div>
           <ion-item-divider>
             <ion-label>{{ 'common.additional_charges' | translate }}</ion-label>
