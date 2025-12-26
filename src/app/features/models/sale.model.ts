@@ -106,40 +106,6 @@ export interface Sale {
   items?: SaleItem[];
 }
 
-export interface SaleItem {
-  saleItemId?: string;
-  saleId: string;
-
-  productId: string;
-  productName: string;
-  hsnCode?: string;
-
-  quantity: number;
-  unit?: string;
-
-  // Pricing
-  pricePerUnit: number;
-  taxType: TaxType;
-
-  // Discount at item level
-  discountType: DiscountType;
-  discountValue: number;
-  discountAmount: number;
-
-  // Tax (Rates are percentages, amounts are in ₹)
-  taxableAmount: number;
-  gstRate: number;           // GST percentage (e.g., 18%)
-  cessRate: number;          // CESS percentage (e.g., 0.5%)
-  cgst: number;              // Calculated CGST amount in ₹ (for intra-state)
-  sgst: number;              // Calculated SGST amount in ₹ (for intra-state)
-  igst: number;              // Calculated IGST amount in ₹ (for inter-state)
-  cess: number;              // Calculated CESS amount in ₹
-
-  totalAmount: number;
-
-  createdAt?: string | Date;
-}
-
 /**
  * Form Metadata for Sale
  */
@@ -251,6 +217,40 @@ export function getAdditionalChargeMeta() {
     { key: 'totalAmount', label: 'Total Amount (Auto)', required: false, controlType: 'number' },
     { key: 'createdAt', label: 'Created At', required: false, hide: true },
   ] as Array<ModelMeta>;
+}
+
+export interface SaleItem {
+  saleItemId?: string;
+  saleId: string;
+
+  productId: string;
+  productName: string;
+  hsnCode?: string;
+
+  quantity: number;
+  unit?: string;
+
+  // Pricing
+  pricePerUnit: number;
+  taxType: TaxType;
+
+  // Discount at item level
+  discountType: DiscountType;
+  discountValue: number;
+  discountAmount: number;
+
+  // Tax (Rates are percentages, amounts are in ₹)
+  taxableAmount: number;
+  gstRate: number;           // GST percentage (e.g., 18%)
+  cessRate: number;          // CESS percentage (e.g., 0.5%)
+  cgst: number;              // Calculated CGST amount in ₹ (for intra-state)
+  sgst: number;              // Calculated SGST amount in ₹ (for intra-state)
+  igst: number;              // Calculated IGST amount in ₹ (for inter-state)
+  cess: number;              // Calculated CESS amount in ₹
+
+  totalAmount: number;
+
+  createdAt?: string | Date;
 }
 
 /**

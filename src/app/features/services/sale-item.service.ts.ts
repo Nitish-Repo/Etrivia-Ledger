@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { DatabaseService, DatabaseUtilityService, DB_TABLES } from '@app/core/database-services';
 import { v7 as uuidv7 } from 'uuid';
-import { SaleItem } from '../models';
+import { Sale, SaleItem } from '../models';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -23,7 +23,7 @@ export class SaleItemServiceTs {
    * @param saleItems Array of sale items
    * @returns Observable of inserted records
    */
-  addSaleItemsAndReturn(saleItems: SaleItem[]): Observable<SaleItem[]> {
+  addSaleItemsAndReturn(saleItems: SaleItem[], sale: Sale): Observable<SaleItem[]> {
     if (!saleItems || !saleItems.length) {
       return new Observable(observer => {
         observer.next([]);
@@ -35,7 +35,8 @@ export class SaleItemServiceTs {
     const items = saleItems.map(item => ({
       ...item,
       createdAt: timestamp,
-      saleItemId: item.saleItemId || uuidv7()
+      saleItemId: item.saleItemId || uuidv7(),
+      saleId: sale.saleId
     }));
 
     return this.db.insertManyAndReturn$<SaleItem>(DB_TABLES.SALE_ITEMS, items);

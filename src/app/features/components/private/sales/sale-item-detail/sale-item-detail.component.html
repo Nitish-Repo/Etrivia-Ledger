@@ -25,16 +25,11 @@
                     labelPlacement="floating" fill="outline"></app-input>
             </div>
 
-            <div class="ion-margin-bottom">
-                <app-select [meta]="unitMeta" />
-            </div>
-
             <div class="ion-display-flex ion-margin-bottom">
                 <app-input class="ion-flex-1" [form]="form" name="quantity" label="label.quantity"
                     [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
                     [errorText]="'error.required'" fill="outline"></app-input>
-                <!-- <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="unit" label="label.unit"
-                    [placeholder]="'placeholder.enter_unit'" labelPlacement="floating" fill="outline"></app-input> -->
+                    <app-select class="ion-flex-1 ion-margin-start" [meta]="unitMeta" />
             </div>
 
             <div class="ion-display-flex ion-margin-bottom">
@@ -59,6 +54,27 @@
                     [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
                     fill="outline"></app-input>
             </div>
+
+            <!-- Summary Card for Calculated Fields -->
+            <ion-card class="ion-margin-bottom ion-padding">
+                <ion-card-header>
+                    <ion-card-title>{{ 'common.summary' | translate }}</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                    <div class="ion-margin-bottom">
+                        <strong>{{ 'label.taxable_amount' | translate }}:</strong>
+                        <span>{{ form.get('taxableAmount')?.value | number:'1.2-2' }}</span>
+                    </div>
+                    <div class="ion-margin-bottom">
+                        <strong>{{ 'label.gst_rate' | translate }}:</strong>
+                        <span>{{ form.get('gstRate')?.value | number:'1.2-2' }}%</span>
+                    </div>
+                    <div class="ion-margin-bottom">
+                        <strong>{{ 'label.total_amount' | translate }}:</strong>
+                        <span>{{ form.get('totalAmount')?.value | number:'1.2-2' }}</span>
+                    </div>
+                </ion-card-content>
+            </ion-card>
 
         </form>
         }
