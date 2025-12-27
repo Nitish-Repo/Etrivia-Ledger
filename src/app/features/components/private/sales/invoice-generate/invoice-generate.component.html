@@ -20,7 +20,7 @@
         </div>
       } @else {
         <div class="templates-grid">
-          @for (template of templates(); track template.id) {
+          @for (template of templates(); track template.templateId) {
             <div class="template-card" (click)="selectTemplate(template)">
               <div class="template-thumbnail">
                 <img [src]="template.thumbnailPath" [alt]="template.name" />

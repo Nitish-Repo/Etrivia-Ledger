@@ -1,7 +1,7 @@
 {
   "templates": [
     {
-      "id": "modern",
+      "templateId": "01f3e5b2-8a67-7a00-a123-000000000001",
       "name": "Modern Invoice",
       "description": "Clean and contemporary design with bold headers and organized layout",
       "filename": "modern-invoice.html",
@@ -9,7 +9,7 @@
       "category": "Professional"
     },
     {
-      "id": "classic",
+      "templateId": "01f3e5b2-8a67-7a00-a123-000000000002",
       "name": "Classic Invoice",
       "description": "Traditional professional invoice with elegant typography",
       "filename": "classic-invoice.html",
@@ -17,12 +17,13 @@
       "category": "Traditional"
     },
     {
-      "id": "minimal",
+      "templateId": "01f3e5b2-8a67-7a00-a123-000000000003",
       "name": "Minimal Invoice",
       "description": "Simple and minimal design focusing on clarity and readability",
       "filename": "minimal-invoice.html",
       "thumbnailPath": "/assets/templates/thumbnails/minimal.jpg",
       "category": "Simple"
     }
+   
   ]
 }

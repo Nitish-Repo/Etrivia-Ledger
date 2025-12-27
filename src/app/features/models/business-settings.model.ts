@@ -14,6 +14,7 @@ export interface BusinessSettings {
   pincode: string;
   phone: string;
   email: string;
+  templateId: string;
   invoicePrefix: string;
   financialYearStart: string;  // MM-DD format (e.g., '04-01')
   defaultGstRate: number;
@@ -38,6 +39,7 @@ export function getBusinessSettingsMeta() {
     { key: 'pincode', label: 'Pincode', required: false },
     { key: 'phone', label: 'Phone', required: true },
     { key: 'email', label: 'Email', required: false, email: true },
+    { key: 'templateId', label: 'Template Id', required: false },
     { key: 'invoicePrefix', label: 'Invoice Prefix', required: true },
     { key: 'financialYearStart', label: 'Financial Year Start', required: true },
     { key: 'defaultGstRate', label: 'Default GST Rate', required: false, controlType: 'number' },

@@ -44,7 +44,7 @@ export class BusinessSettingsService {
   /**
    * Update specific business setting
    */
-  updateSetting(key: keyof BusinessSettings, value: string | number | boolean): Observable<number> {
+  updateBusinessSettingAndReturn(key: keyof BusinessSettings, value: string | number | boolean): Observable<number> {
     const settingValue = String(value);
     
     return from(

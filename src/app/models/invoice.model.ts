@@ -44,7 +44,7 @@ export interface Invoice {
 }
 
 export interface TemplateMetadata {
-  id: string;
+  templateId: string;
   name: string;
   description: string;
   filename: string;

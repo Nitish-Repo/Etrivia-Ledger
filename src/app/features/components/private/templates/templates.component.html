@@ -27,11 +27,35 @@
 </ion-header>
 }
 <ion-content [fullscreen]="true">
-  <!-- <ion-segment-view>
-    <ion-segment-content id="first">First</ion-segment-content>
+  <ion-segment-view>
+    <ion-segment-content id="first">
+      @if (loading()) {
+      <div class="loading">Loading templates...</div>
+      } @else if (error()) {
+      <div class="error">
+        <p>Error loading templates: {{ error() }}</p>
+        <button (click)="loadTemplates()" class="retry-btn">Retry</button>
+      </div>
+      } @else {
+      <ion-grid class="ion-padding">
+        <ion-row>
+          @for (template of templates(); track template.templateId) {
+          <ion-col size="4" size-sm="3" size-md="2" size-lg="2">
+            <div class="template-card" (click)="selectTemplate(template)">
+              <img [src]="template.thumbnailPath" [alt]="template.name" loading="lazy" class="template-thumbnail-img" />
+              @if (businessSetting()?.templateId === template.templateId) {
+                <ion-icon name="checkmark-circle" class="selected-icon"></ion-icon>
+              }
+            </div>
+          </ion-col>
+          }
+        </ion-row>
+      </ion-grid>
+      }
+    </ion-segment-content>
     <ion-segment-content id="second">Second</ion-segment-content>
     <ion-segment-content id="third">Third</ion-segment-content>
-  </ion-segment-view> -->
+  </ion-segment-view>
 
 
 
@@ -40,40 +64,6 @@
 
 
 
-  @if (loading()) {
-  <div class="loading">Loading templates...</div>
-  } @else if (error()) {
-  <div class="error">
-    <p>Error loading templates: {{ error() }}</p>
-    <button (click)="loadTemplates()" class="retry-btn">Retry</button>
-  </div>
-  } @else {
-  <!-- <div class="templates-grid">
-    @for (template of templates(); track template.id) {
-    <div class="template-card" (click)="selectTemplate(template)">
-      <div class="template-thumbnail">
-        <img [src]="template.thumbnailPath" [alt]="template.name" />
-      </div>
-      <div class="template-info">
-        <h3>{{ template.name }}</h3>
-        <span class="category">{{ template.category }}</span>
-        <p>{{ template.description }}</p>
-      </div>
-      <button class="preview-btn">Preview & Generate PDF</button>
-    </div>
-    }
-  </div> -->
-  <!-- @for (template of templates(); track template.id) {
-  <div>
-    <img [src]="template.thumbnailPath" [alt]="template.name" />
-  </div>
-  } -->
-  <div class="image-container ion-margin" >
-    <div *ngFor="let template of templates()" class="thumbnail" (click)="selectTemplate(template)">
-      <img [src]="template.thumbnailPath" alt="Image" loading="lazy">
 
-    </div>
-  </div>
-  }
 
 </ion-content>

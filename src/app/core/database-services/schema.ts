@@ -426,6 +426,7 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
         ('pincode', ''),
         ('phone', ''),
         ('email', ''),
+        ('templateId', ''),
         ('invoicePrefix', 'INV'),
         ('financialYearStart', '04-01'),
         ('defaultGstRate', '18'),
