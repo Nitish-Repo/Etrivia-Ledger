@@ -1,3 +1,4 @@
+@use "./theme/custom.scss" as *;
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
@@ -35,4 +36,4 @@
 @import '@ionic/angular/css/palettes/dark.class.css';
 
 @import 'animate.css';
-@import './theme/custom.scss';
+
