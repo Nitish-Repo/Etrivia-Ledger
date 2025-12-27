@@ -11,29 +11,47 @@
 </ion-header>
 }
 <ion-content [fullscreen]="true">
-   @if (loading()) {
-        <div class="loading">Loading templates...</div>
-      } @else if (error()) {
-        <div class="error">
-          <p>Error loading templates: {{ error() }}</p>
-          <button (click)="loadTemplates()" class="retry-btn">Retry</button>
-        </div>
-      } @else {
-        <div class="templates-grid">
-          @for (template of templates(); track template.templateId) {
-            <div class="template-card" (click)="selectTemplate(template)">
-              <div class="template-thumbnail">
-                <img [src]="template.thumbnailPath" [alt]="template.name" />
-              </div>
-              <div class="template-info">
-                <h3>{{ template.name }}</h3>
-                <span class="category">{{ template.category }}</span>
-                <p>{{ template.description }}</p>
-              </div>
-              <button class="preview-btn">Preview & Generate PDF</button>
-            </div>
+ <div class="container">
+      <header class="toolbar">
+        <button class="back-btn">
+          ← Back to Templates
+        </button>
+        
+        <div class="template-title">
+          @if (currentTemplate()) {
+            <h2>{{ currentTemplate()!.name }}</h2>
+            <span class="category">{{ currentTemplate()!.category }}</span>
           }
         </div>
-      }
+        
+        <button 
+          (click)="downloadPdf()" 
+          [disabled]="generating() || loading()"
+          class="download-btn">
+          @if (generating()) {
+            <span>Generating PDF...</span>
+          } @else {
+            <span>📄 Download PDF</span>
+          }
+        </button>
+      </header>
 
+      @if (loading()) {
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading template...</p>
+        </div>
+      } @else if (error()) {
+        <div class="error">
+          <p>{{ error() }}</p>
+          <button  class="retry-btn">Back to Templates</button>
+        </div>
+      } @else {
+        <div class="preview-container">
+          <div class="preview-wrapper">
+            <div #previewContent class="preview-content" [innerHTML]="renderedHtml()"></div>
+          </div>
+        </div>
+      }
+    </div>
 </ion-content>

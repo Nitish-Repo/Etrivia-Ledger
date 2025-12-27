@@ -46,14 +46,6 @@ export class TemplatesComponent implements OnInit {
     forkJoin([
       this.templateService.getTemplates(),
       this.businessService.getBusinessSettings()
-    ]).subscribe(([templates, businessSetting]) => {
-      this.templates.set(templates);
-      this.loading.set(false);
-    })
-
-    forkJoin([
-      this.templateService.getTemplates(),
-      this.businessService.getBusinessSettings()
     ]).subscribe({
       next: ([templates, businessSetting]) => {
         this.templates.set(templates);
@@ -65,18 +57,7 @@ export class TemplatesComponent implements OnInit {
         this.loading.set(false);
       }
     })
-
-    // this.templateService.getTemplates().subscribe({
-    //   next: (templates) => {
-    //     this.templates.set(templates);
-    //     this.loading.set(false);
-    //   },
-    //   error: (err) => {
-    //     this.error.set(err.message || 'Failed to load templates');
-    //     this.loading.set(false);
-    //   }
-    // });
-
+    
   }
 
 

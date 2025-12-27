@@ -1,11 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnInit, signal, ViewChild } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { InvoiceService } from '@app/core/template-services/invoice.service';
+import { PdfService } from '@app/core/template-services/pdf.service';
 import { TemplateService } from '@app/core/template-services/template.service';
 import { AdditionalCharge, Sale, SaleItem } from '@app/features/models';
+import { BusinessSettingsService } from '@app/features/services/business-settings';
 import { SaleAdditionalChargeService } from '@app/features/services/sale-additional-charge.service';
 import { SaleItemService } from '@app/features/services/sale-item.service';
 import { SaleService } from '@app/features/services/sale.service';
-import { TemplateMetadata } from '@app/models/invoice.model';
+import { Invoice, TemplateMetadata } from '@app/models/invoice.model';
 import {
   ModalController,
   IonHeader, IonContent, IonButton, IonToolbar, IonIcon, IonButtons, IonTitle
@@ -27,8 +31,11 @@ export class InvoiceGenerateComponent implements OnInit {
   private saleService = inject(SaleService);
   private saleItemService = inject(SaleItemService);
   private saleAdditionalChargeService = inject(SaleAdditionalChargeService);
+  private businessService = inject(BusinessSettingsService);
   private templateService = inject(TemplateService);
-
+  private invoiceService = inject(InvoiceService);
+  private pdfService = inject(PdfService);
+  private sanitizer = inject(DomSanitizer);
 
   // openedAsModal = input<boolean>(false);
   @Input() openedAsModal = false;
@@ -38,9 +45,14 @@ export class InvoiceGenerateComponent implements OnInit {
   saleItems = signal<SaleItem[]>([]);
   saleAdditionalCharges = signal<AdditionalCharge[]>([]);
 
-  templates = signal<TemplateMetadata[]>([]);
+  currentTemplate = signal<TemplateMetadata | null>(null);
+  renderedHtml = signal<SafeHtml>('');
   loading = signal(true);
+  generating = signal(false);
   error = signal<string | null>(null);
+
+  private invoice: Invoice | null = null;
+  @ViewChild('previewContent') previewContent!: ElementRef<HTMLElement>;
 
 
   constructor() {
@@ -49,40 +61,100 @@ export class InvoiceGenerateComponent implements OnInit {
 
   ngOnInit() {
     this.getRequireData(this.saleId);
-    this.loadTemplates();
   }
 
   getRequireData(saleId: string) {
     forkJoin([
       this.saleService.getSaleById(saleId),
       this.saleItemService.getSaleItemsBySaleId(saleId),
-      this.saleAdditionalChargeService.getAdditionalChargeBySaleId(saleId)
-    ]).subscribe(([sale, saleItems, saleAdditionalCharges]) => {
-      this.sale.set(sale);
-      this.saleItems.set(saleItems);
-      this.saleAdditionalCharges.set(saleAdditionalCharges);
-      console.log("Sale",this.sale());
-      console.log("saleItems",this.saleItems());
-      console.log("saleAdditionalCharges",this.saleAdditionalCharges());
-    });
-    
-  }
+      this.saleAdditionalChargeService.getAdditionalChargeBySaleId(saleId),
+      this.businessService.getBusinessSettings(),
+    ]).subscribe({
+      next: ([sale, saleItems, saleAdditionalCharges, businessSetting]) => {
+        this.sale.set(sale);
+        this.saleItems.set(saleItems);
+        this.saleAdditionalCharges.set(saleAdditionalCharges);
+        if (businessSetting?.templateId) {
+          this.loadTemplateAndInvoice(businessSetting.templateId)
+        } else {
+          this.loadTemplateAndInvoice();
+        }
 
-  loadTemplates() {
-    this.loading.set(true);
-    this.error.set(null);
-    
-    this.templateService.getTemplates().subscribe({
-      next: (templates) => {
-        this.templates.set(templates);
-        this.loading.set(false);
+        console.log("Sale", this.sale());
+        console.log("saleItems", this.saleItems());
+        console.log("saleAdditionalCharges", this.saleAdditionalCharges());
       },
       error: (err) => {
         this.error.set(err.message || 'Failed to load templates');
         this.loading.set(false);
       }
+    })
+
+  }
+
+
+  loadTemplateAndInvoice(templateId?: string) {
+    this.loading.set(true);
+    this.error.set(null);
+
+    // Load template metadata (with fallback) and generate invoice data
+    forkJoin({
+      template: this.templateService.getTemplateMetadataWithFallback(templateId),
+      invoice: new Promise<Invoice>(resolve => {
+        resolve(this.invoiceService.generateMockInvoice());
+      })
+    }).subscribe({
+      next: ({ template, invoice }) => {
+
+        if (!template) {
+          this.error.set('Template not found');
+          this.loading.set(false);
+          return;
+        }
+
+        this.currentTemplate.set(template);
+        this.invoice = invoice;
+
+        // Load and render the template
+        this.templateService.getAndRenderTemplate(template.filename, invoice).subscribe({
+          next: (html) => {
+            this.renderedHtml.set(this.sanitizer.bypassSecurityTrustHtml(html));
+            this.loading.set(false);
+          },
+          error: (err) => {
+            this.error.set('Failed to render template: ' + err.message);
+            this.loading.set(false);
+          }
+        });
+      },
+      error: (err) => {
+        this.error.set('Failed to load data: ' + err.message);
+        this.loading.set(false);
+      }
     });
   }
+
+  async downloadPdf() {
+    if (!this.previewContent || !this.currentTemplate() || !this.invoice) {
+      return;
+    }
+
+    this.generating.set(true);
+
+    try {
+      const element = this.previewContent.nativeElement;
+      const filename = `invoice-${this.invoice.invoiceNumber}-${this.currentTemplate()!.templateId}.pdf`;
+
+      await this.pdfService.generatePdf(element, filename);
+
+      this.generating.set(false);
+    } catch (err) {
+      console.error('PDF generation error:', err);
+      alert('Failed to generate PDF. Please try again.');
+      this.generating.set(false);
+    }
+  }
+
 
   selectTemplate(template: TemplateMetadata) {
     // this.router.navigate(['/preview', template.id]);
