@@ -52,12 +52,13 @@ export class InvoiceGenerateComponent implements OnInit {
     ]).subscribe(([sale, saleItems, saleAdditionalCharges]) => {
       this.sale.set(sale);
       this.saleItems.set(saleItems);
-      this.saleAdditionalCharges.set(saleAdditionalCharges)
+      this.saleAdditionalCharges.set(saleAdditionalCharges);
+      console.log("Sale",this.sale());
+      console.log("saleItems",this.saleItems());
+      console.log("saleAdditionalCharges",this.saleAdditionalCharges());
     });
     
   }
-  //   this.saleItems.set(Array.isArray(saleItems) ? saleItems : (saleItems ? [saleItems] : []));
-  //   this.saleAdditionalCharges.set(Array.isArray(saleAdditionalCharges) ? saleAdditionalCharges : (saleAdditionalCharges ? [saleAdditionalCharges] : []));
 
   closeModal() {
     this.modalCtrl.dismiss();
