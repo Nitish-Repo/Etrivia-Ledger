@@ -11,5 +11,29 @@
 </ion-header>
 }
 <ion-content [fullscreen]="true">
+   @if (loading()) {
+        <div class="loading">Loading templates...</div>
+      } @else if (error()) {
+        <div class="error">
+          <p>Error loading templates: {{ error() }}</p>
+          <button (click)="loadTemplates()" class="retry-btn">Retry</button>
+        </div>
+      } @else {
+        <div class="templates-grid">
+          @for (template of templates(); track template.id) {
+            <div class="template-card" (click)="selectTemplate(template)">
+              <div class="template-thumbnail">
+                <img [src]="template.thumbnailPath" [alt]="template.name" />
+              </div>
+              <div class="template-info">
+                <h3>{{ template.name }}</h3>
+                <span class="category">{{ template.category }}</span>
+                <p>{{ template.description }}</p>
+              </div>
+              <button class="preview-btn">Preview & Generate PDF</button>
+            </div>
+          }
+        </div>
+      }
 
 </ion-content>

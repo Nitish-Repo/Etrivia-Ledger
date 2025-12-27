@@ -5,7 +5,7 @@
       "name": "Modern Invoice",
       "description": "Clean and contemporary design with bold headers and organized layout",
       "filename": "modern-invoice.html",
-      "thumbnailPath": "/templates/thumbnails/modern.avif",
+      "thumbnailPath": "/assets/templates/thumbnails/modern.avif",
       "category": "Professional"
     },
     {
@@ -13,7 +13,7 @@
       "name": "Classic Invoice",
       "description": "Traditional professional invoice with elegant typography",
       "filename": "classic-invoice.html",
-      "thumbnailPath": "/templates/thumbnails/classic.webp",
+      "thumbnailPath": "/assets/templates/thumbnails/classic.webp",
       "category": "Traditional"
     },
     {
@@ -21,7 +21,7 @@
       "name": "Minimal Invoice",
       "description": "Simple and minimal design focusing on clarity and readability",
       "filename": "minimal-invoice.html",
-      "thumbnailPath": "/templates/thumbnails/minimal.jpg",
+      "thumbnailPath": "/assets/templates/thumbnails/minimal.jpg",
       "category": "Simple"
     }
   ]

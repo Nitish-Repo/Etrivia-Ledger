@@ -8,7 +8,7 @@ import { Invoice, TemplateMetadata } from '@app/models/invoice.model';
   providedIn: 'root'
 })
 export class TemplateService {
-  private templatesBasePath = '/templates';
+  private templatesBasePath = '/assets/templates';
 
   constructor(private http: HttpClient) {}
 
