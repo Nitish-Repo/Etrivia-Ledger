@@ -1,0 +1,79 @@
+@if (openedAsModal) {
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Select Template</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar color="primary">
+    <ion-segment [scrollable]="true">
+      <ion-segment-button value="first" content-id="first">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="second" content-id="second">
+        <ion-label>Classic</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="third" content-id="third">
+        <ion-label>Modern</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+  </ion-toolbar>
+
+</ion-header>
+}
+<ion-content [fullscreen]="true">
+  <!-- <ion-segment-view>
+    <ion-segment-content id="first">First</ion-segment-content>
+    <ion-segment-content id="second">Second</ion-segment-content>
+    <ion-segment-content id="third">Third</ion-segment-content>
+  </ion-segment-view> -->
+
+
+
+
+
+
+
+
+  @if (loading()) {
+  <div class="loading">Loading templates...</div>
+  } @else if (error()) {
+  <div class="error">
+    <p>Error loading templates: {{ error() }}</p>
+    <button (click)="loadTemplates()" class="retry-btn">Retry</button>
+  </div>
+  } @else {
+  <!-- <div class="templates-grid">
+    @for (template of templates(); track template.id) {
+    <div class="template-card" (click)="selectTemplate(template)">
+      <div class="template-thumbnail">
+        <img [src]="template.thumbnailPath" [alt]="template.name" />
+      </div>
+      <div class="template-info">
+        <h3>{{ template.name }}</h3>
+        <span class="category">{{ template.category }}</span>
+        <p>{{ template.description }}</p>
+      </div>
+      <button class="preview-btn">Preview & Generate PDF</button>
+    </div>
+    }
+  </div> -->
+  <!-- @for (template of templates(); track template.id) {
+  <div>
+    <img [src]="template.thumbnailPath" [alt]="template.name" />
+  </div>
+  } -->
+  <div class="image-container ion-margin" >
+    <div *ngFor="let template of templates()" class="thumbnail" (click)="selectTemplate(template)">
+      <img [src]="template.thumbnailPath" alt="Image" loading="lazy">
+
+    </div>
+  </div>
+  }
+
+</ion-content>

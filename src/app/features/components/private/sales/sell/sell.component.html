@@ -50,6 +50,19 @@
           </ion-list>
 
           <ion-list [inset]="true" mode="ios">
+            <ion-item lines="none" [button]="true" detail="true" (click)="navigateToSelectTemplate()">
+              <ion-label class="ion-text-wrap">
+                <div class="product-header">
+                  <strong>Select Template</strong>
+                </div>
+                <!-- <ion-text color="primary" class="description">
+                  <strong>{{ saleForm.get('invoiceNumber')?.value || ('-' ) }}</strong>
+                </ion-text> -->
+              </ion-label>
+            </ion-item>
+          </ion-list>
+
+          <ion-list [inset]="true" mode="ios">
             <ion-item [button]="true" detail="true" lines="none" (click)="navigateToBusinessInfo()">
               <ion-icon color="danger" slot="start" name="id-card-outline" size="large" shape="round"></ion-icon>
               <ion-label class="ion-text-wrap">

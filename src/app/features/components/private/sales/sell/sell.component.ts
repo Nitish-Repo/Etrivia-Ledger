@@ -29,6 +29,7 @@ import { SaleService } from '@app/features/services/sale.service';
 import { SaleItemService } from '@app/features/services/sale-item.service';
 import { SaleAdditionalChargeService } from '@app/features/services/sale-additional-charge.service';
 import { InvoiceGenerateComponent } from '../invoice-generate/invoice-generate.component';
+import { TemplatesComponent } from '../../templates/templates.component';
 
 @Component({
   selector: 'app-sell',
@@ -116,6 +117,36 @@ export class SellComponent implements OnInit {
   }
 
   ngOnInit() {
+    // this.loadBusinessSettings();
+    // this.loadNextInvoiceNumber();
+    // this.saleModelMeta = getSaleMeta();
+    // this.saleItemModelMeta = getSaleItemMeta();
+    // this.additionalChargeModelMeta = getAdditionalChargeMeta();
+
+    // // Find metadata for select components
+    // this.customerMeta = this.saleModelMeta.find(m => m.key === 'customerId')!;
+    // this.invoiceDiscountTypeMeta = this.saleModelMeta.find(m => m.key === 'invoiceDiscountType')!;
+    // this.paymentStatusMeta = this.saleModelMeta.find(m => m.key === 'paymentStatus')!;
+    // this.saleTypeMeta = this.saleModelMeta.find(m => m.key === 'saleType')!;
+    // this.statusMeta = this.saleModelMeta.find(m => m.key === 'status')!;
+
+    // this.productMeta = this.saleItemModelMeta.find(m => m.key === 'productId')!;
+    // this.itemTaxTypeMeta = this.saleItemModelMeta.find(m => m.key === 'taxType')!;
+    // this.itemDiscountTypeMeta = this.saleItemModelMeta.find(m => m.key === 'discountType')!;
+
+    // this.chargeTaxTypeMeta = this.additionalChargeModelMeta.find(m => m.key === 'taxType')!;
+
+    // this.route.params.subscribe((x) => {
+    //   if (x['id']) {
+    //     let saleId = x['id'];
+    //     this.buildSellForm(saleId);
+    //   } else {
+    //     this.buildNewSellForm();
+    //   }
+    // });
+  }
+
+  ionViewWillEnter() {
     this.loadBusinessSettings();
     this.loadNextInvoiceNumber();
     this.saleModelMeta = getSaleMeta();
@@ -394,6 +425,24 @@ export class SellComponent implements OnInit {
     if (data?.saved) {
       // Reload business settings after saving
       this.loadBusinessSettings();
+    }
+  }
+
+  async navigateToSelectTemplate() {
+    const modal = await this.modalCtrl.create({
+      component: TemplatesComponent,
+      cssClass: 'full-screen-modal',
+      componentProps: {
+        openedAsModal: true
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data?.saved) {
+      // Reload business settings after saving
+      // this.loadBusinessSettings();
     }
   }
 
