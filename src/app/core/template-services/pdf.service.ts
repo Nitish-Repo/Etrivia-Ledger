@@ -29,11 +29,14 @@ export class PdfService {
    * @param options Optional: { useA4, widthMm, heightMm, scale }
    */
   async generatePdf(element: HTMLElement, filename: string = 'invoice.pdf', options: PdfOptions = {}): Promise<void> {
-    const scale = options.scale ?? 2;
+    const requestedScale = options.scale ?? 2;
     const widthMm = options.widthMm ?? this.A4_WIDTH;
     const heightMm = options.heightMm ?? this.A4_HEIGHT;
 
-    // Optionally force element to A4 width for consistent layout during render
+    // Cap scale to avoid huge canvases on high-DPR devices
+    const deviceDpr = Math.max(window.devicePixelRatio || 1, 1);
+    const renderScale = Math.min(requestedScale, Math.max(1, deviceDpr), 2);
+
     const appliedA4 = !!options.useA4;
     const originalStyle: Partial<CSSStyleDeclaration> = {};
 
@@ -41,57 +44,58 @@ export class PdfService {
       originalStyle.width = element.style.width;
       originalStyle.maxWidth = element.style.maxWidth;
       originalStyle.boxSizing = element.style.boxSizing;
-
-      const px = `${this.mmToPx(widthMm)}px`;
-      element.style.width = px;
-      element.style.maxWidth = px;
+      element.style.width = `${this.mmToPx(widthMm)}px`;
+      element.style.maxWidth = `${this.mmToPx(widthMm)}px`;
       element.style.boxSizing = 'border-box';
-
-      // ensure layout flush
       await new Promise(requestAnimationFrame);
     }
 
     try {
-      // Create canvas from HTML element
+      // render at capped scale
       const canvas = await html2canvas(element, {
-        scale,
+        scale: renderScale,
         useCORS: true,
         logging: false,
         backgroundColor: '#ffffff'
       });
 
-      const imgData = canvas.toDataURL('image/png');
+      // helpers converting mm <-> px at renderScale (CSS px ~96dpi)
+      const mmToPxScaled = (mm: number) => Math.round((mm * 96 * renderScale) / 25.4);
+      const pxToMm = (px: number) => (px * 25.4) / (96 * renderScale);
 
-      // Calculate dimensions (jsPDF expects mm units)
-      const imgWidth = widthMm;
-      const pageHeight = heightMm;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      // Create PDF
       const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidthMm = widthMm;
+      const pageHeightMm = heightMm;
 
-      // Add first page
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+      // slice canvas into page-sized strips (px) to avoid huge single-image pages and cropping
+      const pageHeightPx = mmToPxScaled(pageHeightMm);
+      let yOffset = 0;
 
-      // Add additional pages if content exceeds one page
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+      while (yOffset < canvas.height) {
+        const sliceHeight = Math.min(pageHeightPx, canvas.height - yOffset);
+        const tmp = document.createElement('canvas');
+        tmp.width = canvas.width;
+        tmp.height = sliceHeight;
+        const ctx = tmp.getContext('2d')!;
+        ctx.drawImage(canvas, 0, yOffset, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
+
+        // use JPEG with quality to reduce size (text renders fine in high quality)
+        const imgData = tmp.toDataURL('image/jpeg', 0.8);
+
+        if (yOffset > 0) pdf.addPage();
+
+        // compute height to draw in mm preserving aspect ratio
+        const drawHeightMm = pxToMm(tmp.height) * (pageWidthMm / pxToMm(tmp.width));
+        pdf.addImage(imgData, 'JPEG', 0, 0, pageWidthMm, drawHeightMm);
+
+        yOffset += sliceHeight;
       }
 
-      // Download the PDF
       pdf.save(filename);
     } catch (error) {
       console.error('Error generating PDF:', error);
       throw new Error('Failed to generate PDF');
     } finally {
-      // restore original styles
       if (appliedA4) {
         element.style.width = originalStyle.width ?? '';
         element.style.maxWidth = originalStyle.maxWidth ?? '';
