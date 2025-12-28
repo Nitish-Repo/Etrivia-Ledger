@@ -212,7 +212,43 @@ export class InvoiceGenerateComponent implements OnInit {
 
   }
 
-  downloadPng() { }
+  async downloadPng() {
+    if (!this.previewContent || !this.currentTemplate() || !this.invoice) return;
+
+    this.renderingPng.set(true);
+    try {
+      const element = this.previewContent.nativeElement;
+      const filename = `invoice-${this.invoice.invoiceNumber}-${this.currentTemplate()!.templateId}.jpg`;
+
+      const dataUrl = await this.pdfService.generateImage(element, {
+        useA4: true,
+        format: 'jpeg',
+        quality: 0.85,
+        scale: 2
+      });
+
+      this.pngPreview.set(dataUrl);
+
+      // Immediately trigger download (optional — caller may instead show preview)
+      this.pdfService.downloadImage(dataUrl, filename);
+    } catch (err) {
+      console.error('PNG generation error:', err);
+      alert('Failed to generate image. Please try again.');
+    } finally {
+      this.renderingPng.set(false);
+    }
+  }
+
+  downloadPreview() {
+    const data = this.pngPreview();
+    if (!data || !this.invoice || !this.currentTemplate()) return;
+    const filename = `invoice-${this.invoice.invoiceNumber}-${this.currentTemplate()!.templateId}.jpg`;
+    this.pdfService.downloadImage(data, filename);
+  }
+
+  closePreview() {
+    this.pngPreview.set(null);
+  }
 
 
 }

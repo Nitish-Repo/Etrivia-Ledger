@@ -28,6 +28,23 @@
       <div #previewContent class="preview-content" [innerHTML]="renderedHtml()"></div>
     </div>
   </div>
+  @if (pngPreview()) {
+  <div class="image-preview-overlay">
+    <div class="image-preview-card">
+      <img [src]="pngPreview()" alt="Invoice preview" />
+      <div class="preview-actions">
+        <ion-button fill="clear" (click)="downloadPreview()">
+          <ion-icon slot="start" name="download-outline"></ion-icon>
+          Download
+        </ion-button>
+        <ion-button fill="clear" (click)="closePreview()">
+          <ion-icon slot="start" name="close"></ion-icon>
+          Close
+        </ion-button>
+      </div>
+    </div>
+  </div>
+  }
   }
 
 </ion-content>

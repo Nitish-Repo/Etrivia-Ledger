@@ -151,4 +151,68 @@ export class PdfService {
       throw new Error('Failed to generate PDF');
     }
   }
+
+  /**
+   * Render the element to an image data URL for preview or download.
+   * Returns a base64 data URL (PNG or JPEG).
+   */
+  async generateImage(
+    element: HTMLElement,
+    options: { useA4?: boolean; widthMm?: number; scale?: number; format?: 'png' | 'jpeg'; quality?: number } = {}
+  ): Promise<string> {
+    const requestedScale = options.scale ?? 2;
+    const widthMm = options.widthMm ?? this.A4_WIDTH;
+
+    // Cap scale similar to PDF rendering to avoid huge canvases
+    const deviceDpr = Math.max(window.devicePixelRatio || 1, 1);
+    const renderScale = Math.min(requestedScale, Math.max(1, deviceDpr), 2);
+
+    const appliedA4 = !!options.useA4;
+    const originalStyle: Partial<CSSStyleDeclaration> = {};
+
+    if (appliedA4) {
+      originalStyle.width = element.style.width;
+      originalStyle.maxWidth = element.style.maxWidth;
+      originalStyle.boxSizing = element.style.boxSizing;
+      element.style.width = `${this.mmToPx(widthMm)}px`;
+      element.style.maxWidth = `${this.mmToPx(widthMm)}px`;
+      element.style.boxSizing = 'border-box';
+      await new Promise(requestAnimationFrame);
+    }
+
+    try {
+      const canvas = await html2canvas(element, {
+        scale: renderScale,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+
+      const format = options.format ?? 'png';
+      if (format === 'png') {
+        return canvas.toDataURL('image/png');
+      }
+
+      const quality = options.quality ?? 0.8;
+      return canvas.toDataURL('image/jpeg', quality);
+    } finally {
+      if (appliedA4) {
+        element.style.width = originalStyle.width ?? '';
+        element.style.maxWidth = originalStyle.maxWidth ?? '';
+        element.style.boxSizing = originalStyle.boxSizing ?? '';
+      }
+    }
+  }
+
+  /**
+   * Trigger download of a base64 image data URL.
+   */
+  downloadImage(dataUrl: string, filename: string = 'image.png'): void {
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
 }
