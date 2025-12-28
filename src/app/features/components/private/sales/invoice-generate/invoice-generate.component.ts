@@ -158,7 +158,9 @@ export class InvoiceGenerateComponent implements OnInit {
       const element = this.previewContent.nativeElement;
       const filename = `invoice-${this.invoice.invoiceNumber}-${this.currentTemplate()!.templateId}.pdf`;
 
-      await this.pdfService.generatePdf(element, filename);
+      // await this.pdfService.generatePdf(element, filename);
+      // element is the preview container (@ViewChild('previewContent').nativeElement)
+      await this.pdfService.generatePdf(element, filename, { useA4: true, scale: 2 });
 
       this.generating.set(false);
     } catch (err) {

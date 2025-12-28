@@ -2,6 +2,13 @@ import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
+export type PdfOptions = {
+  useA4?: boolean;
+  widthMm?: number;
+  heightMm?: number;
+  scale?: number;
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,34 +17,62 @@ export class PdfService {
   private readonly A4_WIDTH = 210;
   private readonly A4_HEIGHT = 297;
 
+  // convert mm -> css px (assumes 96dpi)
+  private mmToPx(mm: number): number {
+    return Math.round((mm * 96) / 25.4);
+  }
+
   /**
    * Generates a PDF from an HTML element with multi-page support
    * @param element The HTML element to convert to PDF
    * @param filename The filename for the downloaded PDF
+   * @param options Optional: { useA4, widthMm, heightMm, scale }
    */
-  async generatePdf(element: HTMLElement, filename: string = 'invoice.pdf'): Promise<void> {
+  async generatePdf(element: HTMLElement, filename: string = 'invoice.pdf', options: PdfOptions = {}): Promise<void> {
+    const scale = options.scale ?? 2;
+    const widthMm = options.widthMm ?? this.A4_WIDTH;
+    const heightMm = options.heightMm ?? this.A4_HEIGHT;
+
+    // Optionally force element to A4 width for consistent layout during render
+    const appliedA4 = !!options.useA4;
+    const originalStyle: Partial<CSSStyleDeclaration> = {};
+
+    if (appliedA4) {
+      originalStyle.width = element.style.width;
+      originalStyle.maxWidth = element.style.maxWidth;
+      originalStyle.boxSizing = element.style.boxSizing;
+
+      const px = `${this.mmToPx(widthMm)}px`;
+      element.style.width = px;
+      element.style.maxWidth = px;
+      element.style.boxSizing = 'border-box';
+
+      // ensure layout flush
+      await new Promise(requestAnimationFrame);
+    }
+
     try {
       // Create canvas from HTML element
       const canvas = await html2canvas(element, {
-        scale: 2, // Higher scale for better quality
+        scale,
         useCORS: true,
         logging: false,
         backgroundColor: '#ffffff'
       });
 
       const imgData = canvas.toDataURL('image/png');
-      
-      // Calculate dimensions
-      const imgWidth = this.A4_WIDTH;
-      const pageHeight = this.A4_HEIGHT;
+
+      // Calculate dimensions (jsPDF expects mm units)
+      const imgWidth = widthMm;
+      const pageHeight = heightMm;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
+
       let heightLeft = imgHeight;
       let position = 0;
 
       // Create PDF
       const pdf = new jsPDF('p', 'mm', 'a4');
-      
+
       // Add first page
       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
@@ -55,6 +90,13 @@ export class PdfService {
     } catch (error) {
       console.error('Error generating PDF:', error);
       throw new Error('Failed to generate PDF');
+    } finally {
+      // restore original styles
+      if (appliedA4) {
+        element.style.width = originalStyle.width ?? '';
+        element.style.maxWidth = originalStyle.maxWidth ?? '';
+        element.style.boxSizing = originalStyle.boxSizing ?? '';
+      }
     }
   }
 
