@@ -1,18 +1,7 @@
-@if (openedAsModal) {
-<ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-button (click)="closeModal()">
-        <ion-icon slot="icon-only" name="close"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Generate Invoice</ion-title>
-  </ion-toolbar>
-</ion-header>
-}
+<!-- 
 <ion-content [fullscreen]="true">
- <div class="container">
-      <header class="toolbar">
+  <div class="container">
+    <header class="toolbar">
         <button class="back-btn">
           ← Back to Templates
         </button>
@@ -36,22 +25,91 @@
         </button>
       </header>
 
-      @if (loading()) {
-        <div class="loading">
-          <div class="spinner"></div>
-          <p>Loading template...</p>
-        </div>
-      } @else if (error()) {
-        <div class="error">
-          <p>{{ error() }}</p>
-          <button  class="retry-btn">Back to Templates</button>
-        </div>
-      } @else {
-        <div class="preview-container">
-          <div class="preview-wrapper">
-            <div #previewContent class="preview-content" [innerHTML]="renderedHtml()"></div>
-          </div>
-        </div>
-      }
+    @if (loading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Loading template...</p>
     </div>
+    } @else if (error()) {
+    <div class="error">
+      <p>{{ error() }}</p>
+      <button class="retry-btn">Back to Templates</button>
+    </div>
+    } @else {
+    <div class="preview-container">
+      <div class="preview-wrapper">
+        <div #previewContent class="preview-content" [innerHTML]="renderedHtml()"></div>
+      </div>
+    </div>
+    }
+  </div>
+   <ion-chip [disabled]="true">Disabled</ion-chip>
 </ion-content>
+
+ -->
+
+@if (openedAsModal) {
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{sale()?.invoiceNumber}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+}
+
+<ion-content [fullscreen]="true">
+  <ion-chip>Default</ion-chip>
+  <ion-chip [disabled]="true">Disabled</ion-chip>
+  <ion-chip [outline]="true">Outline</ion-chip>
+</ion-content>
+
+<ion-footer>
+  <ion-item lines="none" class="ion-margin-top">
+    <ion-label>
+      <h2>₹257.82</h2>
+      <p>sachin</p>
+    </ion-label>
+    <ion-chip [disabled]="true">{{sale()?.paymentStatus}}</ion-chip>
+  </ion-item>
+
+  <ion-toolbar>
+    <ion-button expand="block" class="send-btn" mode="ios">
+      <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
+      Send Invoice
+    </ion-button>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <div class="footer-actions">
+      <div>
+        <ion-button shape="round">
+          <ion-icon slot="icon-only" name="download-outline"></ion-icon>
+        </ion-button>
+        <p>Download</p>
+      </div>
+      <div>
+        <ion-button shape="round">
+          <ion-icon slot="icon-only" name="print-outline"></ion-icon>
+        </ion-button>
+        <p>Print</p>
+      </div>
+      <div>
+        <ion-button shape="round">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+        <p>Edit</p>
+      </div>
+      <div>
+        <ion-button shape="round">
+          <ion-icon slot="icon-only" name="ellipsis-horizontal-outline"></ion-icon>
+        </ion-button>
+        <p>More</p>
+      </div>
+    </div>
+  </ion-toolbar>
+
+</ion-footer>

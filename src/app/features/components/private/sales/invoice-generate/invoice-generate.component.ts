@@ -12,11 +12,10 @@ import { SaleService } from '@app/features/services/sale.service';
 import { Invoice, TemplateMetadata } from '@app/models/invoice.model';
 import {
   ModalController,
-  IonHeader, IonContent, IonButton, IonToolbar, IonIcon, IonButtons, IonTitle
-} from "@ionic/angular/standalone";
+  IonHeader, IonContent, IonButton, IonToolbar, IonIcon, IonButtons, IonTitle, IonFooter, IonChip, IonLabel, IonItem } from "@ionic/angular/standalone";
 import { TranslateModule } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
-import { personOutline, close } from 'ionicons/icons';
+import { personOutline, close, paperPlaneOutline, downloadOutline, printOutline, createOutline, ellipsisHorizontalOutline } from 'ionicons/icons';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -24,7 +23,7 @@ import { forkJoin } from 'rxjs';
   templateUrl: './invoice-generate.component.html',
   styleUrls: ['./invoice-generate.component.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonContent, CommonModule, TranslateModule]
+  imports: [IonItem, IonLabel, IonChip, IonFooter, IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle, IonContent, CommonModule, TranslateModule]
 })
 export class InvoiceGenerateComponent implements OnInit {
   private modalCtrl = inject(ModalController);
@@ -56,7 +55,7 @@ export class InvoiceGenerateComponent implements OnInit {
 
 
   constructor() {
-    addIcons({ close, personOutline });
+    addIcons({close,paperPlaneOutline,downloadOutline,printOutline,createOutline,ellipsisHorizontalOutline,personOutline});
   }
 
   ngOnInit() {
