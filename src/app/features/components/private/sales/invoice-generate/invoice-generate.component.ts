@@ -11,11 +11,12 @@ import { SaleItemService } from '@app/features/services/sale-item.service';
 import { SaleService } from '@app/features/services/sale.service';
 import { Invoice, TemplateMetadata } from '@app/models/invoice.model';
 import {
-  ModalController,
-  IonHeader, IonContent, IonButton, IonToolbar, IonIcon, IonButtons, IonTitle, IonFooter, IonChip, IonLabel, IonItem } from "@ionic/angular/standalone";
-import { TranslateModule } from '@ngx-translate/core';
+  ModalController, ActionSheetController,
+  IonHeader, IonContent, IonButton, IonToolbar, IonIcon, IonButtons, IonTitle, IonFooter, IonChip, IonLabel, IonItem
+} from "@ionic/angular/standalone";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
-import { personOutline, close, paperPlaneOutline, downloadOutline, printOutline, createOutline, ellipsisHorizontalOutline } from 'ionicons/icons';
+import { personOutline, close, paperPlaneOutline, downloadOutline, printOutline, createOutline, ellipsisHorizontalOutline, documentTextOutline, imageOutline } from 'ionicons/icons';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -35,6 +36,8 @@ export class InvoiceGenerateComponent implements OnInit {
   private invoiceService = inject(InvoiceService);
   private pdfService = inject(PdfService);
   private sanitizer = inject(DomSanitizer);
+  private actionSheetCtrl = inject(ActionSheetController);
+  private translate = inject(TranslateService);
 
   // openedAsModal = input<boolean>(false);
   @Input() openedAsModal = false;
@@ -55,7 +58,7 @@ export class InvoiceGenerateComponent implements OnInit {
 
 
   constructor() {
-    addIcons({close,paperPlaneOutline,downloadOutline,printOutline,createOutline,ellipsisHorizontalOutline,personOutline});
+    addIcons({ close, paperPlaneOutline, downloadOutline, printOutline, createOutline, ellipsisHorizontalOutline, personOutline, documentTextOutline, imageOutline });
   }
 
   ngOnInit() {
@@ -162,5 +165,41 @@ export class InvoiceGenerateComponent implements OnInit {
   closeModal() {
     this.modalCtrl.dismiss();
   }
+
+  async presentActionDownloadSheet(event: Event) {
+    event.stopPropagation();
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: this.translate.instant('button.actions'),
+      buttons: [
+        // {
+        //   text: this.translate.instant('page.customers.edit'),
+        //   icon: 'pencil',
+        //   handler: () => this.updateCustomer(customer)
+        // },
+        {
+          text: "Download As Picture",
+          icon: 'image-outline',
+          handler: () => this.downloadPng()
+        },
+        {
+          text: "Download As Pdf",
+          icon: 'document-text-outline',
+          handler: () => this.downloadPdf()
+        },
+
+        {
+          text: this.translate.instant('button.cancel'),
+          role: 'cancel',
+          icon: 'close'
+        },
+      ],
+    });
+
+    await actionSheet.present();
+
+  }
+
+  downloadPng() { }
+
 
 }

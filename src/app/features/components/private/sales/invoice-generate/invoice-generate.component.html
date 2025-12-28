@@ -1,53 +1,3 @@
-<!-- 
-<ion-content [fullscreen]="true">
-  <div class="container">
-    <header class="toolbar">
-        <button class="back-btn">
-          ← Back to Templates
-        </button>
-        
-        <div class="template-title">
-          @if (currentTemplate()) {
-            <h2>{{ currentTemplate()!.name }}</h2>
-            <span class="category">{{ currentTemplate()!.category }}</span>
-          }
-        </div>
-        
-        <button 
-          (click)="downloadPdf()" 
-          [disabled]="generating() || loading()"
-          class="download-btn">
-          @if (generating()) {
-            <span>Generating PDF...</span>
-          } @else {
-            <span>📄 Download PDF</span>
-          }
-        </button>
-      </header>
-
-    @if (loading()) {
-    <div class="loading">
-      <div class="spinner"></div>
-      <p>Loading template...</p>
-    </div>
-    } @else if (error()) {
-    <div class="error">
-      <p>{{ error() }}</p>
-      <button class="retry-btn">Back to Templates</button>
-    </div>
-    } @else {
-    <div class="preview-container">
-      <div class="preview-wrapper">
-        <div #previewContent class="preview-content" [innerHTML]="renderedHtml()"></div>
-      </div>
-    </div>
-    }
-  </div>
-   <ion-chip [disabled]="true">Disabled</ion-chip>
-</ion-content>
-
- -->
-
 @if (openedAsModal) {
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
@@ -62,16 +12,31 @@
 }
 
 <ion-content [fullscreen]="true">
-  <ion-chip>Default</ion-chip>
-  <ion-chip [disabled]="true">Disabled</ion-chip>
-  <ion-chip [outline]="true">Outline</ion-chip>
+  @if (loading()) {
+  <div class="loading">
+    <div class="spinner"></div>
+    <p>Loading template...</p>
+  </div>
+  } @else if (error()) {
+  <div class="error">
+    <p>{{ error() }}</p>
+    <button class="retry-btn">Back to Templates</button>
+  </div>
+  } @else {
+  <div class="preview-container">
+    <div class="preview-wrapper">
+      <div #previewContent class="preview-content" [innerHTML]="renderedHtml()"></div>
+    </div>
+  </div>
+  }
+
 </ion-content>
 
 <ion-footer>
   <ion-item lines="none" class="ion-margin-top">
     <ion-label>
-      <h2>₹257.82</h2>
-      <p>sachin</p>
+      <h2>{{ sale()?.totalAmount | currency:'INR':'symbol':'1.2-2' }}</h2>
+      <p>{{sale()?.customerName}}</p>
     </ion-label>
     <ion-chip [disabled]="true">{{sale()?.paymentStatus}}</ion-chip>
   </ion-item>
@@ -86,7 +51,7 @@
   <ion-toolbar>
     <div class="footer-actions">
       <div>
-        <ion-button shape="round">
+        <ion-button shape="round" (click)="presentActionDownloadSheet($event)" [disabled]="generating() || loading()">
           <ion-icon slot="icon-only" name="download-outline"></ion-icon>
         </ion-button>
         <p>Download</p>
