@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AdditionalCharge, BusinessSettings, Customer, Sale, SaleItem } from '@app/features/models';
 import { Invoice, InvoiceItem } from '@app/models/invoice.model';
 
 @Injectable({
@@ -14,31 +15,31 @@ export class InvoiceService {
       {
         description: 'Web Development Services',
         quantity: 40,
-        unitPrice: 125.00,
-        total: 5000.00
+        unitPrice: 125.0,
+        total: 5000.0
       },
       {
         description: 'UI/UX Design',
         quantity: 20,
-        unitPrice: 100.00,
-        total: 2000.00
+        unitPrice: 100.0,
+        total: 2000.0
       },
       {
         description: 'Consulting Services',
         quantity: 10,
-        unitPrice: 150.00,
-        total: 1500.00
+        unitPrice: 150.0,
+        total: 1500.0
       },
       {
         description: 'Project Management',
         quantity: 15,
-        unitPrice: 110.00,
-        total: 1650.00
+        unitPrice: 110.0,
+        total: 1650.0
       }
     ];
 
     const subtotal = items.reduce((sum, item) => sum + item.total, 0);
-    const taxRate = 0.10; // 10% tax
+    const taxRate = 0.1; // 10% tax
     const tax = subtotal * taxRate;
     const total = subtotal + tax;
 
@@ -86,6 +87,93 @@ export class InvoiceService {
       total: this.formatCurrency(total),
       notes: 'Thank you for your business! Payment is due within 30 days.',
       terms: 'Payment terms: Net 30. Late payments subject to 1.5% monthly interest charge.'
+    };
+  }
+
+  /**
+   * Build an Invoice from a Sale record and its items
+   */
+  generateInvoiceFromSale(sale: Sale, saleItems: SaleItem[], additionalCharges: AdditionalCharge[] = [], businessSettings?: BusinessSettings, customerParam?: Customer): Invoice {
+    // Map sale items
+    const items: InvoiceItem[] = saleItems.map(si => ({
+      description: si.productName,
+      quantity: si.quantity,
+      unitPrice: si.pricePerUnit,
+      total: si.totalAmount
+    }));
+
+    // Totals
+    const subtotalNum = items.reduce((s, it) => s + (it.total || 0), 0);
+    const taxNum = (sale.taxableAmount || 0) + (sale.cgst || 0) + (sale.sgst || 0) + (sale.igst || 0) + (sale.cess || 0) - (sale.taxableAmount || 0);
+    const totalNum = sale.grandTotal ?? sale.totalAmount ?? subtotalNum;
+
+    // Dates
+    const invoiceDate = sale.invoiceDate ? this.formatDate(new Date(sale.invoiceDate)) : this.formatDate(new Date());
+    const dueDate = (() => {
+      try {
+        const d = new Date(sale.invoiceDate || new Date());
+        d.setDate(d.getDate() + 30);
+        return this.formatDate(d);
+      } catch {
+        return this.formatDate(this.addDays(new Date(), 30));
+      }
+    })();
+
+    const company = businessSettings ? {
+      name: businessSettings.businessName || '',
+      address: {
+        street: businessSettings.address || '',
+        city: businessSettings.city || '',
+        state: businessSettings.state || '',
+        zipCode: businessSettings.pincode || '',
+        country: ''
+      },
+      phone: businessSettings.phone || '',
+      email: businessSettings.email || '',
+      taxId: businessSettings.gstin || undefined
+    } : {
+      name: '',
+      address: { street: '', city: '', state: '', zipCode: '', country: '' },
+      phone: '',
+      email: ''
+    };
+
+    const invoiceCustomer = customerParamToUse(customerParam) || {
+      name: sale.customerName || '',
+      address: { street: '', city: '', state: '', zipCode: '', country: '' },
+      phone: '',
+      email: ''
+    };
+
+    function customerParamToUse(cust?: any) {
+      if (!cust) return null;
+      return {
+        name: cust.customerName || cust.name || '',
+        address: {
+          street: cust.billingAddress || cust.address || '',
+          city: cust.city || '',
+          state: cust.state || '',
+          zipCode: cust.pincode || '',
+          country: cust.country || ''
+        },
+        phone: cust.phone || '',
+        email: cust.email || ''
+      } as import('@app/models/invoice.model').Customer;
+    }
+
+    return {
+      invoiceNumber: sale.invoiceNumber || 'INV-0000',
+      invoiceDate,
+      dueDate,
+      company,
+      customer: invoiceCustomer,
+      items,
+      subtotal: this.formatCurrency(subtotalNum),
+      tax: this.formatCurrency(sale.cgst + sale.sgst + sale.igst + sale.cess || 0),
+      taxRate: this.formatPercentage((businessSettings?.defaultGstRate ?? 0) / 100),
+      total: this.formatCurrency(totalNum || 0),
+      notes: sale.notes || '',
+      terms: ''
     };
   }
 

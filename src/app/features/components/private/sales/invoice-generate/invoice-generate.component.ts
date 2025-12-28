@@ -4,8 +4,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { InvoiceService } from '@app/core/template-services/invoice.service';
 import { PdfService } from '@app/core/template-services/pdf.service';
 import { TemplateService } from '@app/core/template-services/template.service';
-import { AdditionalCharge, Sale, SaleItem } from '@app/features/models';
+import { AdditionalCharge, BusinessSettings, Customer, Sale, SaleItem } from '@app/features/models';
 import { BusinessSettingsService } from '@app/features/services/business-settings';
+import { CustomerService } from '@app/features/services/customer.service';
 import { SaleAdditionalChargeService } from '@app/features/services/sale-additional-charge.service';
 import { SaleItemService } from '@app/features/services/sale-item.service';
 import { SaleService } from '@app/features/services/sale.service';
@@ -17,7 +18,7 @@ import {
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
 import { personOutline, close, paperPlaneOutline, downloadOutline, printOutline, createOutline, ellipsisHorizontalOutline, documentTextOutline, imageOutline } from 'ionicons/icons';
-import { forkJoin } from 'rxjs';
+import { forkJoin, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-invoice-generate',
@@ -38,6 +39,7 @@ export class InvoiceGenerateComponent implements OnInit {
   private sanitizer = inject(DomSanitizer);
   private actionSheetCtrl = inject(ActionSheetController);
   private translate = inject(TranslateService);
+  private customerService = inject(CustomerService);
 
   // openedAsModal = input<boolean>(false);
   @Input() openedAsModal = false;
@@ -51,6 +53,8 @@ export class InvoiceGenerateComponent implements OnInit {
   renderedHtml = signal<SafeHtml>('');
   loading = signal(true);
   generating = signal(false);
+  renderingPng = signal(false);
+  pngPreview = signal<string | null>(null);
   error = signal<string | null>(null);
 
   private invoice: Invoice | null = null;
@@ -62,40 +66,43 @@ export class InvoiceGenerateComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getRequireData(this.saleId);
+    this.saleService.getSaleById(this.saleId).subscribe((sale) => {
+      this.getRequireData(sale!);
+    })
   }
 
-  getRequireData(saleId: string) {
+  getRequireData(sale: Sale) {
     forkJoin([
-      this.saleService.getSaleById(saleId),
-      this.saleItemService.getSaleItemsBySaleId(saleId),
-      this.saleAdditionalChargeService.getAdditionalChargeBySaleId(saleId),
+      this.saleService.getSaleById(sale.saleId!),
+      this.saleItemService.getSaleItemsBySaleId(sale.saleId!),
+      this.saleAdditionalChargeService.getAdditionalChargeBySaleId(sale.saleId!),
       this.businessService.getBusinessSettings(),
+      this.customerService.getCustomerById(sale.customerId)
     ]).subscribe({
-      next: ([sale, saleItems, saleAdditionalCharges, businessSetting]) => {
+      next: ([sale, saleItems, saleAdditionalCharges, businessSetting, customer]) => {
         this.sale.set(sale);
         this.saleItems.set(saleItems);
         this.saleAdditionalCharges.set(saleAdditionalCharges);
         if (businessSetting?.templateId) {
-          this.loadTemplateAndInvoice(businessSetting.templateId)
-        } else {
-          this.loadTemplateAndInvoice();
-        }
+            this.loadTemplateAndInvoice(businessSetting.templateId, sale!, saleItems, saleAdditionalCharges, businessSetting ?? undefined, customer ?? undefined)
+          } else {
+            this.loadTemplateAndInvoice(undefined, sale!, saleItems, saleAdditionalCharges, businessSetting ?? undefined, customer ?? undefined);
+          }
 
         console.log("Sale", this.sale());
         console.log("saleItems", this.saleItems());
         console.log("saleAdditionalCharges", this.saleAdditionalCharges());
       },
-      error: (err) => {
-        this.error.set(err.message || 'Failed to load templates');
+      error: (err: any) => {
+        this.error.set(err?.message || 'Failed to load templates');
         this.loading.set(false);
       }
-    })
+    });
 
   }
 
 
-  loadTemplateAndInvoice(templateId?: string) {
+  loadTemplateAndInvoice(templateId?: string, sale?: Sale, saleItems?: SaleItem[], saleAdditionalCharges?: AdditionalCharge[], businessSetting?: BusinessSettings, customer?: Customer) {
     this.loading.set(true);
     this.error.set(null);
 
@@ -103,7 +110,11 @@ export class InvoiceGenerateComponent implements OnInit {
     forkJoin({
       template: this.templateService.getTemplateMetadataWithFallback(templateId),
       invoice: new Promise<Invoice>(resolve => {
-        resolve(this.invoiceService.generateMockInvoice());
+        if (sale && saleItems) {
+          resolve(this.invoiceService.generateInvoiceFromSale(sale, saleItems, saleAdditionalCharges || [], businessSetting, customer));
+        } else {
+          resolve(this.invoiceService.generateMockInvoice());
+        }
       })
     }).subscribe({
       next: ({ template, invoice }) => {
