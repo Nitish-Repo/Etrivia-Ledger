@@ -13,3 +13,27 @@
     margin: 0px 0 25px;
   }
 }
+
+.preview-container {
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.preview-wrapper {
+  background: white;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+  max-width: 210mm;
+  width: 100%;
+}
+
+.preview-content {
+  width: 100%;
+  min-height: 297mm;
+}
+
+/* Ensure template content renders properly */
+.preview-content :deep(body) {
+  padding: 0 !important;
+  margin: 0 !important;
+}
