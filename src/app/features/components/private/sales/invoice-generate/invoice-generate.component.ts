@@ -19,6 +19,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
 import { personOutline, close, paperPlaneOutline, downloadOutline, printOutline, createOutline, ellipsisHorizontalOutline, documentTextOutline, imageOutline } from 'ionicons/icons';
 import { forkJoin, firstValueFrom } from 'rxjs';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-invoice-generate',
@@ -158,9 +159,13 @@ export class InvoiceGenerateComponent implements OnInit {
       const element = this.previewContent.nativeElement;
       const filename = `invoice-${this.invoice.invoiceNumber}-${this.currentTemplate()!.templateId}.pdf`;
 
-      // await this.pdfService.generatePdf(element, filename);
-      // element is the preview container (@ViewChild('previewContent').nativeElement)
-      await this.pdfService.generatePdf(element, filename, { useA4: true, scale: 2 });
+      if (Capacitor.getPlatform() === 'web') {
+        // browser download
+        await this.pdfService.generatePdf(element, filename, { useA4: true, scale: 2 });
+      } else {
+        // native (Android / iOS) - save to app storage and open share sheet
+        await this.pdfService.savePdfFromElement(element, filename, { useA4: true, scale: 2 });
+      }
 
       this.generating.set(false);
     } catch (err) {
@@ -220,22 +225,76 @@ export class InvoiceGenerateComponent implements OnInit {
       const element = this.previewContent.nativeElement;
       const filename = `invoice-${this.invoice.invoiceNumber}-${this.currentTemplate()!.templateId}.jpg`;
 
-      const dataUrl = await this.pdfService.generateImage(element, {
-        useA4: true,
-        format: 'jpeg',
-        quality: 0.85,
-        scale: 2
-      });
+      if (Capacitor.getPlatform() === 'web') {
+        const dataUrl = await this.pdfService.generateImage(element, {
+          useA4: true,
+          format: 'jpeg',
+          quality: 0.85,
+          scale: 2
+        });
 
-      this.pngPreview.set(dataUrl);
+        this.pngPreview.set(dataUrl);
 
-      // Immediately trigger download (optional — caller may instead show preview)
-      this.pdfService.downloadImage(dataUrl, filename);
+        // Browser: trigger download
+        this.pdfService.downloadImage(dataUrl, filename);
+      } else {
+        // Native: generate + save + share
+        await this.pdfService.saveImageFromElement(element, filename, { useA4: true, format: 'jpeg', quality: 0.85, scale: 2 });
+      }
     } catch (err) {
       console.error('PNG generation error:', err);
       alert('Failed to generate image. Please try again.');
     } finally {
       this.renderingPng.set(false);
+    }
+  }
+
+  private dataUrlToBlob(dataUrl: string): Blob {
+    const parts = dataUrl.split(',');
+    const meta = parts[0];
+    const base64 = parts[1];
+    const contentTypeMatch = /data:(.*);base64/.exec(meta);
+    const contentType = contentTypeMatch ? contentTypeMatch[1] : 'application/octet-stream';
+    const byteChars = atob(base64);
+    const byteNumbers = new Array(byteChars.length);
+    for (let i = 0; i < byteChars.length; i++) {
+      byteNumbers[i] = byteChars.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: contentType });
+  }
+
+  async sendInvoice() {
+    if (!this.previewContent || !this.currentTemplate() || !this.invoice) return;
+
+    const element = this.previewContent.nativeElement;
+    const filename = `invoice-${this.invoice.invoiceNumber}-${this.currentTemplate()!.templateId}.pdf`;
+
+    try {
+      if (Capacitor.getPlatform() !== 'web') {
+        // native: generate PDF and open share sheet
+        await this.pdfService.savePdfFromElement(element, filename, { useA4: true, scale: 2 });
+        return;
+      }
+
+      // web: try Web Share API with an image preview (more widely supported for sharing files)
+      if ((navigator as any).canShare && (navigator as any).canShare({ files: [] })) {
+        const imgData = await this.pdfService.generateImage(element, { useA4: true, format: 'jpeg', quality: 0.85, scale: 2 });
+        const blob = this.dataUrlToBlob(imgData);
+        const file = new File([blob], filename.replace(/\.pdf$/, '.jpg'), { type: blob.type });
+        try {
+          await (navigator as any).share({ files: [file], title: 'Invoice', text: 'Invoice attached' });
+          return;
+        } catch (err) {
+          console.warn('Web share failed, falling back to download', err);
+        }
+      }
+
+      // fallback: download PDF in browser
+      await this.pdfService.generatePdf(element, filename, { useA4: true, scale: 2 });
+    } catch (err) {
+      console.error('Send invoice error:', err);
+      alert('Failed to send invoice. Please try download instead.');
     }
   }
 

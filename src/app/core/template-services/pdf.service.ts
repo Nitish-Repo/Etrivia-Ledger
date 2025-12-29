@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 
 export type PdfOptions = {
   useA4?: boolean;
@@ -214,5 +216,114 @@ export class PdfService {
     document.body.appendChild(a);
     a.click();
     a.remove();
+  }
+
+  /**
+   * Save a data URL (base64) to app-scoped storage and open the share sheet.
+   * Works on Android/iOS via Capacitor Filesystem + Share.
+   */
+  async saveAndShareDataUrl(dataUrl: string, filename: string): Promise<void> {
+    try {
+      const commaIdx = dataUrl.indexOf(',');
+      const base64 = commaIdx >= 0 ? dataUrl.substring(commaIdx + 1) : dataUrl;
+
+      await Filesystem.writeFile({
+        path: filename,
+        data: base64,
+        directory: Directory.Documents,
+        recursive: true
+      });
+
+      const uri = await Filesystem.getUri({ path: filename, directory: Directory.Documents });
+
+      await Share.share({
+        title: filename,
+        text: filename,
+        url: uri.uri,
+        dialogTitle: 'Share file'
+      });
+    } catch (err) {
+      console.error('saveAndShareDataUrl error:', err);
+      throw err;
+    }
+  }
+
+  /**
+   * Generate PDF from element and save/share on device (uses app-scoped storage).
+   */
+  async savePdfFromElement(element: HTMLElement, filename: string = 'invoice.pdf', options: PdfOptions = {}): Promise<void> {
+    const requestedScale = options.scale ?? 2;
+    const widthMm = options.widthMm ?? this.A4_WIDTH;
+    const heightMm = options.heightMm ?? this.A4_HEIGHT;
+
+    const deviceDpr = Math.max(window.devicePixelRatio || 1, 1);
+    const renderScale = Math.min(requestedScale, Math.max(1, deviceDpr), 2);
+
+    const appliedA4 = !!options.useA4;
+    const originalStyle: Partial<CSSStyleDeclaration> = {};
+
+    if (appliedA4) {
+      originalStyle.width = element.style.width;
+      originalStyle.maxWidth = element.style.maxWidth;
+      originalStyle.boxSizing = element.style.boxSizing;
+      element.style.width = `${this.mmToPx(widthMm)}px`;
+      element.style.maxWidth = `${this.mmToPx(widthMm)}px`;
+      element.style.boxSizing = 'border-box';
+      await new Promise(requestAnimationFrame);
+    }
+
+    try {
+      const canvas = await html2canvas(element, {
+        scale: renderScale,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+
+      const mmToPxScaled = (mm: number) => Math.round((mm * 96 * renderScale) / 25.4);
+      const pxToMm = (px: number) => (px * 25.4) / (96 * renderScale);
+
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidthMm = widthMm;
+      const pageHeightMm = heightMm;
+
+      const pageHeightPx = mmToPxScaled(pageHeightMm);
+      let yOffset = 0;
+
+      while (yOffset < canvas.height) {
+        const sliceHeight = Math.min(pageHeightPx, canvas.height - yOffset);
+        const tmp = document.createElement('canvas');
+        tmp.width = canvas.width;
+        tmp.height = sliceHeight;
+        const ctx = tmp.getContext('2d')!;
+        ctx.drawImage(canvas, 0, yOffset, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
+
+        const imgData = tmp.toDataURL('image/jpeg', 0.8);
+
+        if (yOffset > 0) pdf.addPage();
+
+        const drawHeightMm = pxToMm(tmp.height) * (pageWidthMm / pxToMm(tmp.width));
+        pdf.addImage(imgData, 'JPEG', 0, 0, pageWidthMm, drawHeightMm);
+
+        yOffset += sliceHeight;
+      }
+
+      const dataUri = pdf.output('datauristring');
+      await this.saveAndShareDataUrl(dataUri, filename);
+    } finally {
+      if (appliedA4) {
+        element.style.width = originalStyle.width ?? '';
+        element.style.maxWidth = originalStyle.maxWidth ?? '';
+        element.style.boxSizing = originalStyle.boxSizing ?? '';
+      }
+    }
+  }
+
+  /**
+   * Generate image from element and save/share on device.
+   */
+  async saveImageFromElement(element: HTMLElement, filename: string = 'invoice.jpg', options: { useA4?: boolean; widthMm?: number; scale?: number; format?: 'png' | 'jpeg'; quality?: number } = {}): Promise<void> {
+    const dataUrl = await this.generateImage(element, { useA4: options.useA4, widthMm: options.widthMm, scale: options.scale, format: options.format ?? 'jpeg', quality: options.quality });
+    await this.saveAndShareDataUrl(dataUrl, filename);
   }
 }
