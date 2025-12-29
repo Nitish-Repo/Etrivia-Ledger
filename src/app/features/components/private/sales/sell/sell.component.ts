@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -56,6 +56,7 @@ export class SellComponent implements OnInit {
   private saleService = inject(SaleService);
   private saleItemService = inject(SaleItemService);
   private saleAdditionalChargeService = inject(SaleAdditionalChargeService);
+  private cdr = inject(ChangeDetectorRef);
 
   private destroy$: Subject<void> = new Subject<void>();
 
@@ -385,6 +386,7 @@ export class SellComponent implements OnInit {
         // If form already exists, set the invoice number into the form so UI shows it
         if (this.saleForm) {
           this.saleForm.get('invoiceNumber')?.setValue(invoiceNumber);
+          this.cdr.detectChanges();
         }
       },
       error: (error) => {
