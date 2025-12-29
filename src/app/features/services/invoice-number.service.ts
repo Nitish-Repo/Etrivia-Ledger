@@ -1,11 +1,27 @@
 import { Injectable, inject } from '@angular/core';
 import { DatabaseService } from '@app/core/database-services/database.service';
-import { from, Observable } from 'rxjs';
+import { from, map, Observable, switchMap } from 'rxjs';
 import { Preferences } from '@capacitor/preferences';
+import { Device } from '@capacitor/device';
+import { DB_TABLES } from '@app/core/database-services';
+import { v7 as uuidv7 } from 'uuid';
+
+export interface InvoiceCounter {
+  id: number;
+  device_id: string;
+  sequence: number;
+  updated_at?: string;
+}
+export interface Invoice {
+  invoiceId: string;
+  invoiceNumber: string;
+  updated_at?: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class InvoiceNumberService {
   private db = inject(DatabaseService);
   private deviceId: string | null = null;
@@ -13,7 +29,74 @@ export class InvoiceNumberService {
   // Generate next invoice number: DMJ-2025-0001
   generateNextInvoiceNumber(): Observable<string> {
     return from(this._generate());
+
   }
+
+  getNextInvoiceNumberPreview$(): Observable<string> {
+    return from(Device.getId()).pipe(
+      switchMap(info =>
+        from(this.db.getAll<InvoiceCounter>(DB_TABLES.INVOICE_COUNTER)).pipe(
+          map(rows => {
+            const deviceId = info.identifier
+              .replace(/-/g, '')
+              .slice(-3)
+              .toUpperCase();
+
+            const counter = rows[0];
+            const year = new Date().getFullYear();
+            const newNumber = counter.sequence + 1;
+
+            return `${deviceId}-${year}-${newNumber
+              .toString()
+              .padStart(4, '0')}`;
+          })
+        )
+      )
+    );
+  }
+
+  // Generate next invoice number: DMJ-2025-0001
+  saveInvoiceNumber(invoiceNumber: string) {
+    let invoice: Invoice = {
+      invoiceId: uuidv7(),
+      invoiceNumber: invoiceNumber,
+      updated_at: new Date().toISOString()
+    }
+    return this.db.insertAndReturn$<Invoice>(DB_TABLES.INVOICE, invoice);
+  }
+
+
+
+
+
+
+  async generateNewInvoiceNumber() {
+    const info = await Device.getId();
+    const deviceId = info.identifier.replace(/-/g, '').slice(-3).toUpperCase();;
+
+    const x = await this.db.getAll<InvoiceCounter>(DB_TABLES.INVOICE_COUNTER);
+
+    const year = new Date().getFullYear();
+    const counter = x[0];
+    const newNumber = counter.sequence + 1;
+
+    const invoiceNumber =
+      `${deviceId}-${year}-${newNumber.toString().padStart(4, '0')}`;
+
+    return invoiceNumber;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 
   // Preview next invoice number without saving
   getNextInvoiceNumberPreview(): Observable<string> {
@@ -85,7 +168,7 @@ export class InvoiceNumberService {
   private async getDevicePrefix(): Promise<string> {
     if (!this.deviceId) {
       const stored = await Preferences.get({ key: 'deviceId' });
-      
+
       if (stored.value) {
         this.deviceId = stored.value;
       } else {

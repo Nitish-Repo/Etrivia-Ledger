@@ -409,6 +409,28 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
       CREATE INDEX IF NOT EXISTS idx_stock_adj_date ON stock_adjustments(adjustmentDate);
 
       -- ============================================
+      -- INVOICE COUNTER TABLE
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS invoice (
+        invoiceId TEXT PRIMARY KEY,
+        invoiceNumber TEXT UNIQUE NOT NULL,
+        updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
+      );
+
+      -- ============================================
+      -- INVOICE COUNTER TABLE
+      -- ============================================
+      CREATE TABLE IF NOT EXISTS invoice_counter (
+        id INTEGER PRIMARY KEY CHECK (id = 1),
+        device_id TEXT NOT NULL,
+        sequence INTEGER NOT NULL DEFAULT 0,
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      );
+
+      INSERT OR IGNORE INTO invoice_counter (id, device_id, sequence) 
+      VALUES (1, '', 0);
+
+      -- ============================================
       -- BUSINESS SETTINGS TABLE
       -- ============================================
       CREATE TABLE IF NOT EXISTS business_settings (
@@ -426,6 +448,7 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
         ('pincode', ''),
         ('phone', ''),
         ('email', ''),
+        ('imageUrl', ''),
         ('templateId', ''),
         ('invoicePrefix', 'INV'),
         ('financialYearStart', '04-01'),
@@ -433,18 +456,7 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
         ('enableCess', '0'),
         ('devicePrefix', 'D1');
 
-      -- ============================================
-      -- INVOICE COUNTER TABLE
-      -- ============================================
-      CREATE TABLE IF NOT EXISTS invoice_counter (
-        id INTEGER PRIMARY KEY CHECK (id = 1),
-        lastNumber INTEGER NOT NULL DEFAULT 0,
-        financialYear TEXT NOT NULL DEFAULT '2025-26',
-        updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
-      );
-
-      INSERT OR IGNORE INTO invoice_counter (id, lastNumber, financialYear) 
-      VALUES (1, 0, '2025-26');
+    
     `
   }
 ];

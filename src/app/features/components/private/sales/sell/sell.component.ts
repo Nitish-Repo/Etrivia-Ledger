@@ -381,7 +381,7 @@ export class SellComponent implements OnInit {
   }
 
   private loadNextInvoiceNumber() {
-    this.invoiceNumberService.getNextInvoiceNumberPreview().subscribe({
+    this.invoiceNumberService.getNextInvoiceNumberPreview$().subscribe({
       next: (invoiceNumber) => {
         // If form already exists, set the invoice number into the form so UI shows it
         if (this.saleForm) {

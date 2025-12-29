@@ -16,6 +16,8 @@ export const DB_TABLES = {
   EXPENSES: 'expenses',
   STOCK_ADJUSTMENTS: 'stock_adjustments',
   BUSINESS_SETTINGS: 'business_settings',
+  INVOICE_COUNTER: 'invoice_counter',
+  INVOICE: 'invoice',
 } as const;
 
 /**
