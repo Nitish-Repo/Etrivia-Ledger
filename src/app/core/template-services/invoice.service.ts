@@ -333,9 +333,10 @@ export class InvoiceService {
    * Formats a number as currency (USD)
    */
   private formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('en-US', {
+    // Format currency in Indian Rupees by default
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'INR'
     }).format(amount);
   }
 
