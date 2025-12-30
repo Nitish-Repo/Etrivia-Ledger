@@ -1,11 +1,163 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { AdditionalCharge, BusinessSettings, Customer, Sale, SaleItem } from '@app/features/models';
+import { BusinessSettingsService } from '@app/features/services/business-settings';
+import { SaleAdditionalChargeService } from '@app/features/services/sale-additional-charge.service';
+import { SaleItemService } from '@app/features/services/sale-item.service';
+import { SaleService } from '@app/features/services/sale.service';
 import { Invoice, InvoiceItem } from '@app/models/invoice.model';
+import { forkJoin, firstValueFrom } from 'rxjs';
+import { TemplateService } from './template.service';
+import { CustomerService } from '@app/features/services/customer.service';
+import { PdfService } from './pdf.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InvoiceService {
+  private saleService = inject(SaleService);
+  private saleItemService = inject(SaleItemService);
+  private saleAdditionalChargeService = inject(SaleAdditionalChargeService);
+  private businessService = inject(BusinessSettingsService);
+  private customerService = inject(CustomerService);
+  private templateService = inject(TemplateService);
+  private pdfService = inject(PdfService);
+
+
+
+  /**
+   * Generate a PNG preview (data URL) for a sale's invoice using the configured template.
+   * Returns a promise resolving to a base64 data URL (jpeg/png).
+   */
+  async getPngPreview(sale: Sale, options: { format?: 'png' | 'jpeg'; quality?: number; scale?: number } = { format: 'jpeg', quality: 0.85, scale: 2 }): Promise<string> {
+    // load all required data
+    const results = await firstValueFrom(forkJoin([
+      this.saleService.getSaleById(sale.saleId!),
+      this.saleItemService.getSaleItemsBySaleId(sale.saleId!),
+      this.saleAdditionalChargeService.getAdditionalChargeBySaleId(sale.saleId!),
+      this.businessService.getBusinessSettings(),
+      this.customerService.getCustomerById(sale.customerId)
+    ]));
+
+    const [saleRec, saleItems, saleAdditionalCharges, businessSetting, customer] = results as [Sale, SaleItem[], any, BusinessSettings, any];
+
+    // determine template id (fallback to undefined)
+    const templateMetadata = await firstValueFrom(this.templateService.getTemplateMetadataWithFallback(businessSetting?.templateId));
+
+    const invoice = this.generateInvoiceFromSale(saleRec, saleItems, saleAdditionalCharges || [], businessSetting ?? undefined, customer ?? undefined);
+
+    // render template html
+    const html = await firstValueFrom(this.templateService.getAndRenderTemplate(templateMetadata.filename, invoice));
+
+    // generate image from html string via PdfService
+    const dataUrl = await this.pdfService.generateImageFromHtmlString(html, {
+      useA4: true,
+      format: options.format ?? 'jpeg',
+      quality: options.quality ?? 0.85,
+      scale: options.scale ?? 2
+    });
+
+    return dataUrl;
+  }
+
+  async generatePdfandSave(sale: Sale, options: { useA4?: boolean; scale?: number } = { useA4: true, scale: 2 }): Promise<void> {
+    const { html, invoice, template } = await this.renderInvoiceHtml(sale);
+    const filename = `invoice-${invoice.invoiceNumber}-${template.templateId}.pdf`;
+
+    if ((window as any).Capacitor && (window as any).Capacitor.getPlatform && (window as any).Capacitor.getPlatform() !== 'web') {
+      // native
+      await this.pdfService.savePdfFromHtmlString(html, filename, { useA4: options.useA4, scale: options.scale });
+      return;
+    }
+
+    // web
+    await this.pdfService.generatePdfFromHtmlString(html, filename, { useA4: options.useA4, scale: options.scale });
+  }
+
+  async generateImageandSave(sale: Sale, options: { format?: 'png' | 'jpeg'; quality?: number; scale?: number } = { format: 'jpeg', quality: 0.85, scale: 2 }): Promise<void> {
+    const { html, invoice, template } = await this.renderInvoiceHtml(sale);
+    const filename = `invoice-${invoice.invoiceNumber}-${template.templateId}.jpg`;
+
+    if ((window as any).Capacitor && (window as any).Capacitor.getPlatform && (window as any).Capacitor.getPlatform() !== 'web') {
+      // native: save image (share)
+      await this.pdfService.saveImageFromHtmlString(html, filename, { useA4: true, format: options.format ?? 'jpeg', quality: options.quality, scale: options.scale });
+      return;
+    }
+
+    // web: generate data url and trigger download
+    const dataUrl = await this.pdfService.generateImageFromHtmlString(html, { useA4: true, format: options.format ?? 'jpeg', quality: options.quality, scale: options.scale });
+    this.pdfService.downloadImage(dataUrl, filename);
+  }
+
+  async savePdfandShare(sale: Sale): Promise<void> {
+    const { html, invoice, template } = await this.renderInvoiceHtml(sale);
+    const filename = `invoice-${invoice.invoiceNumber}-${template.templateId}.pdf`;
+
+    // native: save to storage and open share sheet
+    if ((window as any).Capacitor && (window as any).Capacitor.getPlatform && (window as any).Capacitor.getPlatform() !== 'web') {
+      await this.pdfService.savePdfFromHtmlString(html, filename, { useA4: true, scale: 2 });
+      return;
+    }
+
+    // web: try Web Share API with an image preview first
+    if ((navigator as any).canShare && (navigator as any).canShare({ files: [] })) {
+      try {
+        const imgData = await this.pdfService.generateImageFromHtmlString(html, { useA4: true, format: 'jpeg', quality: 0.85, scale: 2 });
+        const blob = this.dataUrlToBlob(imgData);
+        const file = new File([blob], filename.replace(/\.pdf$/, '.jpg'), { type: blob.type });
+        await (navigator as any).share({ files: [file], title: 'Invoice', text: 'Invoice attached' });
+        return;
+      } catch (err) {
+        console.warn('Web share failed, falling back to download', err);
+      }
+    }
+
+    // fallback: trigger PDF download
+    await this.pdfService.generatePdfFromHtmlString(html, filename, { useA4: true, scale: 2 });
+  }
+
+  // helper to render HTML and invoice object for a sale
+  private async renderInvoiceHtml(sale: Sale): Promise<{ html: string; invoice: Invoice; template: any }> {
+    const results = await firstValueFrom(forkJoin([
+      this.saleService.getSaleById(sale.saleId!),
+      this.saleItemService.getSaleItemsBySaleId(sale.saleId!),
+      this.saleAdditionalChargeService.getAdditionalChargeBySaleId(sale.saleId!),
+      this.businessService.getBusinessSettings(),
+      this.customerService.getCustomerById(sale.customerId)
+    ]));
+
+    const [saleRec, saleItems, saleAdditionalCharges, businessSetting, customer] = results as [Sale, SaleItem[], any, BusinessSettings, any];
+
+    const templateMetadata = await firstValueFrom(this.templateService.getTemplateMetadataWithFallback(businessSetting?.templateId));
+
+    const invoice = this.generateInvoiceFromSale(saleRec, saleItems, saleAdditionalCharges || [], businessSetting ?? undefined, customer ?? undefined);
+
+    const html = await firstValueFrom(this.templateService.getAndRenderTemplate(templateMetadata.filename, invoice));
+
+    return { html, invoice, template: templateMetadata };
+  }
+
+  private dataUrlToBlob(dataUrl: string): Blob {
+    const parts = dataUrl.split(',');
+    const meta = parts[0];
+    const base64 = parts[1];
+    const contentTypeMatch = /data:(.*);base64/.exec(meta);
+    const contentType = contentTypeMatch ? contentTypeMatch[1] : 'application/octet-stream';
+    const byteChars = atob(base64);
+    const byteNumbers = new Array(byteChars.length);
+    for (let i = 0; i < byteChars.length; i++) {
+      byteNumbers[i] = byteChars.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: contentType });
+  }
+
+  
+
+
+
+
+
+
 
   /**
    * Generates mock invoice data with formatted values

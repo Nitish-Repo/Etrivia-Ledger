@@ -16,6 +16,7 @@ import { add, ellipsisVertical, chevronForward, trash, close, receiptOutline, pr
 import { SellComponent } from './sell/sell.component';
 import { AlertController } from '@ionic/angular/standalone';
 import { InvoiceGenerateComponent } from './invoice-generate/invoice-generate.component';
+import { GenerateInvoiceComponent } from './generate-invoice/generate-invoice.component';
 
 @Component({
   selector: 'app-sales',
@@ -195,7 +196,7 @@ export class SalesComponent implements OnInit {
 
   private async printInvoice(sale: Sale) {
     const modal = await this.modalCtrl.create({
-      component: InvoiceGenerateComponent,
+      component: GenerateInvoiceComponent,
       componentProps: { openedAsModal: true, saleId: sale.saleId },
       cssClass: 'full-screen-modal',
       // breakpoints: [0, 1],

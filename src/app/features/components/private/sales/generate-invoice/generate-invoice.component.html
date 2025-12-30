@@ -1,0 +1,68 @@
+
+@if (openedAsModal) {
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{sale()?.invoiceNumber}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+}
+<ion-content [fullscreen]="true">
+  @if (pngPreview()) {
+  <div class="image-preview-overlay">
+    <div class="image-preview-card">
+      <img [src]="pngPreview()" alt="Invoice preview" />
+    </div>
+  </div>
+  }
+</ion-content>
+<ion-footer>
+  <ion-item lines="none" class="ion-margin-top">
+    <ion-label>
+      <h2>{{ sale()?.totalAmount | currency:'INR':'symbol':'1.2-2' }}</h2>
+      <p>{{sale()?.customerName}}</p>
+    </ion-label>
+    <ion-chip [disabled]="true">{{sale()?.paymentStatus}}</ion-chip>
+  </ion-item>
+
+  <ion-toolbar>
+    <ion-button expand="block" class="send-btn" mode="ios" (click)="sendInvoice(sale()!)">
+      <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
+      Send Invoice
+    </ion-button>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <div class="footer-actions">
+      <div>
+        <ion-button shape="round" (click)="presentActionDownloadSheet($event)" [disabled]="generating()">
+          <ion-icon slot="icon-only" name="download-outline"></ion-icon>
+        </ion-button>
+        <p>Download</p>
+      </div>
+      <div>
+        <ion-button shape="round">
+          <ion-icon slot="icon-only" name="print-outline"></ion-icon>
+        </ion-button>
+        <p>Print</p>
+      </div>
+      <div>
+        <ion-button shape="round">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+        <p>Edit</p>
+      </div>
+      <div>
+        <ion-button shape="round">
+          <ion-icon slot="icon-only" name="ellipsis-horizontal-outline"></ion-icon>
+        </ion-button>
+        <p>More</p>
+      </div>
+    </div>
+  </ion-toolbar>
+
+</ion-footer>
