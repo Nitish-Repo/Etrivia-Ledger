@@ -24,6 +24,76 @@ export class PdfService {
     return Math.round((mm * 96) / 25.4);
   }
 
+  // compute render scale capped to reasonable values
+  private getRenderScale(requestedScale?: number): number {
+    const requested = requestedScale ?? 2;
+    const deviceDpr = Math.max(window.devicePixelRatio || 1, 1);
+    return Math.min(requested, Math.max(1, deviceDpr), 2);
+  }
+
+  // apply A4 width styles to an element and return a restore function
+  private async applyA4Width(element: HTMLElement, widthMm: number): Promise<() => void> {
+    const originalStyle: Partial<CSSStyleDeclaration> = {};
+    originalStyle.width = element.style.width;
+    originalStyle.maxWidth = element.style.maxWidth;
+    originalStyle.boxSizing = element.style.boxSizing;
+
+    element.style.width = `${this.mmToPx(widthMm)}px`;
+    element.style.maxWidth = `${this.mmToPx(widthMm)}px`;
+    element.style.boxSizing = 'border-box';
+
+    await new Promise(requestAnimationFrame);
+
+    return () => {
+      element.style.width = originalStyle.width ?? '';
+      element.style.maxWidth = originalStyle.maxWidth ?? '';
+      element.style.boxSizing = originalStyle.boxSizing ?? '';
+    };
+  }
+
+  // Render element to canvas with html2canvas using supplied scale
+  private async renderToCanvas(element: HTMLElement, renderScale: number): Promise<HTMLCanvasElement> {
+    return await html2canvas(element, {
+      scale: renderScale,
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#ffffff'
+    });
+  }
+
+  // Convert a rendered canvas into a jsPDF instance (multi-page slice)
+  private canvasToPdf(canvas: HTMLCanvasElement, widthMm: number, heightMm: number, renderScale: number): jsPDF {
+    const mmToPxScaled = (mm: number) => Math.round((mm * 96 * renderScale) / 25.4);
+    const pxToMm = (px: number) => (px * 25.4) / (96 * renderScale);
+
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pageWidthMm = widthMm;
+    const pageHeightMm = heightMm;
+
+    const pageHeightPx = mmToPxScaled(pageHeightMm);
+    let yOffset = 0;
+
+    while (yOffset < canvas.height) {
+      const sliceHeight = Math.min(pageHeightPx, canvas.height - yOffset);
+      const tmp = document.createElement('canvas');
+      tmp.width = canvas.width;
+      tmp.height = sliceHeight;
+      const ctx = tmp.getContext('2d')!;
+      ctx.drawImage(canvas, 0, yOffset, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
+
+      const imgData = tmp.toDataURL('image/jpeg', 0.8);
+
+      if (yOffset > 0) pdf.addPage();
+
+      const drawHeightMm = pxToMm(tmp.height) * (pageWidthMm / pxToMm(tmp.width));
+      pdf.addImage(imgData, 'JPEG', 0, 0, pageWidthMm, drawHeightMm);
+
+      yOffset += sliceHeight;
+    }
+
+    return pdf;
+  }
+
   /**
    * Generates a PDF from an HTML element with multi-page support
    * @param element The HTML element to convert to PDF
@@ -31,78 +101,21 @@ export class PdfService {
    * @param options Optional: { useA4, widthMm, heightMm, scale }
    */
   async generatePdf(element: HTMLElement, filename: string = 'invoice.pdf', options: PdfOptions = {}): Promise<void> {
-    const requestedScale = options.scale ?? 2;
     const widthMm = options.widthMm ?? this.A4_WIDTH;
     const heightMm = options.heightMm ?? this.A4_HEIGHT;
+    const renderScale = this.getRenderScale(options.scale);
 
-    // Cap scale to avoid huge canvases on high-DPR devices
-    const deviceDpr = Math.max(window.devicePixelRatio || 1, 1);
-    const renderScale = Math.min(requestedScale, Math.max(1, deviceDpr), 2);
-
-    const appliedA4 = !!options.useA4;
-    const originalStyle: Partial<CSSStyleDeclaration> = {};
-
-    if (appliedA4) {
-      originalStyle.width = element.style.width;
-      originalStyle.maxWidth = element.style.maxWidth;
-      originalStyle.boxSizing = element.style.boxSizing;
-      element.style.width = `${this.mmToPx(widthMm)}px`;
-      element.style.maxWidth = `${this.mmToPx(widthMm)}px`;
-      element.style.boxSizing = 'border-box';
-      await new Promise(requestAnimationFrame);
-    }
+    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => {};
 
     try {
-      // render at capped scale
-      const canvas = await html2canvas(element, {
-        scale: renderScale,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff'
-      });
-
-      // helpers converting mm <-> px at renderScale (CSS px ~96dpi)
-      const mmToPxScaled = (mm: number) => Math.round((mm * 96 * renderScale) / 25.4);
-      const pxToMm = (px: number) => (px * 25.4) / (96 * renderScale);
-
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pageWidthMm = widthMm;
-      const pageHeightMm = heightMm;
-
-      // slice canvas into page-sized strips (px) to avoid huge single-image pages and cropping
-      const pageHeightPx = mmToPxScaled(pageHeightMm);
-      let yOffset = 0;
-
-      while (yOffset < canvas.height) {
-        const sliceHeight = Math.min(pageHeightPx, canvas.height - yOffset);
-        const tmp = document.createElement('canvas');
-        tmp.width = canvas.width;
-        tmp.height = sliceHeight;
-        const ctx = tmp.getContext('2d')!;
-        ctx.drawImage(canvas, 0, yOffset, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
-
-        // use JPEG with quality to reduce size (text renders fine in high quality)
-        const imgData = tmp.toDataURL('image/jpeg', 0.8);
-
-        if (yOffset > 0) pdf.addPage();
-
-        // compute height to draw in mm preserving aspect ratio
-        const drawHeightMm = pxToMm(tmp.height) * (pageWidthMm / pxToMm(tmp.width));
-        pdf.addImage(imgData, 'JPEG', 0, 0, pageWidthMm, drawHeightMm);
-
-        yOffset += sliceHeight;
-      }
-
+      const canvas = await this.renderToCanvas(element, renderScale);
+      const pdf = this.canvasToPdf(canvas, widthMm, heightMm, renderScale);
       pdf.save(filename);
     } catch (error) {
       console.error('Error generating PDF:', error);
       throw new Error('Failed to generate PDF');
     } finally {
-      if (appliedA4) {
-        element.style.width = originalStyle.width ?? '';
-        element.style.maxWidth = originalStyle.maxWidth ?? '';
-        element.style.boxSizing = originalStyle.boxSizing ?? '';
-      }
+      restore();
     }
   }
 
@@ -113,38 +126,20 @@ export class PdfService {
    */
   async generatePdfWithPageBreaks(element: HTMLElement, filename: string = 'invoice.pdf'): Promise<void> {
     try {
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pageHeight = this.A4_HEIGHT;
-      const pageWidth = this.A4_WIDTH;
-
-      // Get all page-break elements or use single page
       const pages = element.querySelectorAll('.page-break');
-      
-      if (pages.length === 0) {
-        // No page breaks defined, use simple approach
-        return this.generatePdf(element, filename);
-      }
 
-      // Handle multiple pages with page-break classes
+      if (pages.length === 0) return this.generatePdf(element, filename);
+
+      const pdf = new jsPDF('p', 'mm', 'a4');
       for (let i = 0; i < pages.length; i++) {
         const pageElement = pages[i] as HTMLElement;
-        
-        const canvas = await html2canvas(pageElement, {
-          scale: 2,
-          useCORS: true,
-          logging: false,
-          backgroundColor: '#ffffff'
-        });
-
+        const canvas = await this.renderToCanvas(pageElement, 2);
         const imgData = canvas.toDataURL('image/png');
-        const imgWidth = pageWidth;
+        const imgWidth = this.A4_WIDTH;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        if (i > 0) {
-          pdf.addPage();
-        }
-
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, Math.min(imgHeight, pageHeight));
+        if (i > 0) pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, Math.min(imgHeight, this.A4_HEIGHT));
       }
 
       pdf.save(filename);
@@ -162,47 +157,18 @@ export class PdfService {
     element: HTMLElement,
     options: { useA4?: boolean; widthMm?: number; scale?: number; format?: 'png' | 'jpeg'; quality?: number } = {}
   ): Promise<string> {
-    const requestedScale = options.scale ?? 2;
     const widthMm = options.widthMm ?? this.A4_WIDTH;
-
-    // Cap scale similar to PDF rendering to avoid huge canvases
-    const deviceDpr = Math.max(window.devicePixelRatio || 1, 1);
-    const renderScale = Math.min(requestedScale, Math.max(1, deviceDpr), 2);
-
-    const appliedA4 = !!options.useA4;
-    const originalStyle: Partial<CSSStyleDeclaration> = {};
-
-    if (appliedA4) {
-      originalStyle.width = element.style.width;
-      originalStyle.maxWidth = element.style.maxWidth;
-      originalStyle.boxSizing = element.style.boxSizing;
-      element.style.width = `${this.mmToPx(widthMm)}px`;
-      element.style.maxWidth = `${this.mmToPx(widthMm)}px`;
-      element.style.boxSizing = 'border-box';
-      await new Promise(requestAnimationFrame);
-    }
+    const renderScale = this.getRenderScale(options.scale);
+    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => {};
 
     try {
-      const canvas = await html2canvas(element, {
-        scale: renderScale,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff'
-      });
-
+      const canvas = await this.renderToCanvas(element, renderScale);
       const format = options.format ?? 'png';
-      if (format === 'png') {
-        return canvas.toDataURL('image/png');
-      }
-
+      if (format === 'png') return canvas.toDataURL('image/png');
       const quality = options.quality ?? 0.8;
       return canvas.toDataURL('image/jpeg', quality);
     } finally {
-      if (appliedA4) {
-        element.style.width = originalStyle.width ?? '';
-        element.style.maxWidth = originalStyle.maxWidth ?? '';
-        element.style.boxSizing = originalStyle.boxSizing ?? '';
-      }
+      restore();
     }
   }
 
@@ -252,70 +218,19 @@ export class PdfService {
    * Generate PDF from element and save/share on device (uses app-scoped storage).
    */
   async savePdfFromElement(element: HTMLElement, filename: string = 'invoice.pdf', options: PdfOptions = {}): Promise<void> {
-    const requestedScale = options.scale ?? 2;
     const widthMm = options.widthMm ?? this.A4_WIDTH;
     const heightMm = options.heightMm ?? this.A4_HEIGHT;
+    const renderScale = this.getRenderScale(options.scale);
 
-    const deviceDpr = Math.max(window.devicePixelRatio || 1, 1);
-    const renderScale = Math.min(requestedScale, Math.max(1, deviceDpr), 2);
-
-    const appliedA4 = !!options.useA4;
-    const originalStyle: Partial<CSSStyleDeclaration> = {};
-
-    if (appliedA4) {
-      originalStyle.width = element.style.width;
-      originalStyle.maxWidth = element.style.maxWidth;
-      originalStyle.boxSizing = element.style.boxSizing;
-      element.style.width = `${this.mmToPx(widthMm)}px`;
-      element.style.maxWidth = `${this.mmToPx(widthMm)}px`;
-      element.style.boxSizing = 'border-box';
-      await new Promise(requestAnimationFrame);
-    }
+    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => {};
 
     try {
-      const canvas = await html2canvas(element, {
-        scale: renderScale,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff'
-      });
-
-      const mmToPxScaled = (mm: number) => Math.round((mm * 96 * renderScale) / 25.4);
-      const pxToMm = (px: number) => (px * 25.4) / (96 * renderScale);
-
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pageWidthMm = widthMm;
-      const pageHeightMm = heightMm;
-
-      const pageHeightPx = mmToPxScaled(pageHeightMm);
-      let yOffset = 0;
-
-      while (yOffset < canvas.height) {
-        const sliceHeight = Math.min(pageHeightPx, canvas.height - yOffset);
-        const tmp = document.createElement('canvas');
-        tmp.width = canvas.width;
-        tmp.height = sliceHeight;
-        const ctx = tmp.getContext('2d')!;
-        ctx.drawImage(canvas, 0, yOffset, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
-
-        const imgData = tmp.toDataURL('image/jpeg', 0.8);
-
-        if (yOffset > 0) pdf.addPage();
-
-        const drawHeightMm = pxToMm(tmp.height) * (pageWidthMm / pxToMm(tmp.width));
-        pdf.addImage(imgData, 'JPEG', 0, 0, pageWidthMm, drawHeightMm);
-
-        yOffset += sliceHeight;
-      }
-
+      const canvas = await this.renderToCanvas(element, renderScale);
+      const pdf = this.canvasToPdf(canvas, widthMm, heightMm, renderScale);
       const dataUri = pdf.output('datauristring');
       await this.saveAndShareDataUrl(dataUri, filename);
     } finally {
-      if (appliedA4) {
-        element.style.width = originalStyle.width ?? '';
-        element.style.maxWidth = originalStyle.maxWidth ?? '';
-        element.style.boxSizing = originalStyle.boxSizing ?? '';
-      }
+      restore();
     }
   }
 
