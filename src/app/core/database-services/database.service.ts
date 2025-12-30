@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { SqliteConnectionService } from './sqlite-connection.service';
 import { PaginationBuilder, PaginationOptionsModel } from './database.model';
+import { DatabaseUtilityService } from './database-utils';
 
 /**
  * Generic Database Service
@@ -12,6 +13,7 @@ import { PaginationBuilder, PaginationOptionsModel } from './database.model';
 })
 export class DatabaseService {
   private isReady$ = new BehaviorSubject<boolean>(false);
+  private dataBaseUtilityService = inject(DatabaseUtilityService)
 
   constructor(private connectionService: SqliteConnectionService) { }
 
@@ -22,6 +24,7 @@ export class DatabaseService {
     try {
       await this.connectionService.initialize();
       await this.connectionService.openDatabase();
+      await this.dataBaseUtilityService.setTableValue(this);
       this.isReady$.next(true);
       console.log('✅ Database service ready');
     } catch (error) {
@@ -543,5 +546,40 @@ export class DatabaseService {
       console.error(`❌ Truncate error in ${table}:`, error);
       throw error;
     }
+  }
+
+  /**
+   * Upsert a record by id: update if exists, otherwise insert.
+   * Useful for single-row tables (like counters) or ensuring a row is present
+   * without changing other higher-level functions.
+   * @param table Table name
+   * @param idColumn ID column name (e.g. 'id')
+   * @param idValue ID value (e.g. 1)
+   * @param data Data object to set (columns → values)
+   * @returns number - for update: rows affected; for insert: last inserted id
+   */
+  async upsertById(table: string, idColumn: string, idValue: string | number, data: any): Promise<number> {
+    try {
+      const exists = await this.exists(table, `${idColumn} = ?`, [idValue]);
+
+      if (exists) {
+        // Update existing row
+        const rows = await this.update(table, idValue, data, idColumn);
+        return rows; // number of rows affected
+      } else {
+        // Insert new row (ensure idColumn is included)
+        const insertData = { ...(data || {}) };
+        if (insertData[idColumn] === undefined) insertData[idColumn] = idValue;
+        const lastId = await this.insert(table, insertData);
+        return lastId;
+      }
+    } catch (error) {
+      console.error(`❌ Upsert error in ${table}:`, error);
+      throw error;
+    }
+  }
+
+  upsertById$(table: string, idColumn: string, idValue: string | number, data: any) {
+    return from(this.upsertById(table, idColumn, idValue, data));
   }
 }

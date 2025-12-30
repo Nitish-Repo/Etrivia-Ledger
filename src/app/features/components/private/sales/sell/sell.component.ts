@@ -356,6 +356,7 @@ export class SellComponent implements OnInit {
       //   });
       // }
         this.saleService.addSaleAndReturn(saleData).subscribe(sale => {
+          this.invoiceNumberService.saveInvoiceAndUpdateCounter$(sale?.invoiceNumber!).subscribe();
           // Add sale items
           this.saleItemService.addSaleItemsAndReturn(saleItems, sale!).subscribe();
           // Add additional charges

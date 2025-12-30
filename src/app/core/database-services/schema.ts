@@ -424,7 +424,7 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
         id INTEGER PRIMARY KEY CHECK (id = 1),
         device_id TEXT NOT NULL,
         sequence INTEGER NOT NULL DEFAULT 0,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+        updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
       );
 
       INSERT OR IGNORE INTO invoice_counter (id, device_id, sequence) 

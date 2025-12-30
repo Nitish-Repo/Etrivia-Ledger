@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Device } from '@capacitor/device';
+import type { DatabaseService } from './database.service';
 
 /**
  * Database Utility Service
@@ -97,5 +99,24 @@ export class DatabaseUtilityService {
     const params = entries.map(([, value]) => value);
 
     return { clause, params };
+  }
+
+  /**
+   * Apply initial values to tables after DB initialization.
+   * Accepts the `DatabaseService` instance so this utility stays DI-safe.
+   * Call: `await dbUtil.setTableValue(thisDatabaseServiceInstance)`
+   */
+  async setTableValue(dbService: DatabaseService): Promise<void> {
+    try {
+      const info = await Device.getId();
+      const deviceId = info?.identifier || '';
+
+      // Ensure invoice_counter row has device_id set (id = 1)
+      await dbService.upsertById('invoice_counter', 'id', 1, { device_id: deviceId });
+
+      // Future: add other initializations here (business settings, prefs, etc.)
+    } catch (err) {
+      console.warn('⚠️ database-utils: setTableValue failed', err);
+    }
   }
 }
