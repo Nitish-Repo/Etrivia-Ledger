@@ -241,4 +241,131 @@ export class PdfService {
     const dataUrl = await this.generateImage(element, { useA4: options.useA4, widthMm: options.widthMm, scale: options.scale, format: options.format ?? 'jpeg', quality: options.quality });
     await this.saveAndShareDataUrl(dataUrl, filename);
   }
+
+  // ---- Offscreen / HTML string rendering helpers ----
+
+  // Create a hidden iframe, write the provided HTML into it, wait for fonts and images to load
+  private async createHiddenIframeWithHtml(html: string, widthPx?: number): Promise<{ iframe: HTMLIFrameElement; element: HTMLElement }> {
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.left = '-9999px';
+    iframe.style.top = '0';
+    iframe.style.width = widthPx ? `${widthPx}px` : 'auto';
+    iframe.style.height = '100%';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentDocument!;
+    doc.open();
+    doc.write(html);
+    doc.close();
+
+    // wait for initial load
+    await new Promise<void>((resolve) => {
+      if (doc.readyState === 'complete') return resolve();
+      iframe.onload = () => setTimeout(() => resolve(), 50);
+      // in some cases load may not fire, fallback
+      setTimeout(() => resolve(), 500);
+    });
+
+    // wait for fonts
+    try {
+      if (doc['fonts'] && typeof doc['fonts'].ready !== 'undefined') {
+        await doc['fonts'].ready;
+      }
+    } catch (e) {
+      // ignore font waiting errors
+    }
+
+    // wait for images
+    const images = Array.from(doc.images || []);
+    await Promise.all(images.map((img: HTMLImageElement) => {
+      return img.complete ? Promise.resolve() : new Promise<void>((res) => { img.onload = img.onerror = () => res(); });
+    }));
+
+    return { iframe, element: doc.body };
+  }
+
+  /**
+   * Generate a PDF from an HTML string using a hidden/offscreen iframe.
+   */
+  async generatePdfFromHtmlString(html: string, filename: string = 'invoice.pdf', options: PdfOptions = {}): Promise<void> {
+    const widthMm = options.widthMm ?? this.A4_WIDTH;
+    const heightMm = options.heightMm ?? this.A4_HEIGHT;
+    const renderScale = this.getRenderScale(options.scale);
+
+    // create iframe sized to A4 width in px if requested
+    const widthPx = this.mmToPx(widthMm);
+    const { iframe, element } = await this.createHiddenIframeWithHtml(html, widthPx);
+
+    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => {};
+
+    try {
+      const canvas = await this.renderToCanvas(element, renderScale);
+      const pdf = this.canvasToPdf(canvas, widthMm, heightMm, renderScale);
+      pdf.save(filename);
+    } catch (error) {
+      console.error('Error generating PDF from HTML string:', error);
+      throw new Error('Failed to generate PDF from HTML');
+    } finally {
+      restore();
+      document.body.removeChild(iframe);
+    }
+  }
+
+  /**
+   * Save a PDF generated from an HTML string to device storage and open share sheet.
+   */
+  async savePdfFromHtmlString(html: string, filename: string = 'invoice.pdf', options: PdfOptions = {}): Promise<void> {
+    const widthMm = options.widthMm ?? this.A4_WIDTH;
+    const renderScale = this.getRenderScale(options.scale);
+
+    const widthPx = this.mmToPx(widthMm);
+    const { iframe, element } = await this.createHiddenIframeWithHtml(html, widthPx);
+
+    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => {};
+
+    try {
+      const canvas = await this.renderToCanvas(element, renderScale);
+      const pdf = this.canvasToPdf(canvas, widthMm, options.heightMm ?? this.A4_HEIGHT, renderScale);
+      const dataUri = pdf.output('datauristring');
+      await this.saveAndShareDataUrl(dataUri, filename);
+    } finally {
+      restore();
+      document.body.removeChild(iframe);
+    }
+  }
+
+  /**
+   * Generate an image from an HTML string (hidden iframe) and return as data URL.
+   */
+  async generateImageFromHtmlString(html: string, options: { useA4?: boolean; widthMm?: number; scale?: number; format?: 'png' | 'jpeg'; quality?: number } = {}): Promise<string> {
+    const widthMm = options.widthMm ?? this.A4_WIDTH;
+    const renderScale = this.getRenderScale(options.scale);
+
+    const widthPx = this.mmToPx(widthMm);
+    const { iframe, element } = await this.createHiddenIframeWithHtml(html, widthPx);
+
+    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => {};
+
+    try {
+      const canvas = await this.renderToCanvas(element, renderScale);
+      const format = options.format ?? 'png';
+      if (format === 'png') return canvas.toDataURL('image/png');
+      const quality = options.quality ?? 0.8;
+      return canvas.toDataURL('image/jpeg', quality);
+    } finally {
+      restore();
+      document.body.removeChild(iframe);
+    }
+  }
+
+  /**
+   * Save an image generated from an HTML string to device storage and open share sheet.
+   */
+  async saveImageFromHtmlString(html: string, filename: string = 'invoice.jpg', options: { useA4?: boolean; widthMm?: number; scale?: number; format?: 'png' | 'jpeg'; quality?: number } = {}): Promise<void> {
+    const dataUrl = await this.generateImageFromHtmlString(html, { useA4: options.useA4, widthMm: options.widthMm, scale: options.scale, format: options.format ?? 'jpeg', quality: options.quality });
+    await this.saveAndShareDataUrl(dataUrl, filename);
+  }
 }
+

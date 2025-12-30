@@ -102,6 +102,10 @@ export class InvoiceGenerateComponent implements OnInit {
 
   }
 
+  getImagePerview(){
+    
+  }
+
 
   loadTemplateAndInvoice(templateId?: string, sale?: Sale, saleItems?: SaleItem[], saleAdditionalCharges?: AdditionalCharge[], businessSetting?: BusinessSettings, customer?: Customer) {
     this.loading.set(true);
@@ -149,22 +153,20 @@ export class InvoiceGenerateComponent implements OnInit {
   }
 
   async downloadPdf() {
-    if (!this.previewContent || !this.currentTemplate() || !this.invoice) {
-      return;
-    }
+    if (!this.currentTemplate() || !this.invoice) return;
 
     this.generating.set(true);
 
     try {
-      const element = this.previewContent.nativeElement;
       const filename = `invoice-${this.invoice.invoiceNumber}-${this.currentTemplate()!.templateId}.pdf`;
 
+      // Render template to HTML string (offscreen) and generate PDF without touching the visible DOM
+      const html = await firstValueFrom(this.templateService.getAndRenderTemplate(this.currentTemplate()!.filename, this.invoice!));
+
       if (Capacitor.getPlatform() === 'web') {
-        // browser download
-        await this.pdfService.generatePdf(element, filename, { useA4: true, scale: 2 });
+        await this.pdfService.generatePdfFromHtmlString(html, filename, { useA4: true, scale: 2 });
       } else {
-        // native (Android / iOS) - save to app storage and open share sheet
-        await this.pdfService.savePdfFromElement(element, filename, { useA4: true, scale: 2 });
+        await this.pdfService.savePdfFromHtmlString(html, filename, { useA4: true, scale: 2 });
       }
 
       this.generating.set(false);
@@ -218,15 +220,17 @@ export class InvoiceGenerateComponent implements OnInit {
   }
 
   async downloadPng() {
-    if (!this.previewContent || !this.currentTemplate() || !this.invoice) return;
+    if (!this.currentTemplate() || !this.invoice) return;
 
     this.renderingPng.set(true);
     try {
-      const element = this.previewContent.nativeElement;
       const filename = `invoice-${this.invoice.invoiceNumber}-${this.currentTemplate()!.templateId}.jpg`;
 
+      // Render HTML string and generate image offscreen
+      const html = await firstValueFrom(this.templateService.getAndRenderTemplate(this.currentTemplate()!.filename, this.invoice!));
+
       if (Capacitor.getPlatform() === 'web') {
-        const dataUrl = await this.pdfService.generateImage(element, {
+        const dataUrl = await this.pdfService.generateImageFromHtmlString(html, {
           useA4: true,
           format: 'jpeg',
           quality: 0.85,
@@ -239,7 +243,7 @@ export class InvoiceGenerateComponent implements OnInit {
         this.pdfService.downloadImage(dataUrl, filename);
       } else {
         // Native: generate + save + share
-        await this.pdfService.saveImageFromElement(element, filename, { useA4: true, format: 'jpeg', quality: 0.85, scale: 2 });
+        await this.pdfService.saveImageFromHtmlString(html, filename, { useA4: true, format: 'jpeg', quality: 0.85, scale: 2 });
       }
     } catch (err) {
       console.error('PNG generation error:', err);
@@ -265,21 +269,23 @@ export class InvoiceGenerateComponent implements OnInit {
   }
 
   async sendInvoice() {
-    if (!this.previewContent || !this.currentTemplate() || !this.invoice) return;
+    if (!this.currentTemplate() || !this.invoice) return;
 
-    const element = this.previewContent.nativeElement;
     const filename = `invoice-${this.invoice.invoiceNumber}-${this.currentTemplate()!.templateId}.pdf`;
 
     try {
+      // Generate HTML offscreen
+      const html = await firstValueFrom(this.templateService.getAndRenderTemplate(this.currentTemplate()!.filename, this.invoice!));
+
       if (Capacitor.getPlatform() !== 'web') {
         // native: generate PDF and open share sheet
-        await this.pdfService.savePdfFromElement(element, filename, { useA4: true, scale: 2 });
+        await this.pdfService.savePdfFromHtmlString(html, filename, { useA4: true, scale: 2 });
         return;
       }
 
       // web: try Web Share API with an image preview (more widely supported for sharing files)
       if ((navigator as any).canShare && (navigator as any).canShare({ files: [] })) {
-        const imgData = await this.pdfService.generateImage(element, { useA4: true, format: 'jpeg', quality: 0.85, scale: 2 });
+        const imgData = await this.pdfService.generateImageFromHtmlString(html, { useA4: true, format: 'jpeg', quality: 0.85, scale: 2 });
         const blob = this.dataUrlToBlob(imgData);
         const file = new File([blob], filename.replace(/\.pdf$/, '.jpg'), { type: blob.type });
         try {
@@ -291,7 +297,7 @@ export class InvoiceGenerateComponent implements OnInit {
       }
 
       // fallback: download PDF in browser
-      await this.pdfService.generatePdf(element, filename, { useA4: true, scale: 2 });
+      await this.pdfService.generatePdfFromHtmlString(html, filename, { useA4: true, scale: 2 });
     } catch (err) {
       console.error('Send invoice error:', err);
       alert('Failed to send invoice. Please try download instead.');
