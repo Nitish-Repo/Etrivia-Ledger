@@ -30,6 +30,7 @@ import { SaleItemService } from '@app/features/services/sale-item.service';
 import { SaleAdditionalChargeService } from '@app/features/services/sale-additional-charge.service';
 import { InvoiceGenerateComponent } from '../invoice-generate/invoice-generate.component';
 import { TemplatesComponent } from '../../templates/templates.component';
+import { GenerateInvoiceComponent } from '../generate-invoice/generate-invoice.component';
 
 @Component({
   selector: 'app-sell',
@@ -398,7 +399,7 @@ export class SellComponent implements OnInit {
 
   async navigateToInvoiceGenerate(saleId : string) {
     const modal = await this.modalCtrl.create({
-      component: InvoiceGenerateComponent,
+      component: GenerateInvoiceComponent,
       cssClass: 'full-screen-modal',
       componentProps: {
         openedAsModal: true,
