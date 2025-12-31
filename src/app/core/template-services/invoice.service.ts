@@ -61,7 +61,7 @@ export class InvoiceService {
 
   async generatePdfandSave(sale: Sale, options: { useA4?: boolean; scale?: number } = { useA4: true, scale: 2 }): Promise<void> {
     const { html, invoice, template } = await this.renderInvoiceHtml(sale);
-    const filename = `invoice-${invoice.invoiceNumber}-${template.templateId}.pdf`;
+    const filename = `invoice-${invoice.invoiceNumber}.pdf`;
 
     // save then open (native + web handled inside the PdfService helper)
     await this.pdfService.savePdfFromHtmlStringAndOpen(html, filename, { useA4: options.useA4, scale: options.scale });
@@ -69,37 +69,17 @@ export class InvoiceService {
 
   async generateImageandSave(sale: Sale, options: { format?: 'png' | 'jpeg'; quality?: number; scale?: number } = { format: 'jpeg', quality: 0.85, scale: 2 }): Promise<void> {
     const { html, invoice, template } = await this.renderInvoiceHtml(sale);
-    const filename = `invoice-${invoice.invoiceNumber}-${template.templateId}.jpg`;
+    const filename = `invoice-${invoice.invoiceNumber}.jpg`;
 
     // save then open (native + web handled in PdfService)
     await this.pdfService.saveImageFromHtmlStringAndOpen(html, filename, { useA4: true, format: options.format ?? 'jpeg', quality: options.quality, scale: options.scale });
   }
 
-  async savePdfandShare(sale: Sale): Promise<void> {
+  async savePdfandShare(sale: Sale, options: { useA4?: boolean; scale?: number } = { useA4: true, scale: 2 }): Promise<void> {
     const { html, invoice, template } = await this.renderInvoiceHtml(sale);
-    const filename = `invoice-${invoice.invoiceNumber}-${template.templateId}.pdf`;
+    const filename = `invoice-${invoice.invoiceNumber}.pdf`;
 
-    // native: save to storage and open share sheet
-    if ((window as any).Capacitor && (window as any).Capacitor.getPlatform && (window as any).Capacitor.getPlatform() !== 'web') {
-      await this.pdfService.savePdfFromHtmlString(html, filename, { useA4: true, scale: 2 });
-      return;
-    }
-
-    // web: try Web Share API with an image preview first
-    if ((navigator as any).canShare && (navigator as any).canShare({ files: [] })) {
-      try {
-        const imgData = await this.pdfService.generateImageFromHtmlString(html, { useA4: true, format: 'jpeg', quality: 0.85, scale: 2 });
-        const blob = this.dataUrlToBlob(imgData);
-        const file = new File([blob], filename.replace(/\.pdf$/, '.jpg'), { type: blob.type });
-        await (navigator as any).share({ files: [file], title: 'Invoice', text: 'Invoice attached' });
-        return;
-      } catch (err) {
-        console.warn('Web share failed, falling back to download', err);
-      }
-    }
-
-    // fallback: trigger PDF download
-    await this.pdfService.generatePdfFromHtmlString(html, filename, { useA4: true, scale: 2 });
+    await this.pdfService.savePdfFromHtmlStringAndShare(html, filename, { useA4: options.useA4, scale: options.scale });
   }
 
   // helper to render HTML and invoice object for a sale
@@ -138,7 +118,7 @@ export class InvoiceService {
     return new Blob([byteArray], { type: contentType });
   }
 
-  
+
 
 
 

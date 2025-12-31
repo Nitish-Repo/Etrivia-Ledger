@@ -219,7 +219,7 @@ export class PdfService {
             if (opener && typeof opener.open === 'function') {
               try {
                 // Some plugins accept an object with filePath and contentType, others accept (path, mimeType, success, error)
-                      if (opener.open.length === 1) {
+                if (opener.open.length === 1) {
                   await opener.open({ filePath: uri.uri, contentType: mime });
                 } else {
                   // fallback for Cordova style
@@ -484,6 +484,47 @@ export class PdfService {
     }
   }
 
+  async savePdfFromHtmlStringAndShare(
+    html: string,
+    filename = 'invoice.pdf',
+    options: PdfOptions = {}
+  ): Promise<void> {
+
+    const widthPx = this.mmToPx(options.widthMm ?? this.A4_WIDTH);
+    const { iframe, element } = await this.createHiddenIframeWithHtml(html, widthPx);
+
+    try {
+      const canvas = await this.renderToCanvas(element, this.getRenderScale(options.scale));
+      const pdf = this.canvasToPdf(
+        canvas,
+        this.A4_WIDTH,
+        this.A4_HEIGHT,
+        this.getRenderScale(options.scale)
+      );
+
+      await this.saveAndSharePdfDataUrl(pdf.output('datauristring'), filename);
+    } finally {
+      document.body.removeChild(iframe);
+    }
+  }
+
+  async saveAndSharePdfDataUrl(dataUrl: string, filename: string): Promise<void> {
+    const base64 = dataUrl.split(',')[1];
+
+    try {
+      // SAVE PDF
+      const uri = await this.savePdf(base64, filename);
+
+      // SHARE PDF (uses your cross-platform helper)
+      await this.sharePdf(uri);
+
+    } catch (err) {
+      console.error('saveAndSharePdfDataUrl failed', err);
+    }
+  }
+
+
+
   /**
    * Generate image from HTML and save + open (no share)
    */
@@ -538,13 +579,68 @@ export class PdfService {
   }
 
   async savePdf(base64Pdf: string, fileName: string): Promise<string> {
-    return this.writeBase64ToFile(base64Pdf, fileName, 'application/pdf');
+    // WEB: trigger download
+    if (Capacitor.getPlatform() === 'web') {
+      const blob = this.base64ToBlob(base64Pdf, 'application/pdf');
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      return url; // used later for open()
+    }
+
+    // ANDROID / IOS: save to filesystem
+    await Filesystem.writeFile({
+      path: fileName,
+      data: base64Pdf,
+      directory: Directory.Documents,
+      recursive: true
+    });
+
+    return (await Filesystem.getUri({
+      path: fileName,
+      directory: Directory.Documents
+    })).uri;
   }
 
+
   async savePng(base64Png: string, fileName: string): Promise<string> {
-    // choose png by filename when possible
-    const mime = fileName.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
-    return this.writeBase64ToFile(base64Png, fileName, mime);
+    const mime = fileName.toLowerCase().endsWith('.png')
+      ? 'image/png'
+      : 'image/jpeg';
+
+    // WEB: trigger download
+    if (Capacitor.getPlatform() === 'web') {
+      const blob = this.base64ToBlob(base64Png, mime);
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      return url;
+    }
+
+    // ANDROID / IOS: save to filesystem
+    await Filesystem.writeFile({
+      path: fileName,
+      data: base64Png,
+      directory: Directory.Documents,
+      recursive: true
+    });
+
+    return (await Filesystem.getUri({
+      path: fileName,
+      directory: Directory.Documents
+    })).uri;
   }
 
   private async openFile(uri: string, mime: string): Promise<void> {
@@ -564,9 +660,36 @@ export class PdfService {
   async openPdf(filePath: string) { return this.openFile(filePath, 'application/pdf'); }
   async openPng(filePath: string) { return this.openFile(filePath, 'image/png'); }
 
-  private async shareFile(uri: string, title: string) {
-    await Share.share({ title, text: title, url: uri, dialogTitle: title });
+ private async shareFile(uri: string, fileName: string): Promise<void> {
+  // WEB
+  if (Capacitor.getPlatform() === 'web') {
+    if (!(navigator as any).canShare) {
+      window.open(uri, '_blank');
+      return;
+    }
+
+    const blob = await fetch(uri).then(r => r.blob());
+    const file = new File([blob], fileName, { type: blob.type });
+
+    // IMPORTANT: check canShare with files
+    if ((navigator as any).canShare({ files: [file] })) {
+      await (navigator as any).share({ files: [file] });
+      return;
+    }
+
+    window.open(uri, '_blank');
+    return;
   }
+
+  // ANDROID / IOS
+  await Share.share({
+    title: fileName,
+    url: uri,
+    dialogTitle: fileName
+  });
+}
+
+
 
   async sharePdf(filePath: string) { return this.shareFile(filePath, 'Share PDF'); }
   async sharePng(filePath: string) { return this.shareFile(filePath, 'Share Image'); }
