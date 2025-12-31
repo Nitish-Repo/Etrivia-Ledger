@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.noblewave.ledger;
 
 import com.getcapacitor.BridgeActivity;
 
