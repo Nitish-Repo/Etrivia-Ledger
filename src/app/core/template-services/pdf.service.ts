@@ -198,6 +198,8 @@ export class PdfService {
     // detect content type from data url meta
     const contentTypeMatch = /data:(.*);base64/.exec(meta);
     const contentType = contentTypeMatch ? contentTypeMatch[1] : 'application/octet-stream';
+    // normalize to main mime type (strip parameters like ;filename=...)
+    const mime = contentType.split(';')[0].trim();
 
     // Try writing to public Documents first; if permission denied on Android, fallback to app-scoped storage
     const candidateDirs = [Directory.Documents, Directory.Data];
@@ -217,11 +219,11 @@ export class PdfService {
             if (opener && typeof opener.open === 'function') {
               try {
                 // Some plugins accept an object with filePath and contentType, others accept (path, mimeType, success, error)
-                if (opener.open.length === 1) {
-                  await opener.open({ filePath: uri.uri, contentType });
+                      if (opener.open.length === 1) {
+                  await opener.open({ filePath: uri.uri, contentType: mime });
                 } else {
                   // fallback for Cordova style
-                  await new Promise((res, rej) => opener.open(uri.uri, contentType, res, rej));
+                  await new Promise((res, rej) => opener.open(uri.uri, mime, res, rej));
                 }
                 return;
               } catch (openerErr) {
@@ -396,11 +398,12 @@ export class PdfService {
     const base64 = commaIdx >= 0 ? dataUrl.substring(commaIdx + 1) : dataUrl;
     const contentTypeMatch = /data:(.*);base64/.exec(meta);
     const contentType = contentTypeMatch ? contentTypeMatch[1] : 'application/octet-stream';
+    const mime = contentType.split(';')[0].trim();
 
     const platform = (window as any).Capacitor && (window as any).Capacitor.getPlatform ? (window as any).Capacitor.getPlatform() : 'web';
 
     // PDF
-    if (contentType === 'application/pdf') {
+    if (mime === 'application/pdf') {
       const uri = await this.savePdf(base64, filename);
 
       if (platform === 'web') {
@@ -424,7 +427,7 @@ export class PdfService {
     }
 
     // Image
-    if (contentType.startsWith('image/')) {
+    if (mime.startsWith('image/')) {
       const uri = await this.savePng(base64, filename);
 
       if (platform === 'web') {
