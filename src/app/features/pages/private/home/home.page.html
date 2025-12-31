@@ -1,81 +1,86 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border" [translucent]="true">
   <app-sidemenu-toolbar title="Home"></app-sidemenu-toolbar>
+
+  <ion-item lines="none">
+    <ion-avatar slot="start">
+      <img alt="Silhouette of a person's head" src="assets/images/nk.jpg" />
+    </ion-avatar>
+    <ion-label>
+      <p>Hello,</p>
+      <h3>NITISH</h3>
+    </ion-label>
+  </ion-item>
+  <!-- <ion-toolbar>
+  </ion-toolbar> -->
 </ion-header>
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div id="container">
-    <h1>Welcome to Etrivia Ledger</h1>
-    <p>Testing SQLite local storage for web platform</p>
 
-  </div>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform</p>
-  <p>Testing SQLite local storage for web platform123</p>
+<ion-content [fullscreen]="true">
 
-  <ion-button  shape="round" class="create-invoice" (click)="goToSellPage()">
+  <ion-card class="wallet-card">
+
+    <swiper-container pagination="true" space-between="10" pagination-clickable="true">
+      <swiper-slide>
+        <div class="wallet-balance-box">
+          <div>
+            INR
+            <br>
+            <span class="wallet-exchange-rate">Today's Sales</span>
+          </div>
+          <div class="wallet-amount">₹18,523.00</div>
+        </div>
+      </swiper-slide>
+      <swiper-slide>
+        <div class="wallet-balance-box">
+          <div>
+            INR
+            <br>
+            <span class="wallet-exchange-rate">Today's Expensive</span>
+          </div>
+          <div class="wallet-amount">₹10,523.00</div>
+        </div>
+      </swiper-slide>
+      <swiper-slide>
+        <div class="wallet-balance-box">
+          <div>
+            INR
+            <br>
+            <span class="wallet-exchange-rate">Today's Debt</span>
+          </div>
+          <div class="wallet-amount">₹3,523.00</div>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+
+    <!-- Buttons Section -->
+    <ion-grid>
+      <ion-row class="ion-justify-content-around ion-align-items-center">
+        <ion-col size="auto">
+          <ion-button shape="round" fill="clear" size="medium">
+            <ion-icon slot="icon-only" name="add"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col size="auto">
+          <ion-button shape="round" fill="clear" size="medium">
+            <ion-icon slot="icon-only" name="analytics"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col size="auto">
+          <ion-button shape="round" fill="clear" size="medium">
+            <ion-icon slot="icon-only" name="list"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+
+
+
+  </ion-card>
+
+  <ion-button shape="round" class="create-invoice" (click)="goToSellPage()">
     <ion-icon slot="start" name="create-outline"></ion-icon>
     Sell
   </ion-button>
+
 
 </ion-content>

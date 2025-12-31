@@ -4,6 +4,10 @@ import { ThemeService } from './core/theme.service';
 import { LanguageService } from './core/language.service';
 import { NativeService } from './core/native.service';
 import { Router } from '@angular/router';
+import { register } from 'swiper/element/bundle';
+
+
+register();
 
 @Component({
   selector: 'app-root',
@@ -19,9 +23,9 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     // Initialize translations
     this.lang.init();
-    
+
     this.native.init();
-    
+
     this.router.events.subscribe(console.log);
   }
 }
