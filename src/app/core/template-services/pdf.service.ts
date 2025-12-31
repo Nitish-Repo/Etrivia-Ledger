@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Filesystem, Directory } from '@capacitor/filesystem';
+import { FileOpener } from '@capacitor-community/file-opener';
 import { Share } from '@capacitor/share';
+import { Capacitor } from '@capacitor/core';
 
 export type PdfOptions = {
   useA4?: boolean;
@@ -105,7 +107,7 @@ export class PdfService {
     const heightMm = options.heightMm ?? this.A4_HEIGHT;
     const renderScale = this.getRenderScale(options.scale);
 
-    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => {};
+    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => { };
 
     try {
       const canvas = await this.renderToCanvas(element, renderScale);
@@ -159,7 +161,7 @@ export class PdfService {
   ): Promise<string> {
     const widthMm = options.widthMm ?? this.A4_WIDTH;
     const renderScale = this.getRenderScale(options.scale);
-    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => {};
+    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => { };
 
     try {
       const canvas = await this.renderToCanvas(element, renderScale);
@@ -189,29 +191,78 @@ export class PdfService {
    * Works on Android/iOS via Capacitor Filesystem + Share.
    */
   async saveAndShareDataUrl(dataUrl: string, filename: string): Promise<void> {
-    try {
-      const commaIdx = dataUrl.indexOf(',');
-      const base64 = commaIdx >= 0 ? dataUrl.substring(commaIdx + 1) : dataUrl;
+    const commaIdx = dataUrl.indexOf(',');
+    const meta = commaIdx >= 0 ? dataUrl.substring(0, commaIdx) : '';
+    const base64 = commaIdx >= 0 ? dataUrl.substring(commaIdx + 1) : dataUrl;
 
-      await Filesystem.writeFile({
-        path: filename,
-        data: base64,
-        directory: Directory.Documents,
-        recursive: true
-      });
+    // detect content type from data url meta
+    const contentTypeMatch = /data:(.*);base64/.exec(meta);
+    const contentType = contentTypeMatch ? contentTypeMatch[1] : 'application/octet-stream';
 
-      const uri = await Filesystem.getUri({ path: filename, directory: Directory.Documents });
+    // Try writing to public Documents first; if permission denied on Android, fallback to app-scoped storage
+    const candidateDirs = [Directory.Documents, Directory.Data];
+    let lastErr: any = null;
 
-      await Share.share({
-        title: filename,
-        text: filename,
-        url: uri.uri,
-        dialogTitle: 'Share file'
-      });
-    } catch (err) {
-      console.error('saveAndShareDataUrl error:', err);
-      throw err;
+    for (const dir of candidateDirs) {
+      try {
+        const writeResult = await Filesystem.writeFile({ path: filename, data: base64, directory: dir, recursive: true });
+        const uri = await Filesystem.getUri({ path: filename, directory: dir });
+
+        // On native platforms try to open file directly (if File Opener plugin is available)
+        try {
+          const platform = (window as any).Capacitor && (window as any).Capacitor.getPlatform ? (window as any).Capacitor.getPlatform() : 'web';
+          if (platform !== 'web') {
+            // Check common global exposures for file opener plugins
+            const opener = (window as any).Capacitor?.Plugins?.FileOpener || (window as any).FileOpener || (window as any).cordova?.plugins?.fileOpener2 || null;
+            if (opener && typeof opener.open === 'function') {
+              try {
+                // Some plugins accept an object with filePath and contentType, others accept (path, mimeType, success, error)
+                if (opener.open.length === 1) {
+                  await opener.open({ filePath: uri.uri, contentType });
+                } else {
+                  // fallback for Cordova style
+                  await new Promise((res, rej) => opener.open(uri.uri, contentType, res, rej));
+                }
+                return;
+              } catch (openerErr) {
+                console.warn('FileOpener failed to open file:', openerErr);
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('Error attempting to open file with FileOpener:', e);
+        }
+
+        // If opener not available or on web, fallback to share sheet
+        try {
+          await Share.share({
+            title: filename,
+            text: filename,
+            url: uri.uri,
+            dialogTitle: 'Share file'
+          });
+          return;
+        } catch (shareErr) {
+          // if share failed, still consider write successful and return
+          console.warn('Share failed:', shareErr);
+          return;
+        }
+      } catch (err) {
+        lastErr = err;
+        console.warn(`writeFile to ${dir} failed:`, err);
+        // Try next directory
+      }
     }
+
+    // If we reach here, all writes failed — give a helpful error message
+    console.error('saveAndShareDataUrl error:', lastErr);
+
+    // Provide guidance in error messages for Android storage permissions
+    if (lastErr && typeof lastErr === 'object' && (lastErr.message?.includes('EACCES') || (lastErr as any).code === 'EACCES')) {
+      throw new Error("Failed to write file to external storage (EACCES). On Android this often means your app lacks permission to write to shared storage.\nConsider writing to app-scoped storage (Directory.Data) which requires no runtime permission, or request WRITE_EXTERNAL_STORAGE / MANAGE_EXTERNAL_STORAGE where appropriate.");
+    }
+
+    throw lastErr;
   }
 
   /**
@@ -222,7 +273,7 @@ export class PdfService {
     const heightMm = options.heightMm ?? this.A4_HEIGHT;
     const renderScale = this.getRenderScale(options.scale);
 
-    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => {};
+    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => { };
 
     try {
       const canvas = await this.renderToCanvas(element, renderScale);
@@ -298,7 +349,7 @@ export class PdfService {
     const widthPx = this.mmToPx(widthMm);
     const { iframe, element } = await this.createHiddenIframeWithHtml(html, widthPx);
 
-    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => {};
+    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => { };
 
     try {
       const canvas = await this.renderToCanvas(element, renderScale);
@@ -323,7 +374,7 @@ export class PdfService {
     const widthPx = this.mmToPx(widthMm);
     const { iframe, element } = await this.createHiddenIframeWithHtml(html, widthPx);
 
-    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => {};
+    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => { };
 
     try {
       const canvas = await this.renderToCanvas(element, renderScale);
@@ -337,6 +388,108 @@ export class PdfService {
   }
 
   /**
+   * Save a data URL and open the resulting file. (No share sheet)
+   */
+  async saveAndOpenDataUrl(dataUrl: string, filename: string): Promise<void> {
+    const commaIdx = dataUrl.indexOf(',');
+    const meta = commaIdx >= 0 ? dataUrl.substring(0, commaIdx) : '';
+    const base64 = commaIdx >= 0 ? dataUrl.substring(commaIdx + 1) : dataUrl;
+    const contentTypeMatch = /data:(.*);base64/.exec(meta);
+    const contentType = contentTypeMatch ? contentTypeMatch[1] : 'application/octet-stream';
+
+    const platform = (window as any).Capacitor && (window as any).Capacitor.getPlatform ? (window as any).Capacitor.getPlatform() : 'web';
+
+    // PDF
+    if (contentType === 'application/pdf') {
+      const uri = await this.savePdf(base64, filename);
+
+      if (platform === 'web') {
+        window.open(uri!, '_blank');
+        setTimeout(() => URL.revokeObjectURL(uri!), 10000);
+        return;
+      }
+
+      try {
+        await this.openPdf(uri!);
+      } catch (err) {
+        console.warn('openPdf failed; falling back to share:', err);
+        try {
+          await this.sharePdf(uri!);
+        } catch (shareErr) {
+          console.warn('sharePdf fallback failed:', shareErr);
+        }
+      }
+
+      return;
+    }
+
+    // Image
+    if (contentType.startsWith('image/')) {
+      const uri = await this.savePng(base64, filename);
+
+      if (platform === 'web') {
+        window.open(uri!, '_blank');
+        setTimeout(() => URL.revokeObjectURL(uri!), 10000);
+        return;
+      }
+
+      try {
+        await this.openPng(uri!);
+      } catch (err) {
+        console.warn('openPng failed; falling back to share:', err);
+        try {
+          await this.sharePng(uri!);
+        } catch (shareErr) {
+          console.warn('sharePng fallback failed:', shareErr);
+        }
+      }
+
+      return;
+    }
+
+    // Generic fallback: write and try share
+    try {
+      await Filesystem.writeFile({ path: filename, data: base64, directory: Directory.Documents, recursive: true });
+      const uri = (await Filesystem.getUri({ path: filename, directory: Directory.Documents })).uri;
+      await Share.share({ title: filename, text: filename, url: uri, dialogTitle: 'Share file' });
+    } catch (err) {
+      console.error('saveAndOpenDataUrl fallback error:', err);
+    }
+  }
+
+  /**
+   * Generate PDF from HTML and save + open (no share)
+   */
+  async savePdfFromHtmlStringAndOpen(html: string, filename: string = 'invoice.pdf', options: PdfOptions = {}): Promise<void> {
+    const widthMm = options.widthMm ?? this.A4_WIDTH;
+    const heightMm = options.heightMm ?? this.A4_HEIGHT;
+    const renderScale = this.getRenderScale(options.scale);
+
+    const widthPx = this.mmToPx(widthMm);
+    const { iframe, element } = await this.createHiddenIframeWithHtml(html, widthPx);
+
+    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => { };
+
+    try {
+      const canvas = await this.renderToCanvas(element, renderScale);
+      const pdf = this.canvasToPdf(canvas, widthMm, heightMm, renderScale);
+      const dataUri = pdf.output('datauristring');
+      await this.saveAndOpenDataUrl(dataUri, filename);
+    } finally {
+      restore();
+      document.body.removeChild(iframe);
+    }
+  }
+
+  /**
+   * Generate image from HTML and save + open (no share)
+   */
+  async saveImageFromHtmlStringAndOpen(html: string, filename: string = 'invoice.jpg', options: { useA4?: boolean; widthMm?: number; scale?: number; format?: 'png' | 'jpeg'; quality?: number } = {}): Promise<void> {
+    const dataUrl = await this.generateImageFromHtmlString(html, { useA4: options.useA4, widthMm: options.widthMm, scale: options.scale, format: options.format ?? 'jpeg', quality: options.quality });
+    await this.saveAndOpenDataUrl(dataUrl, filename);
+  }
+
+  /**
    * Generate an image from an HTML string (hidden iframe) and return as data URL.
    */
   async generateImageFromHtmlString(html: string, options: { useA4?: boolean; widthMm?: number; scale?: number; format?: 'png' | 'jpeg'; quality?: number } = {}): Promise<string> {
@@ -346,7 +499,7 @@ export class PdfService {
     const widthPx = this.mmToPx(widthMm);
     const { iframe, element } = await this.createHiddenIframeWithHtml(html, widthPx);
 
-    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => {};
+    const restore = options.useA4 ? await this.applyA4Width(element, widthMm) : () => { };
 
     try {
       const canvas = await this.renderToCanvas(element, renderScale);
@@ -367,5 +520,78 @@ export class PdfService {
     const dataUrl = await this.generateImageFromHtmlString(html, { useA4: options.useA4, widthMm: options.widthMm, scale: options.scale, format: options.format ?? 'jpeg', quality: options.quality });
     await this.saveAndShareDataUrl(dataUrl, filename);
   }
+
+  // Write a base64 payload to storage and return an access URI
+  // - On web returns an object URL (use URL.revokeObjectURL when done)
+  // - On native writes to Documents and returns the filesystem URI
+  private async writeBase64ToFile(base64: string, fileName: string, mime: string): Promise<string> {
+    if (Capacitor.getPlatform() === 'web') {
+      const blob = this.base64ToBlob(base64, mime);
+      return URL.createObjectURL(blob);
+    }
+
+    await Filesystem.writeFile({ path: fileName, data: base64, directory: Directory.Documents, recursive: true });
+    return (await Filesystem.getUri({ path: fileName, directory: Directory.Documents })).uri;
+  }
+
+  async savePdf(base64Pdf: string, fileName: string): Promise<string> {
+    return this.writeBase64ToFile(base64Pdf, fileName, 'application/pdf');
+  }
+
+  async savePng(base64Png: string, fileName: string): Promise<string> {
+    // choose png by filename when possible
+    const mime = fileName.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
+    return this.writeBase64ToFile(base64Png, fileName, mime);
+  }
+
+  private async openFile(uri: string, mime: string): Promise<void> {
+    if (Capacitor.getPlatform() === 'web') {
+      const win = window.open(uri, '_blank');
+      // revoke object URL after short delay to keep UX smooth
+      setTimeout(() => {
+        try { URL.revokeObjectURL(uri); } catch { /* ignore */ }
+      }, 10000);
+      if (win) win.focus();
+      return;
+    }
+
+    await FileOpener.open({ filePath: uri, contentType: mime });
+  }
+
+  async openPdf(filePath: string) { return this.openFile(filePath, 'application/pdf'); }
+  async openPng(filePath: string) { return this.openFile(filePath, 'image/png'); }
+
+  private async shareFile(uri: string, title: string) {
+    await Share.share({ title, text: title, url: uri, dialogTitle: title });
+  }
+
+  async sharePdf(filePath: string) { return this.shareFile(filePath, 'Share PDF'); }
+  async sharePng(filePath: string) { return this.shareFile(filePath, 'Share Image'); }
+
+  base64ToBlob(base64: string, type: string) {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    return new Blob([new Uint8Array(byteNumbers)], { type });
+  }
+
+  // Helper for triggering a direct download (kept for explicit downloads)
+  downloadOnWeb(blob: Blob, fileName: string) {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+
+
+
+
 }
 

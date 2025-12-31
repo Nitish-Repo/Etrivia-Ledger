@@ -63,29 +63,16 @@ export class InvoiceService {
     const { html, invoice, template } = await this.renderInvoiceHtml(sale);
     const filename = `invoice-${invoice.invoiceNumber}-${template.templateId}.pdf`;
 
-    if ((window as any).Capacitor && (window as any).Capacitor.getPlatform && (window as any).Capacitor.getPlatform() !== 'web') {
-      // native
-      await this.pdfService.savePdfFromHtmlString(html, filename, { useA4: options.useA4, scale: options.scale });
-      return;
-    }
-
-    // web
-    await this.pdfService.generatePdfFromHtmlString(html, filename, { useA4: options.useA4, scale: options.scale });
+    // save then open (native + web handled inside the PdfService helper)
+    await this.pdfService.savePdfFromHtmlStringAndOpen(html, filename, { useA4: options.useA4, scale: options.scale });
   }
 
   async generateImageandSave(sale: Sale, options: { format?: 'png' | 'jpeg'; quality?: number; scale?: number } = { format: 'jpeg', quality: 0.85, scale: 2 }): Promise<void> {
     const { html, invoice, template } = await this.renderInvoiceHtml(sale);
     const filename = `invoice-${invoice.invoiceNumber}-${template.templateId}.jpg`;
 
-    if ((window as any).Capacitor && (window as any).Capacitor.getPlatform && (window as any).Capacitor.getPlatform() !== 'web') {
-      // native: save image (share)
-      await this.pdfService.saveImageFromHtmlString(html, filename, { useA4: true, format: options.format ?? 'jpeg', quality: options.quality, scale: options.scale });
-      return;
-    }
-
-    // web: generate data url and trigger download
-    const dataUrl = await this.pdfService.generateImageFromHtmlString(html, { useA4: true, format: options.format ?? 'jpeg', quality: options.quality, scale: options.scale });
-    this.pdfService.downloadImage(dataUrl, filename);
+    // save then open (native + web handled in PdfService)
+    await this.pdfService.saveImageFromHtmlStringAndOpen(html, filename, { useA4: true, format: options.format ?? 'jpeg', quality: options.quality, scale: options.scale });
   }
 
   async savePdfandShare(sale: Sale): Promise<void> {
