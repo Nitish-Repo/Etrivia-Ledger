@@ -34,6 +34,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
 import { saveOutline, close, addOutline, imageOutline } from 'ionicons/icons';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 @Component({
   selector: 'app-business-info',
@@ -76,6 +77,7 @@ export class BusinessInfoComponent implements OnInit {
   isBusinessSave = signal<boolean>(false);
   isEdit = signal<boolean>(false);
   segment = signal<string>('first');
+  logoPreview = signal<string | null>(null);
 
   form!: FormGroup;
   formMeta = new FormMeta();
@@ -104,6 +106,10 @@ export class BusinessInfoComponent implements OnInit {
         if (settings) {
           this.isEdit.set(true);
           this.form = this.app.meta.toFormGroup(settings, this.modelMeta);
+          // Set logo preview if logo exists
+          if (settings.logoUrl) {
+            this.logoPreview.set(settings.logoUrl);
+          }
           this.cdr.detectChanges();
         } else {
           this.buildNewBusinessForm();
@@ -146,6 +152,31 @@ export class BusinessInfoComponent implements OnInit {
         });
       }
     );
+  }
+
+  async selectLogo() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 80,
+        allowEditing: true,
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Prompt,
+        width: 400,
+        height: 400,
+        promptLabelHeader: 'Select Logo',
+        promptLabelPhoto: 'From Gallery',
+        promptLabelPicture: 'Take Photo'
+      });
+      
+      if (image.dataUrl) {
+        this.form.patchValue({ logoUrl: image.dataUrl });
+        this.logoPreview.set(image.dataUrl);
+        this.cdr.detectChanges();
+      }
+    } catch (error) {
+      console.error('Error selecting logo:', error);
+      // User cancelled or error occurred
+    }
   }
 
   closeModal() {

@@ -6,6 +6,20 @@
 
   position: relative;   /* REQUIRED for ripple */
   overflow: hidden;     /* keeps ripple inside */
+  cursor: pointer;      /* Show clickable cursor */
+  transition: all 0.2s ease;
+}
+
+.logo-box:hover {
+  border-color: var(--ion-color-primary);
+  background-color: var(--ion-color-light);
+}
+
+.logo-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
 }
 
 .image-icon {

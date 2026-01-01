@@ -27,17 +27,21 @@
           <ion-grid>
             <ion-row class="ion-justify-content-center">
               <ion-col size="auto">
-                <div
+                <div (click)="selectLogo()"
                   class="logo-box ion-activatable ion-display-flex ion-align-items-center ion-justify-content-center ion-gap-2">
 
                   <ion-ripple-effect></ion-ripple-effect>
 
-                  <ion-icon name="image-outline" class="image-icon ion-margin-end"></ion-icon>
+                  @if(logoPreview()) {
+                    <img [src]="logoPreview()" alt="Company Logo" class="logo-preview" />
+                  } @else {
+                    <ion-icon name="image-outline" class="image-icon ion-margin-end"></ion-icon>
 
-                  <ion-label class="ion-display-flex ion-align-items-center ion-gap-1">
-                    <ion-icon name="add-outline" color="primary"></ion-icon>
-                    Add logo
-                  </ion-label>
+                    <ion-label class="ion-display-flex ion-align-items-center ion-gap-1">
+                      <ion-icon name="add-outline" color="primary"></ion-icon>
+                      Add logo
+                    </ion-label>
+                  }
 
                 </div>
               </ion-col>
