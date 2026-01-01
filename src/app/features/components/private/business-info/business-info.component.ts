@@ -29,19 +29,18 @@ import {
   IonItemDivider,
   ModalController,
   IonButtons,
-  IonTitle,
-  IonToolbar
-} from "@ionic/angular/standalone";
+  IonTitle, IonRippleEffect,
+  IonToolbar, IonAvatar, IonGrid, IonRow, IonCol } from "@ionic/angular/standalone";
 import { TranslateModule } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
-import { saveOutline, close } from 'ionicons/icons';
+import { saveOutline, close, addOutline, imageOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-business-info',
   templateUrl: './business-info.component.html',
   styleUrls: ['./business-info.component.scss'],
   standalone: true,
-  imports: [
+  imports: [IonCol, IonRow, IonGrid, IonRippleEffect,
     IonItemDivider,
     IonFooter,
     IonLabel,
@@ -91,7 +90,7 @@ export class BusinessInfoComponent implements OnInit {
   };
 
   constructor() {
-    addIcons({ saveOutline, close });
+    addIcons({close,addOutline,saveOutline,imageOutline});
   }
 
   ngOnInit() {

@@ -1,0 +1,19 @@
+.logo-box {
+  width: 180px;
+  height: 80px;
+  border: 1.5px dashed var(--ion-color-medium);
+  border-radius: 12px;
+
+  position: relative;   /* REQUIRED for ripple */
+  overflow: hidden;     /* keeps ripple inside */
+}
+
+.image-icon {
+  font-size: 28px;
+  color: var(--ion-color-primary);
+}
+
+.logo-box ion-label {
+  font-size: 14px;
+  color: var(--ion-color-medium);
+}

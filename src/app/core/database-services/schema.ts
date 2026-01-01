@@ -448,7 +448,7 @@ export const SCHEMA_VERSIONS: SchemaVersion[] = [
         ('pincode', ''),
         ('phone', ''),
         ('email', ''),
-        ('imageUrl', ''),
+        ('logoUrl', ''),
         ('templateId', ''),
         ('invoicePrefix', 'INV'),
         ('financialYearStart', '04-01'),

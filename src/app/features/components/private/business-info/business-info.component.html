@@ -21,95 +21,108 @@
             <ion-label>{{ 'common.option_detail' | translate }}</ion-label>
           </ion-segment-button>
         </ion-segment>
-        
+
         @if (segment() === 'first') {
         <div>
-            <div class="ion-margin-bottom ion-margin-top">
-              <app-input [form]="form" name="businessName" label="label.business_name" 
-                [placeholder]="'placeholder.enter_business_name'" labelPlacement="floating"
-                [errorText]="'error.required'" fill="outline" [maxlength]="100" [counter]="true"></app-input>
-            </div>
+          <ion-grid>
+            <ion-row class="ion-justify-content-center">
+              <ion-col size="auto">
+                <div
+                  class="logo-box ion-activatable ion-display-flex ion-align-items-center ion-justify-content-center ion-gap-2">
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="gstin" label="label.gstin" 
-                [placeholder]="'placeholder.enter_gstin'" labelPlacement="floating"
-                [errorText]="'error.required'" fill="outline" [maxlength]="15"></app-input>
-            </div>
+                  <ion-ripple-effect></ion-ripple-effect>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="pan" label="label.pan" 
-                [placeholder]="'placeholder.enter_pan'" labelPlacement="floating"
-                fill="outline" [maxlength]="10"></app-input>
-            </div>
+                  <ion-icon name="image-outline" class="image-icon ion-margin-end"></ion-icon>
 
-            <div class="ion-margin-bottom ion-margin-top">
-              <app-input [form]="form" name="phone" label="label.phone" 
-                [placeholder]="'placeholder.enter_phone'" labelPlacement="floating"
-                type="tel" [errorText]="'error.required'" fill="outline"></app-input>
-            </div>
+                  <ion-label class="ion-display-flex ion-align-items-center ion-gap-1">
+                    <ion-icon name="add-outline" color="primary"></ion-icon>
+                    Add logo
+                  </ion-label>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="email" label="label.email" 
-                [placeholder]="'placeholder.enter_email'" labelPlacement="floating"
-                type="email" fill="outline"></app-input>
-            </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
 
-            <div class="ion-margin-bottom">
-              <ion-textarea formControlName="address" [label]="'label.address' | translate" 
-                labelPlacement="floating" fill="outline" 
-                [placeholder]="'placeholder.enter_address' | translate" 
-                autoGrow="true" [counter]="true" maxlength="200"></ion-textarea>
-            </div>
 
-            <div class="ion-display-flex ion-margin-bottom">
-              <app-input class="ion-flex-1" [form]="form" name="city" label="label.city" 
-                [placeholder]="'placeholder.enter_city'" labelPlacement="floating"
-                fill="outline"></app-input>
-              <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="state" label="label.state" 
-                [placeholder]="'placeholder.enter_state'" labelPlacement="floating"
-                fill="outline"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="businessName" label="label.business_name"
+              [placeholder]="'placeholder.enter_business_name'" labelPlacement="floating" [errorText]="'error.required'"
+              fill="outline" [maxlength]="100" [counter]="true"></app-input>
+          </div>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="pincode" label="label.pincode" 
-                [placeholder]="'placeholder.enter_pincode'" labelPlacement="floating"
-                type="number" fill="outline" [maxlength]="6"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="gstin" label="label.gstin" [placeholder]="'placeholder.enter_gstin'"
+              labelPlacement="floating" [errorText]="'error.required'" fill="outline" [maxlength]="15"></app-input>
+          </div>
+
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="pan" label="label.pan" [placeholder]="'placeholder.enter_pan'"
+              labelPlacement="floating" fill="outline" [maxlength]="10"></app-input>
+          </div>
+
+          <div class="ion-margin-bottom ion-margin-top">
+            <app-input [form]="form" name="phone" label="label.phone" [placeholder]="'placeholder.enter_phone'"
+              labelPlacement="floating" type="tel" [errorText]="'error.required'" fill="outline"></app-input>
+          </div>
+
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="email" label="label.email" [placeholder]="'placeholder.enter_email'"
+              labelPlacement="floating" type="email" fill="outline"></app-input>
+          </div>
+
+          <div class="ion-margin-bottom">
+            <ion-textarea formControlName="address" [label]="'label.address' | translate" labelPlacement="floating"
+              fill="outline" [placeholder]="'placeholder.enter_address' | translate" autoGrow="true" [counter]="true"
+              maxlength="200"></ion-textarea>
+          </div>
+
+          <div class="ion-display-flex ion-margin-bottom">
+            <app-input class="ion-flex-1" [form]="form" name="city" label="label.city"
+              [placeholder]="'placeholder.enter_city'" labelPlacement="floating" fill="outline"></app-input>
+            <app-input class="ion-flex-1 ion-margin-start" [form]="form" name="state" label="label.state"
+              [placeholder]="'placeholder.enter_state'" labelPlacement="floating" fill="outline"></app-input>
+          </div>
+
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="pincode" label="label.pincode" [placeholder]="'placeholder.enter_pincode'"
+              labelPlacement="floating" type="number" fill="outline" [maxlength]="6"></app-input>
+          </div>
         </div>
         }
 
         @if (segment() === 'second') {
         <div>
-            <ion-item-divider>
-              <ion-label>{{ 'common.invoice_settings' | translate }}</ion-label>
-            </ion-item-divider>
+          <ion-item-divider>
+            <ion-label>{{ 'common.invoice_settings' | translate }}</ion-label>
+          </ion-item-divider>
 
-            <div class="ion-margin-bottom ion-margin-top">
-              <app-input [form]="form" name="invoicePrefix" label="label.invoice_prefix" 
-                [placeholder]="'placeholder.enter_invoice_prefix'" labelPlacement="floating"
-                [errorText]="'error.required'" fill="outline" [maxlength]="10"></app-input>
-            </div>
+          <div class="ion-margin-bottom ion-margin-top">
+            <app-input [form]="form" name="invoicePrefix" label="label.invoice_prefix"
+              [placeholder]="'placeholder.enter_invoice_prefix'" labelPlacement="floating"
+              [errorText]="'error.required'" fill="outline" [maxlength]="10"></app-input>
+          </div>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="financialYearStart" label="label.financial_year_start" 
-                [placeholder]="'MM-DD (e.g., 04-01)'" labelPlacement="floating"
-                [errorText]="'error.required'" fill="outline"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="financialYearStart" label="label.financial_year_start"
+              [placeholder]="'MM-DD (e.g., 04-01)'" labelPlacement="floating" [errorText]="'error.required'"
+              fill="outline"></app-input>
+          </div>
 
-            <div class="ion-margin-bottom">
-              <app-input [form]="form" name="defaultGstRate" label="label.default_gst_rate" 
-                [placeholder]="'placeholder.enter_value'" labelPlacement="floating"
-                type="number" [errorText]="'error.required'" fill="outline"></app-input>
-            </div>
+          <div class="ion-margin-bottom">
+            <app-input [form]="form" name="defaultGstRate" label="label.default_gst_rate"
+              [placeholder]="'placeholder.enter_value'" labelPlacement="floating" type="number"
+              [errorText]="'error.required'" fill="outline"></app-input>
+          </div>
 
-            <ion-list>
-              <ion-item class="ion-no-padding" lines="none">
-                <ion-toggle formControlName="enableCess">{{ 'label.enable_cess' | translate }}</ion-toggle>
-              </ion-item>
-            </ion-list>
+          <ion-list>
+            <ion-item class="ion-no-padding" lines="none">
+              <ion-toggle formControlName="enableCess">{{ 'label.enable_cess' | translate }}</ion-toggle>
+            </ion-item>
+          </ion-list>
         </div>
         }
-        
+
         <button type="submit" style="display: none;" [disabled]="formMeta.submitProcessing"></button>
       </form>
     </div>

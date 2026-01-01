@@ -14,6 +14,7 @@ export interface BusinessSettings {
   pincode: string;
   phone: string;
   email: string;
+  logoUrl: string;
   templateId: string;
   invoicePrefix: string;
   financialYearStart: string;  // MM-DD format (e.g., '04-01')
@@ -39,6 +40,7 @@ export function getBusinessSettingsMeta() {
     { key: 'pincode', label: 'Pincode', required: false },
     { key: 'phone', label: 'Phone', required: true },
     { key: 'email', label: 'Email', required: false, email: true },
+    // { key: 'logoUrl', label: 'Logo Url', required: false },
     { key: 'templateId', label: 'Template Id', required: false },
     { key: 'invoicePrefix', label: 'Invoice Prefix', required: true },
     { key: 'financialYearStart', label: 'Financial Year Start', required: true },
